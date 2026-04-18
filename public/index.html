@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Copilote Devis BTP — Cognelia</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#1e3a5f;--navy-light:#2a5080;--orange:#e8600a;--orange-light:#ff7a20;
+  --bg:#f4f6fa;--white:#ffffff;--border:#e4eaf5;--text:#1a2637;--muted:#6b7a90;
+  --green:#22c55e;--red:#ef4444;--shadow:0 4px 24px rgba(0,0,0,0.08);
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+/* HEADER */
+header{background:var(--navy);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:32px;height:32px;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-text{color:white;}
+.logo-text strong{font-size:15px;display:block;line-height:1.2;}
+.logo-text span{font-size:11px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:1px;}
+.header-actions{display:flex;align-items:center;gap:8px;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;}
+.btn-ghost{background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.2);}
+.btn-orange{background:var(--orange);color:white;}
+.btn-orange:hover{background:var(--orange-light);}
+.btn-navy{background:var(--navy-light);color:white;}
+.btn-navy:hover{background:#3a6090;}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);}
+
+/* MAIN LAYOUT */
+main{display:flex;flex:1;overflow:hidden;}
+
+/* CHAT PANEL */
+.chat-panel{width:400px;min-width:340px;background:white;display:flex;flex-direction:column;border-right:1px solid var(--border);flex-shrink:0;}
+.chat-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.chat-header h3{font-size:14px;font-weight:700;color:var(--navy);}
+.chat-header small{font-size:11px;color:var(--muted);display:block;margin-top:1px;}
+.chat-connected{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green);font-weight:600;}
+
+/* VOICE BUTTON */
+.voice-area{display:flex;flex-direction:column;align-items:center;padding:16px 20px 8px;border-bottom:1px solid var(--border);}
+.voice-btn{width:64px;height:64px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;transition:all .2s;background:var(--bg);box-shadow:0 2px 12px rgba(0,0,0,0.1);}
+.voice-btn.idle{background:var(--bg);}
+.voice-btn.listening{background:var(--orange);box-shadow:0 0 0 8px rgba(232,96,10,0.15),0 0 0 16px rgba(232,96,10,0.07);animation:pulse-ring 1.2s ease-out infinite;}
+.voice-btn.processing{background:var(--navy);animation:none;}
+.voice-label{margin-top:8px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.3px;}
+.voice-label.listening{color:var(--orange);}
+@keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,96,10,0.4),0 0 0 0 rgba(232,96,10,0.2);}100%{box-shadow:0 0 0 12px rgba(232,96,10,0),0 0 0 24px rgba(232,96,10,0);}}
+.messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth;}
+.msg{display:flex;flex-direction:column;max-width:88%;}
+.msg.user{align-self:flex-end;align-items:flex-end;}
+.msg.ai{align-self:flex-start;align-items:flex-start;}
+.msg-bubble{padding:10px 14px;border-radius:16px;font-size:13.5px;line-height:1.55;}
+.msg.user .msg-bubble{background:var(--navy);color:white;border-bottom-right-radius:4px;}
+.msg.ai .msg-bubble{background:var(--bg);color:var(--text);border-bottom-left-radius:4px;border:1px solid var(--border);}
+.msg-time{font-size:10px;color:var(--muted);margin-top:3px;padding:0 4px;}
+.typing{display:flex;align-items:center;gap:4px;padding:10px 14px;background:var(--bg);border-radius:16px;border-bottom-left-radius:4px;border:1px solid var(--border);}
+.typing span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:bounce .9s infinite;}
+.typing span:nth-child(2){animation-delay:.15s;}
+.typing span:nth-child(3){animation-delay:.3s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
+.chat-input-area{padding:16px;border-top:1px solid var(--border);}
+.chat-input-wrap{display:flex;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:8px 12px;transition:border-color .15s;}
+.chat-input-wrap:focus-within{border-color:var(--navy);}
+#chatInput{flex:1;border:none;background:transparent;font-size:13.5px;resize:none;outline:none;max-height:100px;line-height:1.5;color:var(--text);}
+#chatInput::placeholder{color:var(--muted);}
+.send-btn{width:36px;height:36px;border-radius:8px;background:var(--navy);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;align-self:flex-end;}
+.send-btn:hover{background:var(--navy-light);}
+.send-btn svg{width:16px;height:16px;fill:white;}
+.quick-prompts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.quick-btn{font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:white;cursor:pointer;color:var(--navy);font-weight:500;transition:all .15s;white-space:nowrap;}
+.quick-btn:hover{background:var(--navy);color:white;border-color:var(--navy);}
+
+/* DEVIS PANEL */
+.devis-panel{flex:1;overflow-y:auto;background:var(--bg);padding:24px;}
+.devis-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.auto-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--green);font-weight:600;background:rgba(34,197,94,0.08);padding:5px 10px;border-radius:20px;border:1px solid rgba(34,197,94,0.2);}
+.auto-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.devis-doc{background:white;max-width:900px;margin:0 auto;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;}
+
+/* DEVIS HEADER */
+.devis-top{background:var(--navy);padding:28px 32px;display:flex;justify-content:space-between;align-items:flex-start;}
+.devis-company{color:white;}
+.devis-company h2{font-size:20px;font-weight:800;margin-bottom:4px;}
+.devis-company p{font-size:12px;color:rgba(255,255,255,0.65);line-height:1.8;}
+.devis-title-block{text-align:right;color:white;}
+.devis-label{font-size:11px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:1px;}
+.devis-num{font-size:22px;font-weight:900;margin:2px 0;}
+.devis-date{font-size:12px;color:rgba(255,255,255,0.7);}
+
+/* CLIENT & META */
+.devis-meta{padding:24px 32px;display:flex;justify-content:space-between;border-bottom:2px solid var(--border);}
+.devis-client h4{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;}
+.devis-client p{font-size:13px;line-height:1.8;color:var(--text);}
+.devis-client strong{font-size:15px;font-weight:700;color:var(--navy);}
+.devis-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:right;}
+.info-item label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.info-item p{font-size:13px;font-weight:600;color:var(--text);}
+
+/* TITRE CHANTIER */
+.devis-chantier{padding:16px 32px;background:#f8faff;border-bottom:1px solid var(--border);}
+.devis-chantier h3{font-size:15px;font-weight:700;color:var(--navy);}
+.devis-chantier p{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* SECTIONS */
+.devis-sections{padding:0 32px;}
+.devis-section{margin:20px 0;}
+.section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--navy);padding:8px 0 6px;border-bottom:2px solid var(--navy);margin-bottom:0;}
+table.lignes{width:100%;border-collapse:collapse;}
+table.lignes thead tr{background:#f8faff;}
+table.lignes th{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:10px 8px;text-align:left;border-bottom:1px solid var(--border);}
+table.lignes th.num{width:28px;}
+table.lignes th.desig{min-width:200px;}
+table.lignes th.num-col,table.lignes th.unit-col{width:60px;text-align:center;}
+table.lignes th.price-col,table.lignes th.total-col{width:90px;text-align:right;}
+table.lignes th.tva-col{width:60px;text-align:center;}
+table.lignes td{padding:10px 8px;font-size:13px;border-bottom:1px solid var(--border);}
+table.lignes td.center{text-align:center;}
+table.lignes td.right{text-align:right;font-weight:600;}
+table.lignes tr:last-child td{border-bottom:none;}
+table.lignes tr:nth-child(even){background:#fafbff;}
+.section-subtotal{text-align:right;padding:6px 8px;font-size:12px;color:var(--muted);font-weight:600;border-top:1px solid var(--border);background:#f8faff;}
+.section-subtotal span{color:var(--navy);font-size:13px;}
+
+/* TOTAUX */
+.devis-totaux{padding:24px 32px;display:flex;justify-content:flex-end;border-top:2px solid var(--border);}
+.totaux-box{width:300px;}
+.total-line{display:flex;justify-content:space-between;padding:7px 0;font-size:13px;border-bottom:1px solid var(--border);}
+.total-line:last-child{border-bottom:none;}
+.total-line label{color:var(--muted);}
+.total-line.remise label{color:var(--green);}
+.total-line.remise span{color:var(--green);font-weight:700;}
+.total-line.grand-total{background:var(--navy);margin:8px -12px -12px;padding:14px 12px;border-radius:8px;border:none;}
+.total-line.grand-total label{color:rgba(255,255,255,0.8);font-weight:700;font-size:14px;}
+.total-line.grand-total span{color:var(--orange);font-size:22px;font-weight:900;}
+.tva-detail{font-size:11px;color:var(--muted);margin-top:2px;padding:0;border:none;}
+.tva-detail label,.tva-detail span{color:var(--muted);}
+.tva-exonere{font-size:11px;color:var(--orange);padding:4px 0;font-style:italic;}
+
+/* FOOTER DEVIS */
+.devis-footer{padding:20px 32px;background:#f8faff;border-top:1px solid var(--border);}
+.devis-footer p{font-size:11.5px;color:var(--muted);line-height:1.7;}
+.devis-footer strong{color:var(--text);}
+.footer-mentions{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.footer-mentions p{font-size:10.5px;color:var(--muted);line-height:1.6;}
+.footer-rib{margin-top:8px;background:white;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:11px;}
+.footer-rib strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px;}
+.footer-rib span{font-family:monospace;color:var(--navy);}
+.devis-signature{margin-top:24px;display:flex;justify-content:space-between;}
+.sig-box{border:1px solid var(--border);border-radius:8px;padding:12px 16px;width:45%;background:white;}
+.sig-box label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);display:block;margin-bottom:30px;}
+.sig-box p{font-size:11px;color:var(--muted);}
+.cognelia-badge{text-align:center;padding:12px;font-size:10px;color:var(--muted);}
+.cognelia-badge strong{color:var(--navy);}
+
+/* EMPTY STATE */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 32px;text-align:center;color:var(--muted);}
+.empty-icon{font-size:56px;margin-bottom:16px;opacity:.4;}
+.empty-state h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+.empty-state p{font-size:13px;line-height:1.7;max-width:320px;}
+
+/* MODAL BASE */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:white;border-radius:16px;width:560px;max-width:96vw;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.modal-head{padding:24px 28px 0;flex-shrink:0;}
+.modal-head h3{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:2px;}
+.modal-head p.sub{font-size:13px;color:var(--muted);margin-bottom:0;}
+.modal-body{flex:1;overflow-y:auto;padding:20px 28px;}
+.modal-foot{padding:16px 28px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;flex-shrink:0;}
+
+/* TABS */
+.tab-bar{display:flex;border-bottom:2px solid var(--border);margin:16px 0 0;gap:0;}
+.tab-btn{padding:10px 16px;font-size:13px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;display:flex;align-items:center;gap:6px;}
+.tab-btn.active{color:var(--navy);border-bottom-color:var(--orange);}
+.tab-btn:hover:not(.active){color:var(--navy);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* FORM */
+.form-group{margin-bottom:14px;}
+.form-group label{font-size:12px;font-weight:600;color:var(--text);display:block;margin-bottom:5px;}
+.form-group input,.form-group textarea,.form-group select{width:100%;border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;outline:none;color:var(--text);background:white;transition:border-color .15s;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--navy);}
+.form-group textarea{resize:vertical;min-height:60px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.form-note{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;}
+.form-sep{border:none;border-top:1px solid var(--border);margin:16px 0;}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg);border-radius:8px;margin-bottom:14px;}
+.toggle-row label{font-size:13px;font-weight:600;color:var(--text);}
+.toggle-row small{font-size:11px;color:var(--muted);display:block;margin-top:1px;}
+.toggle{position:relative;width:42px;height:24px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:#ccc;border-radius:12px;cursor:pointer;transition:.3s;}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s;}
+.toggle input:checked+.toggle-slider{background:var(--orange);}
+.toggle input:checked+.toggle-slider::before{transform:translateX(18px);}
+.badge-micro{display:inline-flex;align-items:center;gap:4px;background:rgba(232,96,10,0.1);color:var(--orange);font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;border:1px solid rgba(232,96,10,0.2);}
+
+/* BTN STYLES */
+.btn-outline{background:white;color:var(--navy);border:1.5px solid var(--border);font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;cursor:pointer;}
+.btn-primary{background:var(--navy);color:white;font-size:13px;font-weight:600;padding:8px 20px;border-radius:8px;cursor:pointer;border:none;}
+.btn-primary:hover{background:var(--navy-light);}
+
+/* API KEY MODAL */
+.apikey-modal{background:white;border-radius:16px;padding:32px;width:440px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;}
+.apikey-icon{font-size:40px;margin-bottom:12px;}
+.apikey-modal h3{font-size:20px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.apikey-modal p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
+.apikey-input-wrap{position:relative;margin-bottom:8px;}
+.apikey-input-wrap input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:12px 44px 12px 14px;font-size:14px;outline:none;color:var(--text);transition:border-color .15s;text-align:left;}
+.apikey-input-wrap input:focus{border-color:var(--navy);}
+.apikey-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--muted);}
+.apikey-note{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);background:var(--bg);padding:8px 12px;border-radius:8px;margin-bottom:20px;text-align:left;}
+.apikey-link{font-size:12px;color:var(--muted);margin-top:12px;}
+.apikey-link a{color:var(--navy);text-decoration:none;font-weight:600;}
+
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* Print */
+@media print{
+  header,.chat-panel,.devis-actions,.modal-overlay{display:none!important;}
+  .devis-panel{padding:0;background:white;}
+  .devis-doc{box-shadow:none;border-radius:0;}
+  body{overflow:visible;}
+  main{display:block;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">🔧</div>
+    <div class="logo-text">
+      <strong>Copilote Devis BTP</strong>
+      <span>Propulsé par Cognelia</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="chat-connected"><div class="status-dot"></div> IA connectée</div>
+    <button class="btn btn-ghost" onclick="openSettings()">⚙ Paramètres</button>
+    <button class="btn btn-ghost" onclick="window.print()">🖨 Imprimer</button>
+    <button class="btn btn-orange" onclick="exportPDF()">📄 Export PDF</button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main>
+  <!-- CHAT PANEL -->
+  <div class="chat-panel">
+    <div class="chat-header">
+      <div>
+        <h3>💬 Copilote Devis</h3>
+        <small>Assistant de chiffrage BTP</small>
+      </div>
+      <div class="chat-connected"><div class="status-dot"></div> Connecté</div>
+    </div>
+
+    <!-- VOICE -->
+    <div class="voice-area">
+      <button class="voice-btn idle" id="voiceBtn" onclick="toggleVoice()" title="Cliquez pour dicter">🎙</button>
+      <div class="voice-label" id="voiceLabel">Prêt</div>
+    </div>
+
+    <div class="messages" id="messages">
+      <div class="msg ai">
+        <div class="msg-bubble">
+          👋 Bonjour ! Je suis votre copilote pour créer des devis professionnels BTP.<br><br>
+          Décrivez-moi le chantier — je génère le devis en temps réel. Vous pouvez aussi me dicter : nom du client, remise, conditions de paiement, ou demander l'export PDF.
+        </div>
+        <span class="msg-time">Maintenant</span>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <div class="quick-prompts" id="quickPrompts">
+        <button class="quick-btn" onclick="quickSend('Remplacement chauffe-eau thermodynamique 200L')">🚿 Chauffe-eau</button>
+        <button class="quick-btn" onclick="quickSend('Réfection salle de bain complète')">🛁 Salle de bain</button>
+        <button class="quick-btn" onclick="quickSend('Pose de carrelage 30m²')">🏠 Carrelage</button>
+        <button class="quick-btn" onclick="quickSend('Isolation des combles perdus 80m²')">🌡 Isolation</button>
+        <button class="quick-btn" onclick="quickSend('Ajouter une remise de 10%')">🏷 Remise 10%</button>
+        <button class="quick-btn" onclick="quickSend('Conditions de paiement : 30% à la commande, 70% à réception')">💳 Paiement</button>
+        <button class="quick-btn" onclick="quickSend('Exporter le devis en PDF')">📄 Export PDF</button>
+      </div>
+      <div class="chat-input-wrap">
+        <textarea id="chatInput" placeholder="Ex: Devis pour rénovation salle de bain — douche à l'italienne, nouveau WC suspendu..." rows="1"
+          onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEVIS PANEL -->
+  <div class="devis-panel">
+    <div class="devis-actions">
+      <div class="auto-badge" id="autoBadge" style="visibility:hidden">
+        <div class="auto-dot"></div> Mise à jour automatique
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-navy" onclick="resetDevis()">🗑 Nouveau devis</button>
+        <button class="btn btn-orange" onclick="exportPDF()">📄 Export PDF</button>
+      </div>
+    </div>
+    <div class="devis-doc" id="devisDoc">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">📋</div>
+        <h3>Votre devis apparaît ici</h3>
+        <p>Décrivez le chantier dans le chat à gauche — le devis se génère automatiquement en temps réel.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ========== MODAL CODE D'ACCÈS ========== -->
+<div class="modal-overlay" id="apiKeyModal">
+  <div class="apikey-modal">
+    <div class="apikey-icon">🏗</div>
+    <h3>Copilote Devis BTP</h3>
+    <p>Entrez votre code d'accès personnel fourni par Cognelia pour activer votre assistant.</p>
+    <div class="apikey-input-wrap">
+      <input type="text" id="apiKeyInput" placeholder="Votre code d'accès..." autocomplete="off" style="text-transform:uppercase;letter-spacing:2px;" />
+    </div>
+    <div class="apikey-note">🔒 Accès sécurisé · Propulsé par Cognelia</div>
+    <button class="btn-primary" style="width:100%;padding:12px;font-size:14px;" onclick="saveApiKey()">Accéder à mon Copilote</button>
+    <div class="apikey-link">Code perdu ? <a href="mailto:contact@cognelia.fr">Contactez Cognelia</a></div>
+  </div>
+</div>
+
+<!-- ========== MODAL PARAMÈTRES ========== -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>⚙ Paramètres de l'entreprise</h3>
+      <p class="sub">Ces informations apparaissent sur tous vos devis</p>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('identite')" id="tab-identite">🏢 Identité</button>
+        <button class="tab-btn" onclick="switchTab('juridique')" id="tab-juridique">⚖ Juridique</button>
+        <button class="tab-btn" onclick="switchTab('assurance')" id="tab-assurance">🛡 Assurance</button>
+        <button class="tab-btn" onclick="switchTab('paiement')" id="tab-paiement">💳 Paiement</button>
+      </div>
+    </div>
+    <div class="modal-body">
+
+      <!-- ONGLET IDENTITÉ -->
+      <div class="tab-pane active" id="pane-identite">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nom de l'entreprise *</label>
+            <input type="text" id="sEntreprise" placeholder="Plomberie Martin SARL"/>
+          </div>
+          <div class="form-group">
+            <label>Forme juridique</label>
+            <select id="sFormeJuridique">
+              <option value="">— Choisir —</option>
+              <option value="Auto-entrepreneur">Auto-entrepreneur</option>
+              <option value="EI">EI - Entreprise Individuelle</option>
+              <option value="EIRL">EIRL</option>
+              <option value="SARL">SARL</option>
+              <option value="SAS">SAS / SASU</option>
+              <option value="SA">SA</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Adresse complète</label>
+          <input type="text" id="sAdresse" placeholder="12 rue de la Paix, 75001 Paris"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Téléphone</label>
+            <input type="text" id="sTel" placeholder="06 12 34 56 78"/>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="text" id="sEmail" placeholder="contact@entreprise.fr"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Site web</label>
+          <input type="text" id="sWebsite" placeholder="www.entreprise.fr"/>
+        </div>
+      </div>
+
+      <!-- ONGLET JURIDIQUE -->
+      <div class="tab-pane" id="pane-juridique">
+        <div class="toggle-row">
+          <div>
+            <label>Micro-entrepreneur <span class="badge-micro">TVA 0%</span></label>
+            <small>Active l'exonération TVA — art. 293B du CGI</small>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="sMicroEntrepreneur" onchange="onMicroChange()"/>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>SIRET</label>
+            <input type="text" id="sSiret" placeholder="123 456 789 00010"/>
+          </div>
+          <div class="form-group">
+            <label>N° TVA intracommunautaire</label>
+            <input type="text" id="sTvaIntracom" placeholder="FR12345678901" id="sTvaIntracom"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>RCS + Ville</label>
+            <input type="text" id="sRcs" placeholder="RCS Paris B 123 456 789"/>
+          </div>
+          <div class="form-group">
+            <label>Capital social</label>
+            <input type="text" id="sCapital" placeholder="10 000 €"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mentions légales complémentaires</label>
+          <textarea id="sNotes" placeholder="Artisan RGE · Qualibat n°XXX · Mention RGE Qualifelec"></textarea>
+          <p class="form-note">Ces mentions apparaissent en bas de chaque devis.</p>
+        </div>
+      </div>
+
+      <!-- ONGLET ASSURANCE -->
+      <div class="tab-pane" id="pane-assurance">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Les informations d'assurance décennale sont obligatoires sur tout devis BTP (art. L241-1 du Code des assurances).</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Compagnie d'assurance</label>
+            <input type="text" id="sAssuranceNom" placeholder="AXA, MAAF, Allianz..."/>
+          </div>
+          <div class="form-group">
+            <label>N° de police décennale</label>
+            <input type="text" id="sAssuranceNumero" placeholder="123456789"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Zone géographique couverte</label>
+          <input type="text" id="sAssuranceZone" placeholder="France métropolitaine"/>
+        </div>
+        <div class="form-group">
+          <label>Type de travaux couverts</label>
+          <input type="text" id="sAssuranceTravaux" placeholder="Plomberie, sanitaires, chauffage"/>
+        </div>
+        <div style="background:rgba(232,96,10,0.06);border:1px solid rgba(232,96,10,0.2);border-radius:8px;padding:12px 14px;margin-top:8px;">
+          <p style="font-size:11.5px;color:var(--orange);line-height:1.6;font-weight:600;">⚠ Rappel légal</p>
+          <p style="font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:4px;">La mention de l'assurance décennale est obligatoire pour tout artisan du bâtiment. En cas d'omission, vous vous exposez à une amende de 75 000 € et 6 mois d'emprisonnement.</p>
+        </div>
+      </div>
+
+      <!-- ONGLET PAIEMENT -->
+      <div class="tab-pane" id="pane-paiement">
+        <div class="form-group">
+          <label>Conditions de paiement par défaut</label>
+          <select id="sConditionsPaiement">
+            <option value="30% à la commande, 70% à réception des travaux">30% commande — 70% réception</option>
+            <option value="50% à la commande, 50% à réception des travaux">50% commande — 50% réception</option>
+            <option value="100% à réception des travaux">100% à réception</option>
+            <option value="À réception de facture, sous 30 jours">À 30 jours</option>
+            <option value="Personnalisé">Personnalisé...</option>
+          </select>
+        </div>
+        <div class="form-group" id="customPaiementGroup" style="display:none;">
+          <label>Conditions personnalisées</label>
+          <textarea id="sConditionsPaiementCustom" placeholder="Ex: 40% à la commande, 30% à mi-chantier, 30% à réception..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Validité du devis (jours)</label>
+            <input type="number" id="sValidite" placeholder="30" min="1" max="365"/>
+          </div>
+          <div class="form-group">
+            <label>Délai de paiement (jours)</label>
+            <input type="number" id="sDelaiPaiement" placeholder="30" min="0" max="90"/>
+          </div>
+        </div>
+        <hr class="form-sep">
+        <p style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:12px;">🏦 Coordonnées bancaires (optionnel — apparaît sur le devis)</p>
+        <div class="form-group">
+          <label>IBAN</label>
+          <input type="text" id="sIban" placeholder="FR76 1234 5678 9012 3456 7890 123"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>BIC / SWIFT</label>
+            <input type="text" id="sBic" placeholder="BNPAFRPP"/>
+          </div>
+          <div class="form-group">
+            <label>Banque</label>
+            <input type="text" id="sBanque" placeholder="BNP Paribas"/>
+          </div>
+        </div>
+        <hr class="form-sep">
+        <div class="form-group">
+          <p class="form-note" style="font-size:11px;color:var(--muted);">Propulsé par Cognelia · IA activée</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-foot">
+      <button class="btn-outline" onclick="closeSettings()">Annuler</button>
+      <button class="btn-primary" onclick="saveSettings()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =============================================
+// STATE
+// =============================================
+let devisState = null;
+let chatHistory = [];
+let isLoading = false;
+let devisCounter = parseInt(localStorage.getItem('devis_counter') || '1');
+
+// =============================================
+// SETTINGS HELPERS
+// =============================================
+function getArtisan() {
+  return {
+    entreprise: localStorage.getItem('s_entreprise') || 'Votre Entreprise BTP',
+    formeJuridique: localStorage.getItem('s_forme_juridique') || '',
+    adresse: localStorage.getItem('s_adresse') || '',
+    tel: localStorage.getItem('s_tel') || '',
+    email: localStorage.getItem('s_email') || '',
+    website: localStorage.getItem('s_website') || '',
+    siret: localStorage.getItem('s_siret') || '',
+    tvaIntracom: localStorage.getItem('s_tva_intracom') || '',
+    rcs: localStorage.getItem('s_rcs') || '',
+    capital: localStorage.getItem('s_capital') || '',
+    microEntrepreneur: localStorage.getItem('s_micro') === 'true',
+    notes: localStorage.getItem('s_notes') || '',
+    assuranceNom: localStorage.getItem('s_assurance_nom') || '',
+    assuranceNumero: localStorage.getItem('s_assurance_numero') || '',
+    assuranceZone: localStorage.getItem('s_assurance_zone') || '',
+    assuranceTravaux: localStorage.getItem('s_assurance_travaux') || '',
+    iban: localStorage.getItem('s_iban') || '',
+    bic: localStorage.getItem('s_bic') || '',
+    banque: localStorage.getItem('s_banque') || '',
+    conditionsPaiement: localStorage.getItem('s_conditions_paiement') || '30% à la commande, 70% à réception des travaux',
+    validite: parseInt(localStorage.getItem('s_validite') || '30'),
+    delaiPaiement: localStorage.getItem('s_delai_paiement') || '30'
+  };
+}
+
+function getApiKey() {
+  return localStorage.getItem('access_code') || '';
+}
+
+function saveApiKey() {
+  const code = document.getElementById('apiKeyInput').value.trim().toUpperCase();
+  if (!code) {
+    alert('Veuillez entrer votre code d\'accès.');
+    return;
+  }
+  localStorage.setItem('access_code', code);
+  document.getElementById('apiKeyModal').classList.remove('open');
+  addMessage('ai', '✅ Accès activé ! Je suis prêt. Décrivez-moi votre chantier.');
+}
+
+// =============================================
+// TABS SETTINGS
+// =============================================
+function switchTab(name) {
+  ['identite','juridique','assurance','paiement'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === name);
+    document.getElementById('pane-' + t).classList.toggle('active', t === name);
+  });
+}
+
+function onMicroChange() {
+  const isMicro = document.getElementById('sMicroEntrepreneur').checked;
+  document.getElementById('sTvaIntracom').disabled = isMicro;
+  if (isMicro) document.getElementById('sTvaIntracom').value = '';
+}
+
+// =============================================
+// OPEN / CLOSE SETTINGS
+// =============================================
+function openSettings() {
+  const a = getArtisan();
+  document.getElementById('sEntreprise').value = a.entreprise === 'Votre Entreprise BTP' ? '' : a.entreprise;
+  document.getElementById('sFormeJuridique').value = a.formeJuridique;
+  document.getElementById('sAdresse').value = a.adresse;
+  document.getElementById('sTel').value = a.tel;
+  document.getElementById('sEmail').value = a.email;
+  document.getElementById('sWebsite').value = a.website;
+  document.getElementById('sSiret').value = a.siret;
+  document.getElementById('sTvaIntracom').value = a.tvaIntracom;
+  document.getElementById('sRcs').value = a.rcs;
+  document.getElementById('sCapital').value = a.capital;
+  document.getElementById('sMicroEntrepreneur').checked = a.microEntrepreneur;
+  document.getElementById('sNotes').value = a.notes;
+  document.getElementById('sAssuranceNom').value = a.assuranceNom;
+  document.getElementById('sAssuranceNumero').value = a.assuranceNumero;
+  document.getElementById('sAssuranceZone').value = a.assuranceZone;
+  document.getElementById('sAssuranceTravaux').value = a.assuranceTravaux;
+  document.getElementById('sIban').value = a.iban;
+  document.getElementById('sBic').value = a.bic;
+  document.getElementById('sBanque').value = a.banque;
+  document.getElementById('sValidite').value = a.validite;
+  document.getElementById('sDelaiPaiement').value = a.delaiPaiement;
+  // Code d'accès géré côté serveur
+
+  // Conditions paiement
+  const sel = document.getElementById('sConditionsPaiement');
+  const cp = a.conditionsPaiement;
+  let found = false;
+  for (let opt of sel.options) { if (opt.value === cp) { sel.value = cp; found = true; break; } }
+  if (!found) {
+    sel.value = 'Personnalisé';
+    document.getElementById('sConditionsPaiementCustom').value = cp;
+    document.getElementById('customPaiementGroup').style.display = 'block';
+  }
+
+  document.getElementById('settingsModal').classList.add('open');
+  switchTab('identite');
+}
+
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('open');
+}
+
+function saveSettings() {
+  const cp = document.getElementById('sConditionsPaiement').value;
+  const finalCP = cp === 'Personnalisé'
+    ? document.getElementById('sConditionsPaiementCustom').value.trim()
+    : cp;
+
+  // Clé API gérée côté serveur — rien à sauvegarder ici
+
+  localStorage.setItem('s_entreprise', document.getElementById('sEntreprise').value.trim() || 'Votre Entreprise BTP');
+  localStorage.setItem('s_forme_juridique', document.getElementById('sFormeJuridique').value);
+  localStorage.setItem('s_adresse', document.getElementById('sAdresse').value.trim());
+  localStorage.setItem('s_tel', document.getElementById('sTel').value.trim());
+  localStorage.setItem('s_email', document.getElementById('sEmail').value.trim());
+  localStorage.setItem('s_website', document.getElementById('sWebsite').value.trim());
+  localStorage.setItem('s_siret', document.getElementById('sSiret').value.trim());
+  localStorage.setItem('s_tva_intracom', document.getElementById('sTvaIntracom').value.trim());
+  localStorage.setItem('s_rcs', document.getElementById('sRcs').value.trim());
+  localStorage.setItem('s_capital', document.getElementById('sCapital').value.trim());
+  localStorage.setItem('s_micro', document.getElementById('sMicroEntrepreneur').checked);
+  localStorage.setItem('s_notes', document.getElementById('sNotes').value.trim());
+  localStorage.setItem('s_assurance_nom', document.getElementById('sAssuranceNom').value.trim());
+  localStorage.setItem('s_assurance_numero', document.getElementById('sAssuranceNumero').value.trim());
+  localStorage.setItem('s_assurance_zone', document.getElementById('sAssuranceZone').value.trim());
+  localStorage.setItem('s_assurance_travaux', document.getElementById('sAssuranceTravaux').value.trim());
+  localStorage.setItem('s_iban', document.getElementById('sIban').value.trim());
+  localStorage.setItem('s_bic', document.getElementById('sBic').value.trim());
+  localStorage.setItem('s_banque', document.getElementById('sBanque').value.trim());
+  localStorage.setItem('s_conditions_paiement', finalCP);
+  localStorage.setItem('s_validite', document.getElementById('sValidite').value || '30');
+  localStorage.setItem('s_delai_paiement', document.getElementById('sDelaiPaiement').value || '30');
+
+  closeSettings();
+  if (devisState) renderDevis();
+  addMessage('ai', '✅ Paramètres enregistrés ! Ils seront utilisés sur tous vos devis.');
+}
+
+// Watch custom paiement
+document.getElementById('sConditionsPaiement').addEventListener('change', function() {
+  document.getElementById('customPaiementGroup').style.display = this.value === 'Personnalisé' ? 'block' : 'none';
+});
+
+// =============================================
+// SYSTEM PROMPT
+// =============================================
+function buildSystemPrompt() {
+  const a = getArtisan();
+  const microNote = a.microEntrepreneur
+    ? '\nIMPORTANT : Cet artisan est auto-entrepreneur / micro-entrepreneur. TVA NON APPLICABLE (art. 293B du CGI). Toutes les lignes doivent avoir tauxTVA: 0. Ajoute la mention "TVA non applicable, art. 293B du CGI" dans notesBas.'
+    : '';
+
+  return `Tu es Copilote Devis BTP, un assistant expert en chiffrage de travaux BTP en France. Tu aides les artisans à créer des devis professionnels par conversation naturelle.
+
+ARTISAN : ${a.entreprise}${a.formeJuridique ? ' — ' + a.formeJuridique : ''}
+SIRET : ${a.siret || 'non renseigné'}
+Contact : ${[a.tel, a.email].filter(Boolean).join(' | ') || 'non renseigné'}
+Adresse : ${a.adresse || 'non renseignée'}
+${a.microEntrepreneur ? '⚠ MICRO-ENTREPRENEUR — Exonéré de TVA (art. 293B CGI)' : ''}
+${microNote}
+
+RÔLE ET COMPORTEMENT :
+- Tu es concis et efficace. Pas de bavardage inutile.
+- Tu poses des questions précises UNIQUEMENT quand il manque une info indispensable (ex : "vertical ou horizontal ?" pour un chauffe-eau).
+- Tu confirmes brièvement chaque action effectuée.
+- Tu proposes toujours des prix de marché cohérents si l'artisan ne les précise pas.
+- Tu regroupes les postes logiquement en sections (max 5 sections).
+- Tu utilises TOUJOURS le JSON pour répondre.
+
+CONNAISSANCES TECHNIQUES — Prix marché français HT :
+Plomberie : MO plombier 55-80€/h · Chauffe-eau thermo 200L fourni 900-1400€ · Pose chauffe-eau 250-400€ · Douche italienne fournie 600-1200€ · Meuble vasque 300-600€ · WC suspendu 250-450€ · Baignoire 400-900€
+Électricité : MO électricien 55-75€/h · Tableau élec standard 800-1500€ · Point lumineux 80-150€ · Prise 60-100€
+Carrelage : Pose sol 35-55€/m² · Pose mural 40-65€/m² · Fourniture moy 25-50€/m² · Dépose 15-25€/m²
+Isolation : Combles perdus soufflé 25-40€/m² · Sous-rampants 40-60€/m² · ITE façade 80-150€/m²
+Peinture : MO peintre 25-40€/m² · Fourniture 5-12€/m²
+Menuiserie : Porte int fournie/posée 400-900€ · Fenêtre PVC fournie/posée 600-1400€ · Volet roulant 400-800€
+Maçonnerie : MO maçon 40-60€/h · Démolition cloison 20-35€/m²
+Divers : Déplacement/approvisionnement 80-150€ · Protection/nettoyage chantier 150-400€
+
+TAUX DE TVA BTP FRANCE :
+- 20% → neuf, local commercial, logement < 2 ans, équipements seuls
+- 10% → rénovation logement > 2 ans (le plus courant)
+- 5,5% → travaux amélioration énergétique (isolation, PAC, pompe à chaleur, chaudière biomasse, panneaux solaires)
+- 0% → micro-entrepreneur (art. 293B CGI)
+
+RÉPONSE — Format STRICT (JSON pur, pas de markdown) :
+{
+  "message": "ta réponse courte en français",
+  "devis": { ... } ou null si pas de modification
+}
+
+Structure du devis :
+{
+  "client": { "nom": "", "adresse": "", "ville": "", "telephone": "", "email": "" },
+  "titre": "Titre court du chantier",
+  "description": "",
+  "sections": [
+    {
+      "titre": "Nom section",
+      "lignes": [
+        { "designation": "Description précise et professionnelle", "quantite": 1, "unite": "forfait|m²|ml|h|u|ens", "prixUnitaireHT": 0, "tauxTVA": 10 }
+      ]
+    }
+  ],
+  "remise": { "actif": false, "type": "pourcentage", "valeur": 0, "raison": "" },
+  "conditionsPaiement": "${a.conditionsPaiement}",
+  "validite": ${a.validite},
+  "notesBas": ""
+}
+
+COMPORTEMENT CONTEXTUEL :
+- "client = Dupont" ou "le client s'appelle Jacky" → client.nom = exactement ce qui est dit, SANS ajouter de civilité (pas de "M.", "Mme" sauf si explicitement demandé)
+- "remise 10%" → remise.actif:true, type:pourcentage, valeur:10
+- "conditions : 30% commande" → conditionsPaiement
+- "supprimer", "enlever" → retirer la ligne/section du devis
+- Si artisan mentionne l'adresse/ville du chantier → client.ville
+- Toujours conserver les lignes existantes sauf si modification demandée`;
+}
+
+// =============================================
+// VOICE RECOGNITION
+// =============================================
+let recognition = null;
+let isListening = false;
+
+function initSpeech() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return null;
+  const r = new SR();
+  r.lang = 'fr-FR';
+  r.continuous = false;
+  r.interimResults = true;
+  return r;
+}
+
+function toggleVoice() {
+  if (isListening) { stopListening(); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    addMessage('ai', '⚠️ La reconnaissance vocale n\'est pas supportée sur ce navigateur. Utilisez Chrome ou Edge.');
+    return;
+  }
+  startListening();
+}
+
+function startListening() {
+  recognition = initSpeech();
+  if (!recognition) return;
+  isListening = true;
+  const btn = document.getElementById('voiceBtn');
+  const label = document.getElementById('voiceLabel');
+  btn.className = 'voice-btn listening';
+  btn.textContent = '🎙';
+  label.textContent = 'Je vous écoute...';
+  label.className = 'voice-label listening';
+  const input = document.getElementById('chatInput');
+  input.placeholder = 'Transcription en cours...';
+  input.value = '';
+
+  recognition.onresult = (e) => {
+    let interim = '', final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript;
+      else interim += e.results[i][0].transcript;
+    }
+    input.value = final || interim;
+    autoResize(input);
+  };
+
+  recognition.onend = () => {
+    isListening = false;
+    btn.className = 'voice-btn processing';
+    btn.textContent = '⏳';
+    label.textContent = 'Traitement...';
+    label.className = 'voice-label';
+    const text = input.value.trim();
+    if (text) {
+      setTimeout(() => {
+        btn.className = 'voice-btn idle';
+        btn.textContent = '🎙';
+        label.textContent = 'Prêt';
+        label.className = 'voice-label';
+        input.placeholder = 'Ex: Devis pour rénovation salle de bain...';
+        sendMessage();
+      }, 300);
+    } else {
+      btn.className = 'voice-btn idle';
+      btn.textContent = '🎙';
+      label.textContent = 'Prêt';
+      label.className = 'voice-label';
+    }
+  };
+
+  recognition.onerror = (e) => {
+    isListening = false;
+    btn.className = 'voice-btn idle';
+    btn.textContent = '🎙';
+    label.textContent = 'Prêt';
+    label.className = 'voice-label';
+    if (e.error !== 'no-speech') addMessage('ai', '⚠️ Erreur micro : ' + e.error);
+  };
+
+  recognition.start();
+}
+
+function stopListening() {
+  if (recognition) recognition.stop();
+}
+
+// =============================================
+// (demo mode supprimé)
+// =============================================
+function getDemoResponse(text) {
+  const t = text.toLowerCase();
+  const a = getArtisan();
+
+  // Client name
+  const clientMatch = text.match(/(?:client|s'appelle|pour|contact)\s+(?:M\.?\s*|Mme\.?\s*|Mr\.?\s*)?([A-ZÀ-Ü][a-zà-ü]+(?:\s+[A-ZÀ-Ü][a-zà-ü]+)?)/);
+
+  // Remise
+  if (/remise|réduction|discount/.test(t)) {
+    const pct = text.match(/(\d+)\s*%/);
+    const val = pct ? parseInt(pct[1]) : 10;
+    return {
+      message: `✅ Remise de ${val}% appliquée sur le devis.`,
+      devis: devisState ? { ...devisState, remise: { actif: true, type: 'pourcentage', valeur: val, raison: 'Geste commercial' } } : null
+    };
+  }
+
+  // Conditions paiement
+  if (/condition|paiement|acompte|règlement/.test(t)) {
+    const cp = /50/.test(t) ? '50% à la commande, 50% à réception' :
+               /100/.test(t) ? '100% à réception' :
+               '30% à la commande, 70% à réception des travaux';
+    return {
+      message: `✅ Conditions de paiement mises à jour : ${cp}`,
+      devis: devisState ? { ...devisState, conditionsPaiement: cp } : null
+    };
+  }
+
+  // Client info
+  if (clientMatch || /client|m\.\s|mme\s|contact/.test(t)) {
+    const nom = clientMatch ? clientMatch[1] : 'Dupont';
+    return {
+      message: `✅ Client enregistré : **${nom}**. Continuez à dicter les travaux.`,
+      devis: devisState ? { ...devisState, client: { ...devisState.client, nom } } : null
+    };
+  }
+
+  // PDF
+  if (/pdf|export|télécharg|imprimer/.test(t)) {
+    return { message: '📄 Export PDF en cours…', devis: null };
+  }
+
+  // SALLE DE BAIN
+  if (/salle.de.bain|sdb|douche|baignoire|vasque|wc|toilette|sanitaire/.test(t)) {
+    return {
+      message: "✅ Devis rénovation salle de bain généré ! J'ai inclus les postes standards. Dites-moi si vous souhaitez modifier des prix ou ajouter des postes.",
+      devis: {
+        client: { nom: 'À compléter', adresse: '', ville: '', telephone: '', email: '' },
+        titre: 'Rénovation Salle de Bain',
+        description: 'Rénovation complète salle de bain — démolition, plomberie, carrelage, équipements',
+        sections: [
+          {
+            titre: 'Démolition & Préparation',
+            lignes: [
+              { designation: 'Dépose ancienne baignoire / douche, WC et meuble vasque', quantite: 1, unite: 'forfait', prixUnitaireHT: 450, tauxTVA: 10 },
+              { designation: 'Dépose carrelage mural et sol (protection, évacuation déchets)', quantite: 1, unite: 'forfait', prixUnitaireHT: 380, tauxTVA: 10 }
+            ]
+          },
+          {
+            titre: 'Plomberie & Sanitaires',
+            lignes: [
+              { designation: 'Fourniture et pose douche à l\'italienne 90×90 cm — receveur extra-plat', quantite: 1, unite: 'u', prixUnitaireHT: 950, tauxTVA: 10 },
+              { designation: 'Fourniture et pose WC suspendu avec bâti-support — blanc', quantite: 1, unite: 'u', prixUnitaireHT: 680, tauxTVA: 10 },
+              { designation: 'Fourniture et pose meuble vasque 80 cm, mitigeur, miroir LED', quantite: 1, unite: 'u', prixUnitaireHT: 820, tauxTVA: 10 },
+              { designation: 'Main d\'œuvre plomberie — raccordements et mise en service', quantite: 8, unite: 'h', prixUnitaireHT: 65, tauxTVA: 10 }
+            ]
+          },
+          {
+            titre: 'Carrelage & Revêtements',
+            lignes: [
+              { designation: 'Fourniture et pose carrelage sol grès cérame 60×60 — ton gris clair', quantite: 6.5, unite: 'm²', prixUnitaireHT: 85, tauxTVA: 10 },
+              { designation: 'Fourniture et pose faïence murale 30×60 — couleur unie', quantite: 18, unite: 'm²', prixUnitaireHT: 95, tauxTVA: 10 },
+              { designation: 'Joints, colle et finitions périphériques', quantite: 1, unite: 'forfait', prixUnitaireHT: 220, tauxTVA: 10 }
+            ]
+          },
+          {
+            titre: 'Divers',
+            lignes: [
+              { designation: 'Protection chantier, nettoyage et évacuation gravats', quantite: 1, unite: 'forfait', prixUnitaireHT: 280, tauxTVA: 10 },
+              { designation: 'Déplacement et approvisionnement', quantite: 1, unite: 'forfait', prixUnitaireHT: 120, tauxTVA: 10 }
+            ]
+          }
+        ],
+        remise: { actif: false, type: 'pourcentage', valeur: 0, raison: '' },
+        conditionsPaiement: a.conditionsPaiement,
+        validite: a.validite,
+        notesBas: ''
+      }
+    };
+  }
+
+  // CHAUFFE-EAU
+  if (/chauffe.eau|ballon|thermodynamique|chaudière|chauffage/.test(t)) {
+    const isThermo = /thermodynamique|thermo/.test(t);
+    return {
+      message: `✅ Devis ${isThermo ? 'chauffe-eau thermodynamique' : 'chauffe-eau'} généré. Éligible TVA 5,5% (amélioration énergétique).`,
+      devis: {
+        client: { nom: 'À compléter', adresse: '', ville: '', telephone: '', email: '' },
+        titre: isThermo ? 'Installation Chauffe-eau Thermodynamique' : 'Remplacement Chauffe-eau',
+        description: '',
+        sections: [
+          {
+            titre: 'Fourniture',
+            lignes: [
+              { designation: isThermo ? 'Chauffe-eau thermodynamique 200L — classe énergétique A+' : 'Chauffe-eau électrique 200L', quantite: 1, unite: 'u', prixUnitaireHT: isThermo ? 1190 : 520, tauxTVA: isThermo ? 5.5 : 10 },
+              { designation: 'Kit raccordement, sécurités et robinetterie', quantite: 1, unite: 'forfait', prixUnitaireHT: 145, tauxTVA: isThermo ? 5.5 : 10 }
+            ]
+          },
+          {
+            titre: 'Main d\'œuvre',
+            lignes: [
+              { designation: 'Dépose ancien chauffe-eau, évacuation', quantite: 1, unite: 'forfait', prixUnitaireHT: 180, tauxTVA: isThermo ? 5.5 : 10 },
+              { designation: isThermo ? 'Pose chauffe-eau thermodynamique mural, raccordements plomberie et électricité, mise en service' : 'Pose et raccordement chauffe-eau', quantite: 1, unite: 'forfait', prixUnitaireHT: isThermo ? 420 : 280, tauxTVA: isThermo ? 5.5 : 10 },
+              { designation: 'Déplacement et approvisionnement', quantite: 1, unite: 'forfait', prixUnitaireHT: 90, tauxTVA: isThermo ? 5.5 : 10 }
+            ]
+          }
+        ],
+        remise: { actif: false, type: 'pourcentage', valeur: 0, raison: '' },
+        conditionsPaiement: a.conditionsPaiement,
+        validite: a.validite,
+        notesBas: isThermo ? 'Travaux éligibles au crédit d\'impôt énergie et aux aides MaPrimeRénov\'.' : ''
+      }
+    };
+  }
+
+  // CARRELAGE
+  if (/carrelage|faïence|revêtement|sol|parquet/.test(t)) {
+    const m2Match = text.match(/(\d+)\s*m/);
+    const surface = m2Match ? parseInt(m2Match[1]) : 25;
+    return {
+      message: `✅ Devis pose de carrelage ${surface} m² généré.`,
+      devis: {
+        client: { nom: 'À compléter', adresse: '', ville: '', telephone: '', email: '' },
+        titre: `Pose Carrelage ${surface} m²`,
+        description: '',
+        sections: [
+          {
+            titre: 'Carrelage',
+            lignes: [
+              { designation: `Fourniture carrelage grès cérame 60×60 — coloris au choix (${surface} m² + 10% chutes)`, quantite: Math.ceil(surface * 1.1), unite: 'm²', prixUnitaireHT: 38, tauxTVA: 10 },
+              { designation: `Dépose ancien revêtement de sol`, quantite: surface, unite: 'm²', prixUnitaireHT: 18, tauxTVA: 10 },
+              { designation: `Pose carrelage sol sur chape existante — joints compris`, quantite: surface, unite: 'm²', prixUnitaireHT: 45, tauxTVA: 10 },
+              { designation: 'Ragréage et préparation support', quantite: surface, unite: 'm²', prixUnitaireHT: 12, tauxTVA: 10 },
+              { designation: 'Plinthes carrelage assorties, pose', quantite: Math.ceil(surface * 0.5), unite: 'ml', prixUnitaireHT: 22, tauxTVA: 10 },
+              { designation: 'Nettoyage et évacuation déchets', quantite: 1, unite: 'forfait', prixUnitaireHT: 150, tauxTVA: 10 }
+            ]
+          }
+        ],
+        remise: { actif: false, type: 'pourcentage', valeur: 0, raison: '' },
+        conditionsPaiement: a.conditionsPaiement,
+        validite: a.validite,
+        notesBas: ''
+      }
+    };
+  }
+
+  // ISOLATION
+  if (/isolation|comble|rampant|ite|façade|isoler/.test(t)) {
+    const m2Match = text.match(/(\d+)\s*m/);
+    const surface = m2Match ? parseInt(m2Match[1]) : 80;
+    const isComble = /comble|souffle|perdus/.test(t);
+    return {
+      message: `✅ Devis isolation ${isComble ? 'combles' : 'thermique'} ${surface} m² — TVA 5,5% (travaux d'amélioration énergétique).`,
+      devis: {
+        client: { nom: 'À compléter', adresse: '', ville: '', telephone: '', email: '' },
+        titre: `Isolation ${isComble ? 'Combles Perdus' : 'Thermique'} — ${surface} m²`,
+        description: 'Travaux d\'amélioration de la performance énergétique — éligibles MaPrimeRénov\'',
+        sections: [
+          {
+            titre: 'Isolation',
+            lignes: [
+              { designation: isComble ? `Isolation combles perdus par soufflage — laine de verre 300 mm — R≥7` : 'Isolation thermique par l\'extérieur (ITE) — laine de roche 120 mm', quantite: surface, unite: 'm²', prixUnitaireHT: isComble ? 32 : 115, tauxTVA: 5.5 },
+              { designation: isComble ? 'Trappe d\'accès isolée et pose d\'écran de protection' : 'Enduit de finition et finitions périphériques', quantite: 1, unite: 'forfait', prixUnitaireHT: isComble ? 280 : Math.round(surface * 18), tauxTVA: 5.5 },
+              { designation: 'Déplacement, installation chantier, nettoyage', quantite: 1, unite: 'forfait', prixUnitaireHT: 220, tauxTVA: 5.5 }
+            ]
+          }
+        ],
+        remise: { actif: false, type: 'pourcentage', valeur: 0, raison: '' },
+        conditionsPaiement: a.conditionsPaiement,
+        validite: a.validite,
+        notesBas: 'TVA 5,5% applicable — travaux d\'amélioration de la performance énergétique. Éligible MaPrimeRénov\' et CEE.'
+      }
+    };
+  }
+
+  // ÉLECTRICITÉ
+  if (/électric|tableau|disjoncteur|prise|luminaire|éclairage/.test(t)) {
+    return {
+      message: '✅ Devis électricité généré avec les postes standards.',
+      devis: {
+        client: { nom: 'À compléter', adresse: '', ville: '', telephone: '', email: '' },
+        titre: 'Travaux Électricité',
+        description: '',
+        sections: [
+          {
+            titre: 'Électricité',
+            lignes: [
+              { designation: 'Remplacement tableau électrique — 13 circuits, disjoncteur différentiel', quantite: 1, unite: 'u', prixUnitaireHT: 1200, tauxTVA: 10 },
+              { designation: 'Points lumineux — fourniture et pose (spots encastrés LED)', quantite: 8, unite: 'u', prixUnitaireHT: 110, tauxTVA: 10 },
+              { designation: 'Prises de courant 2P+T — fourniture et pose', quantite: 12, unite: 'u', prixUnitaireHT: 75, tauxTVA: 10 },
+              { designation: 'Main d\'œuvre électricien — câblage, saignées, raccordements', quantite: 14, unite: 'h', prixUnitaireHT: 68, tauxTVA: 10 },
+              { designation: 'Déplacement et approvisionnement', quantite: 1, unite: 'forfait', prixUnitaireHT: 110, tauxTVA: 10 }
+            ]
+          }
+        ],
+        remise: { actif: false, type: 'pourcentage', valeur: 0, raison: '' },
+        conditionsPaiement: a.conditionsPaiement,
+        validite: a.validite,
+        notesBas: ''
+      }
+    };
+  }
+
+  // PEINTURE
+  if (/peinture|peindre|enduit|mur|plafond/.test(t)) {
+    const m2Match = text.match(/(\d+)\s*m/);
+    const surface = m2Match ? parseInt(m2Match[1]) : 60;
+    return {
+      message: `✅ Devis peinture ${surface} m² généré.`,
+      devis: {
+        client: { nom: 'À compléter', adresse: '', ville: '', telephone: '', email: '' },
+        titre: `Travaux de Peinture — ${surface} m²`,
+        description: '',
+        sections: [
+          {
+            titre: 'Peinture',
+            lignes: [
+              { designation: 'Préparation support — rebouchage, ponçage, impression', quantite: surface, unite: 'm²', prixUnitaireHT: 8, tauxTVA: 10 },
+              { designation: 'Fourniture et application peinture acrylique 2 couches — coloris au choix', quantite: surface, unite: 'm²', prixUnitaireHT: 35, tauxTVA: 10 },
+              { designation: 'Peinture plafond blanc mat 2 couches', quantite: Math.round(surface * 0.4), unite: 'm²', prixUnitaireHT: 30, tauxTVA: 10 },
+              { designation: 'Protection mobilier et sols, nettoyage chantier', quantite: 1, unite: 'forfait', prixUnitaireHT: 180, tauxTVA: 10 }
+            ]
+          }
+        ],
+        remise: { actif: false, type: 'pourcentage', valeur: 0, raison: '' },
+        conditionsPaiement: a.conditionsPaiement,
+        validite: a.validite,
+        notesBas: ''
+      }
+    };
+  }
+
+  // RÉPONSE GÉNÉRIQUE
+  return {
+    message: '🎭 [Mode démo] Je comprends votre demande. En mode IA réelle, je générerai un devis détaillé adapté. Essayez : "Réfection salle de bain", "Chauffe-eau thermodynamique", "Carrelage 30m²", "Isolation combles 80m²".',
+    devis: null
+  };
+}
+
+// =============================================
+// CHAT & API
+// =============================================
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || isLoading) return;
+
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    document.getElementById('apiKeyModal').classList.add('open');
+    return;
+  }
+
+  addMessage('user', text);
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('quickPrompts').style.display = 'none';
+  chatHistory.push({ role: 'user', content: text });
+  showTyping();
+  isLoading = true;
+
+  try {
+    let userContent = text;
+    if (devisState) {
+      userContent = text + '\n\n[ÉTAT ACTUEL DU DEVIS: ' + JSON.stringify(devisState) + ']';
+    }
+    // Limite l'historique aux 10 derniers messages (5 échanges) pour économiser les tokens
+    const recentHistory = chatHistory.slice(0, -1).slice(-10);
+    const msgs = recentHistory.map(m => ({ role: m.role, content: m.content }));
+    msgs.push({ role: 'user', content: userContent });
+
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-code': apiKey
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 2000,
+        system: buildSystemPrompt(),
+        messages: msgs
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      if (res.status === 403) {
+        localStorage.removeItem('access_code');
+        document.getElementById('apiKeyModal').classList.add('open');
+        throw new Error(err.error?.message || 'Code d\'accès invalide.');
+      }
+      throw new Error(err.error?.message || 'Erreur serveur ' + res.status);
+    }
+
+    const data = await res.json();
+    const raw = data.content[0].text;
+    hideTyping();
+
+    let parsed;
+    try {
+      const m = raw.match(/\{[\s\S]*\}/);
+      parsed = JSON.parse(m ? m[0] : raw);
+    } catch {
+      parsed = { message: raw, devis: null };
+    }
+
+    chatHistory.push({ role: 'assistant', content: raw });
+    addMessage('ai', parsed.message || 'Devis mis à jour.');
+
+    if (parsed.devis) {
+      devisState = parsed.devis;
+      renderDevis();
+      document.getElementById('autoBadge').style.visibility = 'visible';
+      devisCounter++;
+      localStorage.setItem('devis_counter', devisCounter);
+    }
+
+    if (parsed.message && /pdf|télécharg|exporter/i.test(parsed.message)) {
+      if (devisState) setTimeout(exportPDF, 800);
+    }
+
+  } catch (err) {
+    hideTyping();
+    addMessage('ai', '❌ ' + err.message);
+    console.error(err);
+  } finally {
+    isLoading = false;
+  }
+}
+
+function quickSend(text) {
+  document.getElementById('chatInput').value = text;
+  sendMessage();
+}
+
+function addMessage(role, text) {
+  const messages = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const now = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  div.innerHTML = `<div class="msg-bubble">${text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div><span class="msg-time">${now}</span>`;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+let typingEl = null;
+function showTyping() {
+  const messages = document.getElementById('messages');
+  typingEl = document.createElement('div');
+  typingEl.className = 'msg ai';
+  typingEl.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+  messages.appendChild(typingEl);
+  messages.scrollTop = messages.scrollHeight;
+}
+function hideTyping() { if (typingEl) { typingEl.remove(); typingEl = null; } }
+function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
+function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
+
+// =============================================
+// DEVIS RENDER
+// =============================================
+function formatMoney(v) {
+  return Number(v || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+}
+
+function calcTotaux(d) {
+  let totalHT = 0, tvaMap = {};
+  (d.sections || []).forEach(s => {
+    (s.lignes || []).forEach(l => {
+      const ht = (l.quantite || 1) * (l.prixUnitaireHT || 0);
+      totalHT += ht;
+      const taux = l.tauxTVA || 10;
+      tvaMap[taux] = (tvaMap[taux] || 0) + ht * taux / 100;
+    });
+  });
+  let remiseMontant = 0;
+  if (d.remise?.actif && d.remise.valeur > 0) {
+    remiseMontant = d.remise.type === 'pourcentage' ? totalHT * d.remise.valeur / 100 : d.remise.valeur;
+  }
+  const totalHTApresRemise = totalHT - remiseMontant;
+  let totalTVA = 0, tvaAdj = {};
+  Object.entries(tvaMap).forEach(([taux, montant]) => {
+    const r = totalHT > 0 ? totalHTApresRemise / totalHT : 1;
+    const adj = montant * r;
+    tvaAdj[taux] = adj;
+    totalTVA += adj;
+  });
+  return { totalHT, remiseMontant, totalHTApresRemise, tvaMap: tvaAdj, totalTVA, totalTTC: totalHTApresRemise + totalTVA };
+}
+
+function renderDevis() {
+  const doc = document.getElementById('devisDoc');
+  const d = devisState;
+  const a = getArtisan();
+  const t = calcTotaux(d);
+
+  const num = 'DEV-' + new Date().getFullYear() + '-' + String(devisCounter).padStart(3, '0');
+  const today = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const validDate = new Date(Date.now() + ((d.validite || a.validite || 30) * 86400000))
+    .toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  // Sections
+  let sectionsHTML = '', lineNum = 1;
+  (d.sections || []).forEach(sec => {
+    let lignesHTML = '', secTotal = 0;
+    (sec.lignes || []).forEach(l => {
+      const ht = (l.quantite || 1) * (l.prixUnitaireHT || 0);
+      secTotal += ht;
+      const tvaLabel = l.tauxTVA === 0 ? '<span style="color:var(--orange);font-size:10px">Exo.</span>' : (l.tauxTVA || 10) + '%';
+      lignesHTML += `<tr>
+        <td class="center" style="color:var(--muted);font-size:11px">${lineNum++}</td>
+        <td>${l.designation || ''}</td>
+        <td class="center">${Number(l.quantite).toLocaleString('fr-FR')}</td>
+        <td class="center" style="color:var(--muted)">${l.unite || 'u'}</td>
+        <td class="right">${formatMoney(l.prixUnitaireHT)}</td>
+        <td class="center">${tvaLabel}</td>
+        <td class="right" style="color:var(--navy)">${formatMoney(ht)}</td>
+      </tr>`;
+    });
+    sectionsHTML += `<div class="devis-section">
+      <div class="section-title">${sec.titre || 'Travaux'}</div>
+      <table class="lignes">
+        <thead><tr>
+          <th class="num">#</th><th class="desig">Désignation</th>
+          <th class="num-col">Qté</th><th class="unit-col">Unité</th>
+          <th class="price-col">P.U. HT</th><th class="tva-col">TVA</th>
+          <th class="total-col">Total HT</th>
+        </tr></thead>
+        <tbody>${lignesHTML}</tbody>
+      </table>
+      <div class="section-subtotal">Sous-total ${sec.titre || ''} : <span>${formatMoney(secTotal)}</span></div>
+    </div>`;
+  });
+
+  // TVA lines
+  let tvaLines = '';
+  if (a.microEntrepreneur || Object.keys(t.tvaMap).every(k => k === '0')) {
+    tvaLines = `<div class="tva-exonere">TVA non applicable — art. 293B du CGI</div>`;
+  } else {
+    Object.entries(t.tvaMap).forEach(([taux, montant]) => {
+      if (Number(taux) > 0) tvaLines += `<div class="total-line tva-detail"><label>TVA ${taux}%</label><span>${formatMoney(montant)}</span></div>`;
+    });
+  }
+
+  // Remise
+  let remiseHTML = '';
+  if (d.remise?.actif && t.remiseMontant > 0) {
+    const lib = d.remise.type === 'pourcentage' ? `Remise ${d.remise.valeur}%${d.remise.raison ? ' — ' + d.remise.raison : ''}` : `Remise${d.remise.raison ? ' — ' + d.remise.raison : ''}`;
+    remiseHTML = `<div class="total-line remise"><label>${lib}</label><span>-${formatMoney(t.remiseMontant)}</span></div>`;
+  }
+
+  // Footer mentions
+  const assuranceMention = a.assuranceNom
+    ? `Assurance décennale : ${a.assuranceNom}${a.assuranceNumero ? ' — Police n°' + a.assuranceNumero : ''}${a.assuranceZone ? ' — Zone : ' + a.assuranceZone : ''}`
+    : '';
+  const ribBlock = a.iban ? `<div class="footer-rib">
+    <strong>Coordonnées bancaires</strong>
+    IBAN : <span>${a.iban}</span>${a.bic ? ' · BIC : <span>' + a.bic + '</span>' : ''}${a.banque ? ' · ' + a.banque : ''}
+  </div>` : '';
+  const microMention = (a.microEntrepreneur || d.notesBas?.includes('293B'))
+    ? '<br><em>TVA non applicable, art. 293B du CGI.</em>' : '';
+  const tvaMentionInfo = a.microEntrepreneur ? '<p>Exonéré TVA</p>' : '<p>Applicable</p>';
+
+  doc.innerHTML = `
+    <div class="devis-top">
+      <div class="devis-company">
+        <h2>${a.entreprise}</h2>
+        <p>
+          ${a.formeJuridique ? a.formeJuridique + '<br>' : ''}
+          ${a.adresse ? a.adresse + '<br>' : ''}
+          ${a.tel ? '📞 ' + a.tel + ' · ' : ''}${a.email ? '✉ ' + a.email : ''}<br>
+          ${a.siret ? 'SIRET : ' + a.siret : ''}
+          ${a.tvaIntracom ? ' · TVA : ' + a.tvaIntracom : ''}
+        </p>
+      </div>
+      <div class="devis-title-block">
+        <div class="devis-label">Devis N°</div>
+        <div class="devis-num">${num}</div>
+        <div class="devis-date">Le ${today}</div>
+      </div>
+    </div>
+
+    <div class="devis-meta">
+      <div class="devis-client">
+        <h4>Client</h4>
+        <p>
+          <strong>${d.client?.nom || 'À compléter'}</strong><br>
+          ${d.client?.adresse ? d.client.adresse + '<br>' : ''}
+          ${d.client?.ville || ''}
+          ${d.client?.telephone ? '<br>📞 ' + d.client.telephone : ''}
+          ${d.client?.email ? '<br>✉ ' + d.client.email : ''}
+        </p>
+      </div>
+      <div class="devis-info-grid">
+        <div class="info-item"><label>Date</label><p>${today}</p></div>
+        <div class="info-item"><label>Valide jusqu'au</label><p>${validDate}</p></div>
+        <div class="info-item"><label>Paiement</label><p style="font-size:11px;">${d.conditionsPaiement || a.conditionsPaiement}</p></div>
+        <div class="info-item"><label>TVA</label>${tvaMentionInfo}</div>
+      </div>
+    </div>
+
+    <div class="devis-chantier">
+      <h3>📍 ${d.titre || 'Travaux'}</h3>
+      ${d.description ? '<p>' + d.description + '</p>' : ''}
+    </div>
+
+    <div class="devis-sections">${sectionsHTML}</div>
+
+    <div class="devis-totaux">
+      <div class="totaux-box">
+        <div class="total-line"><label>Total HT</label><span>${formatMoney(t.totalHT)}</span></div>
+        ${remiseHTML}
+        ${t.remiseMontant > 0 ? '<div class="total-line"><label>Total HT après remise</label><span>' + formatMoney(t.totalHTApresRemise) + '</span></div>' : ''}
+        ${tvaLines}
+        ${!a.microEntrepreneur ? '<div class="total-line"><label>Total TVA</label><span>' + formatMoney(t.totalTVA) + '</span></div>' : ''}
+        <div class="total-line grand-total"><label>Total TTC</label><span>${formatMoney(t.totalTTC)}</span></div>
+      </div>
+    </div>
+
+    <div class="devis-footer">
+      <p>
+        <strong>Conditions :</strong> Ce devis est valable ${d.validite || a.validite || 30} jours. Paiement : ${d.conditionsPaiement || a.conditionsPaiement}.
+        ${d.notesBas || ''}${microMention}
+      </p>
+      ${ribBlock}
+      ${assuranceMention || a.notes ? `<div class="footer-mentions">
+        <p>${assuranceMention ? assuranceMention + '<br>' : ''}${a.notes || ''}</p>
+      </div>` : ''}
+      <div class="devis-signature">
+        <div class="sig-box"><label>Bon pour accord — Client</label><p>Date et signature :</p></div>
+        <div class="sig-box"><label>Signature de l'entreprise</label><p>${a.entreprise}</p></div>
+      </div>
+    </div>
+
+    <div class="cognelia-badge">
+      Devis créé avec <strong>Copilote Devis BTP</strong> · Propulsé par <strong>Cognelia</strong>
+    </div>`;
+}
+
+// =============================================
+// PDF EXPORT
+// =============================================
+function exportPDF() {
+  if (!devisState) { alert('Créez d\'abord un devis via le chat.'); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ format: 'a4', unit: 'mm' });
+  const a = getArtisan();
+  const d = devisState;
+  const t = calcTotaux(d);
+  const num = 'DEV-' + new Date().getFullYear() + '-' + String(devisCounter).padStart(3, '0');
+  const today = new Date().toLocaleDateString('fr-FR');
+  const validDate = new Date(Date.now() + ((d.validite || a.validite || 30) * 86400000)).toLocaleDateString('fr-FR');
+  const W = 210;
+  const NAVY = [30, 58, 95], ORANGE = [232, 96, 10], MUTED = [107, 122, 144], LIGHT = [248, 250, 255];
+
+  // Header
+  doc.setFillColor(...NAVY);
+  doc.rect(0, 0, W, 44, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(17);
+  doc.setFont('helvetica', 'bold');
+  doc.text(a.entreprise, 14, 13);
+
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(180, 200, 225);
+  let yh = 19;
+  if (a.formeJuridique) { doc.text(a.formeJuridique, 14, yh); yh += 4.5; }
+  if (a.adresse) { doc.text(a.adresse, 14, yh); yh += 4.5; }
+  const contact = [a.tel, a.email].filter(Boolean).join(' · ');
+  if (contact) { doc.text(contact, 14, yh); yh += 4.5; }
+  if (a.siret) doc.text('SIRET : ' + a.siret + (a.tvaIntracom ? '  ·  TVA : ' + a.tvaIntracom : ''), 14, yh);
+
+  doc.setTextColor(150, 180, 210);
+  doc.setFontSize(8);
+  doc.text('DEVIS N°', W - 14, 9, { align: 'right' });
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(17);
+  doc.setFont('helvetica', 'bold');
+  doc.text(num, W - 14, 18, { align: 'right' });
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(180, 200, 225);
+  doc.text('Le ' + today, W - 14, 24, { align: 'right' });
+  doc.text('Valide jusqu\'au ' + validDate, W - 14, 29, { align: 'right' });
+
+  // Client block
+  let y = 52;
+  doc.setTextColor(...MUTED);
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica', 'bold');
+  doc.text('CLIENT', 14, y); y += 4;
+  doc.setTextColor(...NAVY);
+  doc.setFontSize(12);
+  doc.text(d.client?.nom || 'À compléter', 14, y); y += 5;
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(60, 80, 100);
+  if (d.client?.adresse) { doc.text(d.client.adresse, 14, y); y += 4; }
+  if (d.client?.ville) { doc.text(d.client.ville, 14, y); y += 4; }
+  if (d.client?.telephone) { doc.text('Tél : ' + d.client.telephone, 14, y); y += 4; }
+
+  // Paiement info
+  doc.setTextColor(...MUTED);
+  doc.setFontSize(7.5);
+  doc.text('Paiement : ' + (d.conditionsPaiement || a.conditionsPaiement), W - 14, 52, { align: 'right' });
+  if (a.microEntrepreneur) {
+    doc.setTextColor(...ORANGE);
+    doc.text('TVA non applicable — art. 293B CGI', W - 14, 57, { align: 'right' });
+  }
+
+  // Chantier title
+  y = Math.max(y + 4, 74);
+  doc.setFillColor(...LIGHT);
+  doc.rect(0, y - 4, W, 11, 'F');
+  doc.setTextColor(...NAVY);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.text((d.titre || 'Travaux'), 14, y + 3);
+  y += 13;
+
+  // Sections via autoTable
+  let lineNum = 1;
+  (d.sections || []).forEach(sec => {
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...NAVY);
+    if (y > 260) { doc.addPage(); y = 16; }
+    doc.text(sec.titre?.toUpperCase() || 'TRAVAUX', 14, y);
+    doc.setDrawColor(...NAVY);
+    doc.line(14, y + 1.5, W - 14, y + 1.5);
+    y += 4;
+
+    const rows = (sec.lignes || []).map(l => {
+      const ht = (l.quantite || 1) * (l.prixUnitaireHT || 0);
+      const tvaLabel = l.tauxTVA === 0 ? 'Exo.' : (l.tauxTVA || 10) + '%';
+      return [
+        String(lineNum++),
+        l.designation || '',
+        Number(l.quantite).toLocaleString('fr-FR') + ' ' + (l.unite || 'u'),
+        formatMoney(l.prixUnitaireHT),
+        tvaLabel,
+        formatMoney(ht)
+      ];
+    });
+
+    doc.autoTable({
+      startY: y,
+      head: [['#', 'Désignation', 'Qté/Unité', 'P.U. HT', 'TVA', 'Total HT']],
+      body: rows,
+      theme: 'grid',
+      headStyles: { fillColor: [240, 244, 252], textColor: MUTED, fontSize: 7.5, fontStyle: 'bold', cellPadding: 3 },
+      bodyStyles: { fontSize: 8.5, cellPadding: 3.5, textColor: [30, 40, 60] },
+      columnStyles: {
+        0: { cellWidth: 9, halign: 'center', textColor: MUTED },
+        1: { cellWidth: 85 },
+        2: { cellWidth: 26, halign: 'center' },
+        3: { cellWidth: 28, halign: 'right' },
+        4: { cellWidth: 18, halign: 'center' },
+        5: { cellWidth: 28, halign: 'right', fontStyle: 'bold' }
+      },
+      alternateRowStyles: { fillColor: [252, 253, 255] },
+      margin: { left: 14, right: 14 },
+    });
+
+    y = doc.lastAutoTable.finalY + 2;
+    // Subtotal section
+    const secTotal = (sec.lignes || []).reduce((s, l) => s + (l.quantite || 1) * (l.prixUnitaireHT || 0), 0);
+    doc.setFontSize(8);
+    doc.setTextColor(...MUTED);
+    doc.text('Sous-total ' + (sec.titre || '') + ' : ' + formatMoney(secTotal), W - 14, y + 3, { align: 'right' });
+    y += 8;
+  });
+
+  // Totaux
+  if (y > 220) { doc.addPage(); y = 20; }
+  y += 4;
+  doc.setDrawColor(220, 228, 240);
+  doc.line(14, y, W - 14, y);
+  y += 6;
+
+  const totauxLines = [
+    ['Total HT', formatMoney(t.totalHT)],
+  ];
+  if (t.remiseMontant > 0) {
+    const remLib = d.remise.type === 'pourcentage' ? `Remise ${d.remise.valeur}%` : 'Remise';
+    totauxLines.push([remLib, '-' + formatMoney(t.remiseMontant)]);
+    totauxLines.push(['Total HT après remise', formatMoney(t.totalHTApresRemise)]);
+  }
+  if (a.microEntrepreneur) {
+    totauxLines.push(['TVA (non applicable)', '0,00 €']);
+  } else {
+    Object.entries(t.tvaMap).forEach(([taux, montant]) => {
+      if (Number(taux) > 0) totauxLines.push(['TVA ' + taux + '%', formatMoney(montant)]);
+    });
+    if (t.totalTVA > 0) totauxLines.push(['Total TVA', formatMoney(t.totalTVA)]);
+  }
+
+  totauxLines.forEach(([label, val]) => {
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...MUTED);
+    doc.text(label, W - 70, y);
+    doc.setTextColor(30, 58, 95);
+    doc.text(val, W - 14, y, { align: 'right' });
+    doc.setDrawColor(234, 238, 245);
+    doc.line(W - 75, y + 1.5, W - 14, y + 1.5);
+    y += 7;
+  });
+
+  // Grand total
+  y += 2;
+  doc.setFillColor(...NAVY);
+  doc.roundedRect(W - 80, y - 6, 66, 14, 3, 3, 'F');
+  doc.setFontSize(8.5);
+  doc.setTextColor(200, 215, 235);
+  doc.setFont('helvetica', 'bold');
+  doc.text('TOTAL TTC', W - 75, y + 1);
+  doc.setFontSize(13);
+  doc.setTextColor(...ORANGE);
+  doc.text(formatMoney(t.totalTTC), W - 15, y + 1, { align: 'right' });
+  y += 18;
+
+  // Footer
+  if (y > 255) { doc.addPage(); y = 20; }
+  doc.setDrawColor(220, 228, 240);
+  doc.line(14, y, W - 14, y);
+  y += 5;
+
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...MUTED);
+
+  const conditionsText = `Devis valable ${d.validite || a.validite || 30} jours. Paiement : ${d.conditionsPaiement || a.conditionsPaiement}.`;
+  doc.text(conditionsText, 14, y, { maxWidth: W - 28 });
+  y += 5;
+
+  if (a.microEntrepreneur) {
+    doc.setTextColor(...ORANGE);
+    doc.text('TVA non applicable, art. 293B du CGI.', 14, y); y += 5;
+    doc.setTextColor(...MUTED);
+  }
+  if (d.notesBas) { doc.text(d.notesBas, 14, y, { maxWidth: W - 28 }); y += 5; }
+  if (a.assuranceNom) {
+    doc.text(`Assurance décennale : ${a.assuranceNom}${a.assuranceNumero ? ' — Police n°' + a.assuranceNumero : ''}${a.assuranceZone ? ' — Zone : ' + a.assuranceZone : ''}.`, 14, y, { maxWidth: W - 28 });
+    y += 5;
+  }
+  if (a.notes) { doc.text(a.notes, 14, y, { maxWidth: W - 28 }); y += 5; }
+
+  // RIB
+  if (a.iban) {
+    y += 2;
+    doc.setFillColor(...LIGHT);
+    doc.roundedRect(14, y - 3, W - 28, 12, 2, 2, 'F');
+    doc.setTextColor(...NAVY);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.text('Coordonnées bancaires', 18, y + 1);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...MUTED);
+    const ribText = `IBAN : ${a.iban}${a.bic ? '  ·  BIC : ' + a.bic : ''}${a.banque ? '  ·  ' + a.banque : ''}`;
+    doc.text(ribText, 18, y + 5.5);
+    y += 16;
+  }
+
+  // Signatures
+  if (y > 255) { doc.addPage(); y = 20; }
+  y += 4;
+  doc.setDrawColor(...MUTED);
+  doc.roundedRect(14, y, 82, 28, 2, 2, 'S');
+  doc.roundedRect(112, y, 84, 28, 2, 2, 'S');
+  doc.setFontSize(7.5);
+  doc.setTextColor(...MUTED);
+  doc.text('Bon pour accord — Le client :', 18, y + 5);
+  doc.text('Signature de l\'entreprise :', 116, y + 5);
+  doc.text('Date et signature :', 18, y + 10);
+  doc.setTextColor(...NAVY);
+  doc.text(a.entreprise, 116, y + 10);
+
+  // Badge
+  doc.setFontSize(7);
+  doc.setTextColor(180, 190, 205);
+  doc.text('Devis créé avec Copilote Devis BTP · Propulsé par Cognelia · cognelia.fr', W / 2, 291, { align: 'center' });
+
+  const fileName = 'devis-' + (d.client?.nom || 'client').replace(/[^a-z0-9]/gi, '-').toLowerCase() + '-' + num + '.pdf';
+  doc.save(fileName);
+  addMessage('ai', '✅ PDF exporté : **' + fileName + '**');
+}
+
+// =============================================
+// RESET
+// =============================================
+function resetDevis() {
+  if (devisState && !confirm('Créer un nouveau devis ? Le devis actuel sera effacé.')) return;
+  devisState = null;
+  chatHistory = [];
+  document.getElementById('devisDoc').innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><h3>Votre devis apparaît ici</h3><p>Décrivez le chantier dans le chat — le devis se génère automatiquement.</p></div>`;
+  document.getElementById('autoBadge').style.visibility = 'hidden';
+  document.getElementById('quickPrompts').style.display = 'flex';
+  document.getElementById('messages').innerHTML = `<div class="msg ai"><div class="msg-bubble">✅ Nouveau devis prêt. Décrivez-moi votre chantier !</div><span class="msg-time">${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</span></div>`;
+}
+
+// =============================================
+// INIT
+// =============================================
+window.addEventListener('load', () => {
+  if (!getApiKey()) {
+    setTimeout(() => document.getElementById('apiKeyModal').classList.add('open'), 500);
+  }
+});
+</script>
+</body>
+</html>
