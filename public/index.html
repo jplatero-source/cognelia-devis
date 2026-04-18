@@ -1166,11 +1166,14 @@ async function sendMessage() {
     addMessage('ai', parsed.message || 'Devis mis à jour.');
 
     if (parsed.devis) {
+      if (!devisState) {
+        // Premier devis de la session → incrémenter le compteur
+        devisCounter++;
+        localStorage.setItem('devis_counter', devisCounter);
+      }
       devisState = parsed.devis;
       renderDevis();
       document.getElementById('autoBadge').style.visibility = 'visible';
-      devisCounter++;
-      localStorage.setItem('devis_counter', devisCounter);
     }
 
     if (parsed.message && /pdf|télécharg|exporter/i.test(parsed.message)) {
@@ -1220,6 +1223,18 @@ function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(e
 function formatMoney(v) {
   return Number(v || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
 }
+function formatMoneyPDF(v) {
+  // Évite le U+202F (espace insécable) du locale fr-FR qui corrompt jsPDF
+  const n = Number(v || 0).toFixed(2);
+  const [int, dec] = n.split('.');
+  return int.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ',' + dec + ' €';
+}
+function sanitizeTVA(taux) {
+  // Convertit "N/A", null, undefined ou tout non-numérique en 0
+  if (typeof taux === 'number' && !isNaN(taux)) return taux;
+  const parsed = parseFloat(taux);
+  return isNaN(parsed) ? 0 : parsed;
+}
 
 function calcTotaux(d) {
   let totalHT = 0, tvaMap = {};
@@ -1227,7 +1242,7 @@ function calcTotaux(d) {
     (s.lignes || []).forEach(l => {
       const ht = (l.quantite || 1) * (l.prixUnitaireHT || 0);
       totalHT += ht;
-      const taux = l.tauxTVA || 10;
+      const taux = sanitizeTVA(l.tauxTVA);
       tvaMap[taux] = (tvaMap[taux] || 0) + ht * taux / 100;
     });
   });
@@ -1264,7 +1279,8 @@ function renderDevis() {
     (sec.lignes || []).forEach(l => {
       const ht = (l.quantite || 1) * (l.prixUnitaireHT || 0);
       secTotal += ht;
-      const tvaLabel = l.tauxTVA === 0 ? '<span style="color:var(--orange);font-size:10px">Exo.</span>' : (l.tauxTVA || 10) + '%';
+      const tvaTaux = sanitizeTVA(l.tauxTVA);
+      const tvaLabel = tvaTaux === 0 ? '<span style="color:var(--orange);font-size:10px">Exo.</span>' : tvaTaux + '%';
       lignesHTML += `<tr>
         <td class="center" style="color:var(--muted);font-size:11px">${lineNum++}</td>
         <td>${l.designation || ''}</td>
@@ -1317,7 +1333,7 @@ function renderDevis() {
   </div>` : '';
   const microMention = (a.microEntrepreneur || d.notesBas?.includes('293B'))
     ? '<br><em>TVA non applicable, art. 293B du CGI.</em>' : '';
-  const tvaMentionInfo = a.microEntrepreneur ? '<p>Exonéré TVA</p>' : '<p>Applicable</p>';
+  const tvaMentionInfo = (a.microEntrepreneur || t.totalTVA === 0) ? '<p>Exonéré TVA</p>' : '<p>Applicable</p>';
 
   doc.innerHTML = `
     <div class="devis-top">
@@ -1492,14 +1508,15 @@ function exportPDF() {
 
     const rows = (sec.lignes || []).map(l => {
       const ht = (l.quantite || 1) * (l.prixUnitaireHT || 0);
-      const tvaLabel = l.tauxTVA === 0 ? 'Exo.' : (l.tauxTVA || 10) + '%';
+      const tvaTauxPDF = sanitizeTVA(l.tauxTVA);
+      const tvaLabel = tvaTauxPDF === 0 ? 'Exo.' : tvaTauxPDF + '%';
       return [
         String(lineNum++),
         l.designation || '',
         Number(l.quantite).toLocaleString('fr-FR') + ' ' + (l.unite || 'u'),
-        formatMoney(l.prixUnitaireHT),
+        formatMoneyPDF(l.prixUnitaireHT),
         tvaLabel,
-        formatMoney(ht)
+        formatMoneyPDF(ht)
       ];
     });
 
@@ -1511,12 +1528,12 @@ function exportPDF() {
       headStyles: { fillColor: [240, 244, 252], textColor: MUTED, fontSize: 7.5, fontStyle: 'bold', cellPadding: 3 },
       bodyStyles: { fontSize: 8.5, cellPadding: 3.5, textColor: [30, 40, 60] },
       columnStyles: {
-        0: { cellWidth: 9, halign: 'center', textColor: MUTED },
-        1: { cellWidth: 85 },
+        0: { cellWidth: 8, halign: 'center', textColor: MUTED },
+        1: { cellWidth: 80 },
         2: { cellWidth: 26, halign: 'center' },
         3: { cellWidth: 28, halign: 'right' },
-        4: { cellWidth: 18, halign: 'center' },
-        5: { cellWidth: 28, halign: 'right', fontStyle: 'bold' }
+        4: { cellWidth: 16, halign: 'center' },
+        5: { cellWidth: 24, halign: 'right', fontStyle: 'bold' }
       },
       alternateRowStyles: { fillColor: [252, 253, 255] },
       margin: { left: 14, right: 14 },
@@ -1527,7 +1544,7 @@ function exportPDF() {
     const secTotal = (sec.lignes || []).reduce((s, l) => s + (l.quantite || 1) * (l.prixUnitaireHT || 0), 0);
     doc.setFontSize(8);
     doc.setTextColor(...MUTED);
-    doc.text('Sous-total ' + (sec.titre || '') + ' : ' + formatMoney(secTotal), W - 14, y + 3, { align: 'right' });
+    doc.text('Sous-total ' + (sec.titre || '') + ' : ' + formatMoneyPDF(secTotal), W - 14, y + 3, { align: 'right' });
     y += 8;
   });
 
@@ -1539,20 +1556,20 @@ function exportPDF() {
   y += 6;
 
   const totauxLines = [
-    ['Total HT', formatMoney(t.totalHT)],
+    ['Total HT', formatMoneyPDF(t.totalHT)],
   ];
   if (t.remiseMontant > 0) {
     const remLib = d.remise.type === 'pourcentage' ? `Remise ${d.remise.valeur}%` : 'Remise';
-    totauxLines.push([remLib, '-' + formatMoney(t.remiseMontant)]);
-    totauxLines.push(['Total HT après remise', formatMoney(t.totalHTApresRemise)]);
+    totauxLines.push([remLib, '-' + formatMoneyPDF(t.remiseMontant)]);
+    totauxLines.push(['Total HT après remise', formatMoneyPDF(t.totalHTApresRemise)]);
   }
-  if (a.microEntrepreneur) {
+  if (a.microEntrepreneur || t.totalTVA === 0) {
     totauxLines.push(['TVA (non applicable)', '0,00 €']);
   } else {
     Object.entries(t.tvaMap).forEach(([taux, montant]) => {
-      if (Number(taux) > 0) totauxLines.push(['TVA ' + taux + '%', formatMoney(montant)]);
+      if (Number(taux) > 0) totauxLines.push(['TVA ' + taux + '%', formatMoneyPDF(montant)]);
     });
-    if (t.totalTVA > 0) totauxLines.push(['Total TVA', formatMoney(t.totalTVA)]);
+    if (t.totalTVA > 0) totauxLines.push(['Total TVA', formatMoneyPDF(t.totalTVA)]);
   }
 
   totauxLines.forEach(([label, val]) => {
@@ -1577,7 +1594,7 @@ function exportPDF() {
   doc.text('TOTAL TTC', W - 75, y + 1);
   doc.setFontSize(13);
   doc.setTextColor(...ORANGE);
-  doc.text(formatMoney(t.totalTTC), W - 15, y + 1, { align: 'right' });
+  doc.text(formatMoneyPDF(t.totalTTC), W - 15, y + 1, { align: 'right' });
   y += 18;
 
   // Footer
