@@ -159,6 +159,12 @@ table.lignes tr:nth-child(even){background:#fafbff;}
 .cognelia-badge{text-align:center;padding:12px;font-size:10px;color:var(--muted);}
 .cognelia-badge strong{color:var(--navy);}
 
+/* ÉDITION DIRECTE */
+.editable-cell{cursor:text;border-radius:3px;transition:background .15s;}
+.editable-cell:hover{background:rgba(255,165,0,.08);outline:1px dashed rgba(255,165,0,.4);}
+.editable-cell:focus{background:rgba(255,165,0,.12);outline:2px solid rgba(255,165,0,.6);outline-offset:1px;}
+[contenteditable]:empty:before{content:attr(placeholder);color:var(--muted);font-style:italic;}
+
 /* EMPTY STATE */
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 32px;text-align:center;color:var(--muted);}
 .empty-icon{font-size:56px;margin-bottom:16px;opacity:.4;}
@@ -694,11 +700,12 @@ Adresse : ${a.adresse || 'non renseignée'}
 ${a.microEntrepreneur ? '⚠ MICRO-ENTREPRENEUR — Exonéré de TVA (art. 293B CGI)' : ''}
 ${microNote}
 
-RÔLE ET COMPORTEMENT :
-- Tu es concis et efficace. Pas de bavardage inutile.
-- Tu poses des questions précises UNIQUEMENT quand il manque une info indispensable (ex : "vertical ou horizontal ?" pour un chauffe-eau).
-- Tu confirmes brièvement chaque action effectuée.
-- Tu proposes toujours des prix de marché cohérents si l'artisan ne les précise pas.
+RÔLE ET COMPORTEMENT — MODE ACTION PURE :
+- Tu ne poses JAMAIS de question. Jamais. Même si une info manque.
+- À chaque message, tu génères ou mets à jour le devis IMMÉDIATEMENT avec ce que tu sais.
+- Si une info manque (surface, prix, marque, type), utilise une estimation BTP standard raisonnable et indique-la dans la désignation (ex: "Fourniture et pose WC suspendu (estimation standard)").
+- L'artisan corrigera lui-même ce qui ne lui convient pas — ce n'est pas ton rôle de vérifier.
+- Ta réponse "message" est UNE LIGNE maximum. Ex: "✅ Devis salle de bain généré." ou "✅ TVA 10% appliquée."
 - Tu regroupes les postes logiquement en sections (max 5 sections).
 - Tu utilises TOUJOURS le JSON pour répondre.
 
@@ -740,8 +747,10 @@ Structure du devis :
   "remise": { "actif": false, "type": "pourcentage", "valeur": 0, "raison": "" },
   "conditionsPaiement": "${a.conditionsPaiement}",
   "validite": ${a.validite},
+  "dateEmission": "",
   "notesBas": ""
 }
+dateEmission : optionnel. Format "JJ/MM/AAAA" ou "JJ mois AAAA". Laisser vide pour utiliser la date du jour.
 
 COMPORTEMENT CONTEXTUEL :
 - "client = Dupont" ou "le client s'appelle Jacky" → client.nom = exactement ce qui est dit, SANS ajouter de civilité (pas de "M.", "Mme" sauf si explicitement demandé)
@@ -832,7 +841,11 @@ function startListening() {
     btn.textContent = '🎙';
     label.textContent = 'Prêt';
     label.className = 'voice-label';
-    if (e.error !== 'no-speech') addMessage('ai', '⚠️ Erreur micro : ' + e.error);
+    input.placeholder = 'Ex: Devis pour rénovation salle de bain...';
+    // Erreurs silencieuses : no-speech et network (perte de connexion momentanée)
+    if (e.error !== 'no-speech' && e.error !== 'network') {
+      addMessage('ai', '⚠️ Micro indisponible : ' + e.error);
+    }
   };
 
   recognition.start();
@@ -1218,6 +1231,35 @@ function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault
 function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
 
 // =============================================
+// ÉDITION DIRECTE DES CELLULES
+// =============================================
+function editLigne(el, secIdx, ligIdx, field) {
+  if (!devisState?.sections?.[secIdx]?.lignes?.[ligIdx]) return;
+  const raw = el.innerText.trim();
+  let val;
+  if (field === 'quantite' || field === 'prixUnitaireHT') {
+    val = parseFloat(raw.replace(/\s/g, '').replace(',', '.').replace(/[^\d.]/g, '')) || 0;
+  } else if (field === 'tauxTVA') {
+    val = parseFloat(raw.replace(/[^\d.]/g, '')) || 0;
+  } else {
+    val = raw;
+  }
+  devisState.sections[secIdx].lignes[ligIdx][field] = val;
+  renderDevis();
+}
+
+function editSectionTitre(el, secIdx) {
+  if (!devisState?.sections?.[secIdx]) return;
+  devisState.sections[secIdx].titre = el.innerText.trim();
+}
+
+function editClientField(el, field) {
+  if (!devisState) return;
+  if (!devisState.client) devisState.client = {};
+  devisState.client[field] = el.innerText.trim();
+}
+
+// =============================================
 // DEVIS RENDER
 // =============================================
 function formatMoney(v) {
@@ -1268,31 +1310,36 @@ function renderDevis() {
   const t = calcTotaux(d);
 
   const num = 'DEV-' + new Date().getFullYear() + '-' + String(devisCounter).padStart(3, '0');
-  const today = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
-  const validDate = new Date(Date.now() + ((d.validite || a.validite || 30) * 86400000))
+  let baseDate = new Date();
+  if (d.dateEmission) {
+    const tryParse = new Date(d.dateEmission.split('/').reverse().join('-'));
+    if (!isNaN(tryParse)) baseDate = tryParse;
+  }
+  const today = baseDate.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const validDate = new Date(baseDate.getTime() + ((d.validite || a.validite || 30) * 86400000))
     .toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
 
   // Sections
   let sectionsHTML = '', lineNum = 1;
-  (d.sections || []).forEach(sec => {
+  (d.sections || []).forEach((sec, secIdx) => {
     let lignesHTML = '', secTotal = 0;
-    (sec.lignes || []).forEach(l => {
+    (sec.lignes || []).forEach((l, ligIdx) => {
       const ht = (l.quantite || 1) * (l.prixUnitaireHT || 0);
       secTotal += ht;
       const tvaTaux = sanitizeTVA(l.tauxTVA);
       const tvaLabel = tvaTaux === 0 ? '<span style="color:var(--orange);font-size:10px">Exo.</span>' : tvaTaux + '%';
       lignesHTML += `<tr>
         <td class="center" style="color:var(--muted);font-size:11px">${lineNum++}</td>
-        <td>${l.designation || ''}</td>
-        <td class="center">${Number(l.quantite).toLocaleString('fr-FR')}</td>
-        <td class="center" style="color:var(--muted)">${l.unite || 'u'}</td>
-        <td class="right">${formatMoney(l.prixUnitaireHT)}</td>
-        <td class="center">${tvaLabel}</td>
+        <td class="editable-cell" contenteditable="true" onblur="editLigne(this,${secIdx},${ligIdx},'designation')">${l.designation || ''}</td>
+        <td class="center editable-cell" contenteditable="true" onblur="editLigne(this,${secIdx},${ligIdx},'quantite')">${Number(l.quantite).toLocaleString('fr-FR')}</td>
+        <td class="center editable-cell" contenteditable="true" onblur="editLigne(this,${secIdx},${ligIdx},'unite')" style="color:var(--muted)">${l.unite || 'u'}</td>
+        <td class="right editable-cell" contenteditable="true" onblur="editLigne(this,${secIdx},${ligIdx},'prixUnitaireHT')">${formatMoney(l.prixUnitaireHT)}</td>
+        <td class="center editable-cell" contenteditable="true" onblur="editLigne(this,${secIdx},${ligIdx},'tauxTVA')">${tvaLabel}</td>
         <td class="right" style="color:var(--navy)">${formatMoney(ht)}</td>
       </tr>`;
     });
     sectionsHTML += `<div class="devis-section">
-      <div class="section-title">${sec.titre || 'Travaux'}</div>
+      <div class="section-title editable-cell" contenteditable="true" onblur="editSectionTitre(this,${secIdx})">${sec.titre || 'Travaux'}</div>
       <table class="lignes">
         <thead><tr>
           <th class="num">#</th><th class="desig">Désignation</th>
@@ -1331,8 +1378,10 @@ function renderDevis() {
     <strong>Coordonnées bancaires</strong>
     IBAN : <span>${a.iban}</span>${a.bic ? ' · BIC : <span>' + a.bic + '</span>' : ''}${a.banque ? ' · ' + a.banque : ''}
   </div>` : '';
-  const microMention = (a.microEntrepreneur || d.notesBas?.includes('293B'))
-    ? '<br><em>TVA non applicable, art. 293B du CGI.</em>' : '';
+  const isMicroTVA = a.microEntrepreneur || d.notesBas?.includes('293B');
+  const microMention = isMicroTVA ? '<br><em>TVA non applicable, art. 293B du CGI.</em>' : '';
+  // Supprimer la mention 293B des notesBas pour éviter le doublon
+  const notesBasClean = (d.notesBas || '').replace(/TVA\s+non\s+applicable[^.]*\.?\s*/gi, '').trim();
   const tvaMentionInfo = (a.microEntrepreneur || t.totalTVA === 0) ? '<p>Exonéré TVA</p>' : '<p>Applicable</p>';
 
   doc.innerHTML = `
@@ -1358,9 +1407,9 @@ function renderDevis() {
       <div class="devis-client">
         <h4>Client</h4>
         <p>
-          <strong>${d.client?.nom || 'À compléter'}</strong><br>
-          ${d.client?.adresse ? d.client.adresse + '<br>' : ''}
-          ${d.client?.ville || ''}
+          <strong class="editable-cell" contenteditable="true" onblur="editClientField(this,'nom')">${d.client?.nom || 'À compléter'}</strong><br>
+          <span class="editable-cell" contenteditable="true" onblur="editClientField(this,'adresse')" style="display:block;min-height:1em">${d.client?.adresse || ''}</span>
+          <span class="editable-cell" contenteditable="true" onblur="editClientField(this,'ville')">${d.client?.ville || ''}</span>
           ${d.client?.telephone ? '<br>📞 ' + d.client.telephone : ''}
           ${d.client?.email ? '<br>✉ ' + d.client.email : ''}
         </p>
@@ -1394,7 +1443,7 @@ function renderDevis() {
     <div class="devis-footer">
       <p>
         <strong>Conditions :</strong> Ce devis est valable ${d.validite || a.validite || 30} jours. Paiement : ${d.conditionsPaiement || a.conditionsPaiement}.
-        ${d.notesBas || ''}${microMention}
+        ${notesBasClean}${microMention}
       </p>
       ${ribBlock}
       ${assuranceMention || a.notes ? `<div class="footer-mentions">
