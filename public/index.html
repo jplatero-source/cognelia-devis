@@ -165,6 +165,16 @@ table.lignes tr:nth-child(even){background:#fafbff;}
 .editable-cell:focus{background:rgba(255,165,0,.12);outline:2px solid rgba(255,165,0,.6);outline-offset:1px;}
 [contenteditable]:empty:before{content:attr(placeholder);color:var(--muted);font-style:italic;}
 
+/* BOUTONS AJOUT/SUPPRESSION */
+.btn-add-ligne{display:block;width:100%;margin-top:6px;padding:5px;border:1px dashed var(--border);border-radius:6px;background:none;color:var(--muted);font-size:12px;cursor:pointer;transition:all .15s;}
+.btn-add-ligne:hover{border-color:var(--orange);color:var(--orange);background:rgba(255,165,0,.05);}
+.btn-add-section{display:block;width:100%;margin:8px 0;padding:7px;border:1px dashed var(--border);border-radius:6px;background:none;color:var(--muted);font-size:12px;cursor:pointer;transition:all .15s;}
+.btn-add-section:hover{border-color:var(--navy);color:var(--navy);background:rgba(30,58,95,.05);}
+.del-cell{width:24px;padding:0 2px !important;}
+.btn-del-ligne{background:none;border:none;cursor:pointer;opacity:0;font-size:13px;padding:2px 4px;border-radius:4px;transition:all .15s;}
+tr:hover .btn-del-ligne{opacity:.5;}
+tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
+
 /* EMPTY STATE */
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 32px;text-align:center;color:var(--muted);}
 .empty-icon{font-size:56px;margin-bottom:16px;opacity:.4;}
@@ -1251,12 +1261,54 @@ function editLigne(el, secIdx, ligIdx, field) {
 function editSectionTitre(el, secIdx) {
   if (!devisState?.sections?.[secIdx]) return;
   devisState.sections[secIdx].titre = el.innerText.trim();
+
 }
 
 function editClientField(el, field) {
   if (!devisState) return;
   if (!devisState.client) devisState.client = {};
   devisState.client[field] = el.innerText.trim();
+}
+
+function addLigne(secIdx) {
+  if (!devisState?.sections?.[secIdx]) return;
+  devisState.sections[secIdx].lignes.push({
+    designation: 'Nouvelle prestation', quantite: 1, unite: 'forfait', prixUnitaireHT: 0, tauxTVA: 10
+  });
+  renderDevis();
+}
+
+function deleteLigne(secIdx, ligIdx) {
+  if (!devisState?.sections?.[secIdx]?.lignes) return;
+  devisState.sections[secIdx].lignes.splice(ligIdx, 1);
+  renderDevis();
+}
+
+function addSection() {
+  if (!devisState) return;
+  if (!devisState.sections) devisState.sections = [];
+  devisState.sections.push({ titre: 'Nouvelle section', lignes: [
+    { designation: 'Prestation', quantite: 1, unite: 'forfait', prixUnitaireHT: 0, tauxTVA: 10 }
+  ]});
+  renderDevis();
+}
+
+function saveDevisLocal() {
+  if (devisState) localStorage.setItem('devis_autosave', JSON.stringify({ state: devisState, counter: devisCounter, ts: Date.now() }));
+}
+
+function restoreDevisLocal() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('devis_autosave'));
+    if (saved?.state && saved?.ts && (Date.now() - saved.ts < 86400000)) {
+      devisState = saved.state;
+      if (saved.counter) devisCounter = saved.counter;
+      renderDevis();
+      document.getElementById('autoBadge').style.visibility = 'visible';
+      document.getElementById('quickPrompts').style.display = 'none';
+      addMessage('ai', '♻️ Devis précédent restauré automatiquement.');
+    }
+  } catch {}
 }
 
 // =============================================
@@ -1458,6 +1510,31 @@ function renderDevis() {
     <div class="cognelia-badge">
       Devis créé avec <strong>Copilote Devis BTP</strong> · Propulsé par <strong>Cognelia</strong>
     </div>`;
+
+  // Boutons d'ajout section/ligne
+  (d.sections || []).forEach((sec, secIdx) => {
+    const secEl = doc.querySelectorAll('.devis-section')[secIdx];
+    if (!secEl) return;
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-add-ligne';
+    addBtn.innerHTML = '+ Ajouter une ligne';
+    addBtn.onclick = () => addLigne(secIdx);
+    secEl.appendChild(addBtn);
+    // Boutons supprimer sur chaque ligne
+    secEl.querySelectorAll('tbody tr').forEach((tr, ligIdx) => {
+      const td = document.createElement('td');
+      td.className = 'del-cell';
+      td.innerHTML = '<button class="btn-del-ligne" onclick="deleteLigne(' + secIdx + ',' + ligIdx + ')" title="Supprimer">🗑</button>';
+      tr.appendChild(td);
+    });
+  });
+  const addSecBtn = document.createElement('button');
+  addSecBtn.className = 'btn-add-section';
+  addSecBtn.innerHTML = '+ Ajouter une section';
+  addSecBtn.onclick = addSection;
+  doc.querySelector('.devis-totaux')?.insertAdjacentElement('beforebegin', addSecBtn);
+
+  saveDevisLocal();
 }
 
 // =============================================
@@ -1723,7 +1800,14 @@ function resetDevis() {
   document.getElementById('autoBadge').style.visibility = 'hidden';
   document.getElementById('quickPrompts').style.display = 'flex';
   document.getElementById('messages').innerHTML = `<div class="msg ai"><div class="msg-bubble">✅ Nouveau devis prêt. Décrivez-moi votre chantier !</div><span class="msg-time">${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</span></div>`;
+  localStorage.removeItem('devis_autosave');
+  devisCounter++;
+  localStorage.setItem('devis_counter', devisCounter);
 }
+
+// =============================================
+// RESET — efface aussi l'autosave
+// =============================================
 
 // =============================================
 // INIT
@@ -1731,6 +1815,9 @@ function resetDevis() {
 window.addEventListener('load', () => {
   if (!getApiKey()) {
     setTimeout(() => document.getElementById('apiKeyModal').classList.add('open'), 500);
+  } else {
+    // Restaurer le devis de la session précédente si < 24h
+    setTimeout(restoreDevisLocal, 600);
   }
 });
 </script>
