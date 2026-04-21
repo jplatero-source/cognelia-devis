@@ -244,6 +244,49 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
+/* DOCS PANEL */
+.docs-panel{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;background:#f4f6fa;}
+.docs-panel.open{display:flex;}
+.docs-header{background:var(--navy);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.docs-header h2{color:white;font-size:16px;font-weight:700;}
+.docs-toolbar{padding:16px 24px;background:white;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+.docs-toolbar input{flex:1;min-width:200px;border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:13px;outline:none;}
+.docs-toolbar input:focus{border-color:var(--navy);}
+.docs-list{flex:1;overflow-y:auto;padding:16px 24px;}
+.doc-item{background:white;border-radius:12px;border:1.5px solid var(--border);padding:16px 20px;margin-bottom:10px;display:flex;align-items:center;gap:16px;transition:box-shadow .15s;}
+.doc-item:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08);border-color:#c8d4e8;}
+.doc-type-icon{font-size:28px;flex-shrink:0;}
+.doc-info{flex:1;min-width:0;}
+.doc-num{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px;font-family:monospace;}
+.doc-client{font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.doc-titre{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.doc-right{text-align:right;flex-shrink:0;}
+.doc-total{font-size:15px;font-weight:800;color:var(--navy);}
+.doc-date{font-size:11px;color:var(--muted);margin-top:2px;}
+.doc-actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
+.doc-actions button{font-size:11px;padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:white;cursor:pointer;font-weight:600;transition:all .15s;white-space:nowrap;}
+.doc-actions button:hover{border-color:var(--navy);color:var(--navy);background:#f0f4ff;}
+.doc-actions .btn-doc-convert{background:var(--orange);color:white;border-color:var(--orange);}
+.doc-actions .btn-doc-convert:hover{background:var(--orange-light);border-color:var(--orange-light);}
+.doc-actions .btn-doc-load{background:var(--navy);color:white;border-color:var(--navy);}
+.doc-actions .btn-doc-load:hover{background:var(--navy-light);}
+.status-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;margin-top:4px;}
+.s-brouillon{background:#f1f5f9;color:#64748b;}
+.s-envoye{background:#dbeafe;color:#1d4ed8;}
+.s-accepte{background:#dcfce7;color:#16a34a;}
+.s-refuse{background:#fee2e2;color:#dc2626;}
+.s-facture{background:#fef3c7;color:#d97706;}
+.s-facture-doc{background:#fde68a;color:#92400e;}
+.docs-empty{text-align:center;padding:80px 20px;color:var(--muted);}
+.docs-empty-icon{font-size:56px;margin-bottom:16px;opacity:.4;}
+.save-bar{position:fixed;bottom:24px;right:24px;z-index:50;display:none;}
+.btn-save-float{background:#22c55e;color:white;border:none;border-radius:10px;padding:11px 20px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(34,197,94,0.35);transition:all .15s;display:flex;align-items:center;gap:8px;}
+.btn-save-float:hover{background:#16a34a;transform:translateY(-1px);}
+.notif{position:fixed;bottom:80px;right:24px;z-index:300;background:var(--navy);color:white;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;}
+.notif.show{opacity:1;transform:translateY(0);}
+.docs-count{background:var(--orange);color:white;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:4px;}
+.status-select{font-size:11px;border:1px solid var(--border);border-radius:6px;padding:3px 6px;cursor:pointer;background:white;color:var(--text);font-weight:600;}
+
 /* Print */
 @media print{
   header,.chat-panel,.devis-actions,.modal-overlay{display:none!important;}
@@ -267,6 +310,7 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
   </div>
   <div class="header-actions">
     <div class="chat-connected"><div class="status-dot"></div> IA connectée</div>
+    <button class="btn btn-ghost" onclick="openDocsPanel()">📂 Mes Devis<span class="docs-count" id="docsCount">0</span></button>
     <button class="btn btn-ghost" onclick="openSettings()">⚙ Paramètres</button>
     <button class="btn btn-ghost" onclick="window.print()">🖨 Imprimer</button>
     <button class="btn btn-orange" onclick="exportPDF()">📄 Export PDF</button>
@@ -341,6 +385,29 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
     </div>
   </div>
 </main>
+
+<!-- ========== PANEL MES DEVIS ========== -->
+<div class="docs-panel" id="docsPanel">
+  <div class="docs-header">
+    <h2>📂 Mes Devis &amp; Factures</h2>
+    <button class="btn btn-ghost" onclick="closeDocsPanel()">✕ Fermer</button>
+  </div>
+  <div class="docs-toolbar">
+    <input type="text" id="docsSearch" placeholder="🔍 Rechercher par client, numéro, chantier..." oninput="renderDocsList()"/>
+    <button class="btn btn-orange" onclick="saveDocument('brouillon'); renderDocsList();" id="btnSaveInPanel" style="display:none;">💾 Sauvegarder le devis en cours</button>
+  </div>
+  <div class="docs-list" id="docsList">
+    <div class="docs-empty"><div class="docs-empty-icon">📋</div><p>Aucun document sauvegardé.</p></div>
+  </div>
+</div>
+
+<!-- SAVE BAR FLOTTANTE -->
+<div class="save-bar" id="saveBar">
+  <button class="btn-save-float" onclick="saveDocument('brouillon')">💾 Sauvegarder</button>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif"></div>
 
 <!-- ========== MODAL CODE D'ACCÈS ========== -->
 <div class="modal-overlay" id="apiKeyModal">
@@ -542,6 +609,194 @@ let devisState = null;
 let chatHistory = [];
 let isLoading = false;
 let devisCounter = parseInt(localStorage.getItem('devis_counter') || '1');
+
+// ---- DOCUMENT MANAGEMENT ----
+let currentDocId = null;      // ID du document en cours d'édition
+let currentDocNum = null;     // Numéro assigné (DEV-... ou FAC-...)
+let currentDocType = 'devis'; // 'devis' ou 'facture'
+
+function nextDevisNum() {
+  const year = new Date().getFullYear();
+  let n = parseInt(localStorage.getItem('cnl_devis_seq') || '0') + 1;
+  localStorage.setItem('cnl_devis_seq', n);
+  return 'DEV-' + year + '-' + String(n).padStart(3, '0');
+}
+function nextFactureNum() {
+  const year = new Date().getFullYear();
+  let n = parseInt(localStorage.getItem('cnl_facture_seq') || '0') + 1;
+  localStorage.setItem('cnl_facture_seq', n);
+  return 'FAC-' + year + '-' + String(n).padStart(3, '0');
+}
+
+function getDocs() {
+  try { return JSON.parse(localStorage.getItem('cnl_docs') || '[]'); } catch { return []; }
+}
+function saveDocs(docs) { localStorage.setItem('cnl_docs', JSON.stringify(docs)); }
+
+function saveDocument(status) {
+  if (!devisState) return;
+  const docs = getDocs();
+  const t = calcTotaux(devisState);
+  if (!currentDocNum) {
+    currentDocNum = nextDevisNum();
+    currentDocType = 'devis';
+  }
+  const doc = {
+    id: currentDocId || ('doc-' + Date.now()),
+    type: currentDocType,
+    numero: currentDocNum,
+    status: status || 'brouillon',
+    client: devisState.client?.nom || '—',
+    titre: devisState.titre || 'Sans titre',
+    totalTTC: t.totalTTC,
+    savedAt: Date.now(),
+    state: JSON.parse(JSON.stringify(devisState))
+  };
+  currentDocId = doc.id;
+  const idx = docs.findIndex(d => d.id === doc.id);
+  if (idx >= 0) docs[idx] = doc; else docs.unshift(doc);
+  saveDocs(docs);
+  updateDocsCount();
+  showNotif('💾 Sauvegardé — ' + doc.numero);
+  renderDevis(); // refresh le numéro affiché
+}
+
+function loadDocument(id) {
+  const docs = getDocs();
+  const doc = docs.find(d => d.id === id);
+  if (!doc) return;
+  if (devisState && !confirm('Charger ce document ? Le devis en cours sera perdu (pensez à sauvegarder).')) return;
+  devisState = JSON.parse(JSON.stringify(doc.state));
+  currentDocId = doc.id;
+  currentDocNum = doc.numero;
+  currentDocType = doc.type;
+  chatHistory = [];
+  renderDevis();
+  document.getElementById('autoBadge').style.visibility = 'visible';
+  document.getElementById('quickPrompts').style.display = 'none';
+  document.getElementById('saveBar').style.display = 'block';
+  document.getElementById('messages').innerHTML = '';
+  addMessage('ai', '📂 Document chargé : <strong>' + doc.numero + '</strong> — ' + doc.client);
+  closeDocsPanel();
+}
+
+function convertToInvoice(id) {
+  const docs = getDocs();
+  const doc = docs.find(d => d.id === id);
+  if (!doc) return;
+  if (!confirm('Convertir "' + doc.numero + '" en facture ? Un nouveau numéro de facture sera assigné.')) return;
+  const facNum = nextFactureNum();
+  const newDoc = {
+    id: 'doc-' + Date.now(),
+    type: 'facture',
+    numero: facNum,
+    status: 'brouillon',
+    client: doc.client,
+    titre: doc.titre,
+    totalTTC: doc.totalTTC,
+    savedAt: Date.now(),
+    state: JSON.parse(JSON.stringify(doc.state))
+  };
+  // Marquer le devis original comme "facturé"
+  const origIdx = docs.findIndex(d => d.id === id);
+  if (origIdx >= 0) docs[origIdx].status = 'facture';
+  docs.unshift(newDoc);
+  saveDocs(docs);
+  // Charger la facture dans l'éditeur
+  devisState = JSON.parse(JSON.stringify(newDoc.state));
+  currentDocId = newDoc.id;
+  currentDocNum = facNum;
+  currentDocType = 'facture';
+  renderDevis();
+  document.getElementById('autoBadge').style.visibility = 'visible';
+  document.getElementById('saveBar').style.display = 'block';
+  updateDocsCount();
+  renderDocsList();
+  addMessage('ai', '🧾 Facture créée : <strong>' + facNum + '</strong> — prête à valider et envoyer.');
+  closeDocsPanel();
+}
+
+function updateDocStatus(id, status) {
+  const docs = getDocs();
+  const idx = docs.findIndex(d => d.id === id);
+  if (idx >= 0) { docs[idx].status = status; saveDocs(docs); renderDocsList(); }
+  if (currentDocId === id) showNotif('Statut mis à jour : ' + statusLabel(status));
+}
+
+function statusLabel(s) {
+  return {brouillon:'Brouillon',envoye:'Envoyé',accepte:'Accepté',refuse:'Refusé',facture:'Facturé'}[s] || s;
+}
+function statusClass(s, type) {
+  if (type === 'facture') return 's-facture-doc';
+  return 's-' + s;
+}
+
+function openDocsPanel() {
+  if (devisState) document.getElementById('btnSaveInPanel').style.display = 'inline-flex';
+  else document.getElementById('btnSaveInPanel').style.display = 'none';
+  renderDocsList();
+  document.getElementById('docsPanel').classList.add('open');
+}
+function closeDocsPanel() { document.getElementById('docsPanel').classList.remove('open'); }
+
+function renderDocsList() {
+  const docs = getDocs();
+  const q = (document.getElementById('docsSearch')?.value || '').toLowerCase();
+  const filtered = docs.filter(d =>
+    !q || d.client.toLowerCase().includes(q) || d.numero.toLowerCase().includes(q) || d.titre.toLowerCase().includes(q)
+  );
+  const el = document.getElementById('docsList');
+  if (!filtered.length) {
+    el.innerHTML = '<div class="docs-empty"><div class="docs-empty-icon">📋</div><p style="font-size:14px;color:var(--muted);">Aucun document' + (q ? ' pour cette recherche' : '') + '.</p></div>';
+    return;
+  }
+  el.innerHTML = filtered.map(d => {
+    const isFacture = d.type === 'facture';
+    const icon = isFacture ? '🧾' : '📋';
+    const date = new Date(d.savedAt).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric' });
+    const total = Number(d.totalTTC || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+    const sLabel = isFacture ? 'Facture' : statusLabel(d.status);
+    const sClass = statusClass(d.status, d.type);
+    const canConvert = !isFacture && (d.status === 'accepte' || d.status === 'envoye' || d.status === 'brouillon');
+    const statusOptions = isFacture
+      ? '<option value="brouillon">Brouillon</option><option value="envoye">Envoyée</option><option value="accepte">Payée</option>'
+      : '<option value="brouillon">Brouillon</option><option value="envoye">Envoyé</option><option value="accepte">Accepté</option><option value="refuse">Refusé</option><option value="facture">Facturé</option>';
+    return `<div class="doc-item">
+      <div class="doc-type-icon">${icon}</div>
+      <div class="doc-info">
+        <div class="doc-num">${d.numero}</div>
+        <div class="doc-client">${d.client}</div>
+        <div class="doc-titre">${d.titre}</div>
+        <span class="status-badge ${sClass}">${sLabel}</span>
+      </div>
+      <div class="doc-right">
+        <div class="doc-total">${total}</div>
+        <div class="doc-date">${date}</div>
+        <div style="margin-top:6px;">
+          <select class="status-select" onchange="updateDocStatus('${d.id}', this.value)" onclick="event.stopPropagation()">
+            ${statusOptions.replace('value="' + d.status + '"', 'value="' + d.status + '" selected')}
+          </select>
+        </div>
+      </div>
+      <div class="doc-actions">
+        <button class="btn-doc-load" onclick="loadDocument('${d.id}')">📂 Ouvrir</button>
+        ${canConvert ? '<button class="btn-doc-convert" onclick="convertToInvoice(\'' + d.id + '\')">🧾 → Facture</button>' : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateDocsCount() {
+  const n = getDocs().length;
+  document.getElementById('docsCount').textContent = n;
+}
+
+function showNotif(msg) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
 
 // =============================================
 // SETTINGS HELPERS
@@ -1189,12 +1444,15 @@ async function sendMessage() {
     addMessage('ai', parsed.message || 'Devis mis à jour.');
 
     if (parsed.devis) {
-      if (!devisState) {
-        // Premier devis de la session → incrémenter le compteur
-        devisCounter++;
-        localStorage.setItem('devis_counter', devisCounter);
-      }
+      const isFirstDevis = !devisState;
       devisState = parsed.devis;
+      if (isFirstDevis) {
+        // Nouveau devis → attribuer un numéro définitif
+        currentDocId = null;
+        currentDocNum = nextDevisNum();
+        currentDocType = 'devis';
+        document.getElementById('saveBar').style.display = 'flex';
+      }
       renderDevis();
       document.getElementById('autoBadge').style.visibility = 'visible';
     }
@@ -1294,7 +1552,7 @@ function addSection() {
 }
 
 function saveDevisLocal() {
-  if (devisState) localStorage.setItem('devis_autosave', JSON.stringify({ state: devisState, counter: devisCounter, ts: Date.now() }));
+  if (devisState) localStorage.setItem('devis_autosave', JSON.stringify({ state: devisState, docNum: currentDocNum, docType: currentDocType, ts: Date.now() }));
 }
 
 function restoreDevisLocal() {
@@ -1302,10 +1560,11 @@ function restoreDevisLocal() {
     const saved = JSON.parse(localStorage.getItem('devis_autosave'));
     if (saved?.state && saved?.ts && (Date.now() - saved.ts < 86400000)) {
       devisState = saved.state;
-      if (saved.counter) devisCounter = saved.counter;
+      if (saved.docNum) { currentDocNum = saved.docNum; currentDocType = saved.docType || 'devis'; }
       renderDevis();
       document.getElementById('autoBadge').style.visibility = 'visible';
       document.getElementById('quickPrompts').style.display = 'none';
+      document.getElementById('saveBar').style.display = 'flex';
       addMessage('ai', '♻️ Devis précédent restauré automatiquement.');
     }
   } catch {}
@@ -1361,7 +1620,9 @@ function renderDevis() {
   const a = getArtisan();
   const t = calcTotaux(d);
 
-  const num = 'DEV-' + new Date().getFullYear() + '-' + String(devisCounter).padStart(3, '0');
+  if (!currentDocNum) { currentDocNum = nextDevisNum(); }
+  const num = currentDocNum;
+  const docLabel = currentDocType === 'facture' ? 'Facture N°' : 'Devis N°';
   let baseDate = new Date();
   if (d.dateEmission) {
     const tryParse = new Date(d.dateEmission.split('/').reverse().join('-'));
@@ -1449,7 +1710,7 @@ function renderDevis() {
         </p>
       </div>
       <div class="devis-title-block">
-        <div class="devis-label">Devis N°</div>
+        <div class="devis-label">${docLabel}</div>
         <div class="devis-num">${num}</div>
         <div class="devis-date">Le ${today}</div>
       </div>
@@ -1548,7 +1809,9 @@ function exportPDF() {
   const a = getArtisan();
   const d = devisState;
   const t = calcTotaux(d);
-  const num = 'DEV-' + new Date().getFullYear() + '-' + String(devisCounter).padStart(3, '0');
+  if (!currentDocNum) { currentDocNum = nextDevisNum(); }
+  const num = currentDocNum;
+  const isFacture = currentDocType === 'facture';
   const today = new Date().toLocaleDateString('fr-FR');
   const validDate = new Date(Date.now() + ((d.validite || a.validite || 30) * 86400000)).toLocaleDateString('fr-FR');
   const W = 210;
@@ -1574,7 +1837,7 @@ function exportPDF() {
 
   doc.setTextColor(150, 180, 210);
   doc.setFontSize(8);
-  doc.text('DEVIS N°', W - 14, 9, { align: 'right' });
+  doc.text(isFacture ? 'FACTURE N°' : 'DEVIS N°', W - 14, 9, { align: 'right' });
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(17);
   doc.setFont('helvetica', 'bold');
@@ -1784,9 +2047,11 @@ function exportPDF() {
   doc.setTextColor(180, 190, 205);
   doc.text('Devis créé avec Copilote Devis BTP · Propulsé par Cognelia · cognelia.fr', W / 2, 291, { align: 'center' });
 
-  const fileName = 'devis-' + (d.client?.nom || 'client').replace(/[^a-z0-9]/gi, '-').toLowerCase() + '-' + num + '.pdf';
+  const prefix = isFacture ? 'facture' : 'devis';
+  const fileName = prefix + '-' + (d.client?.nom || 'client').replace(/[^a-z0-9]/gi, '-').toLowerCase() + '-' + num + '.pdf';
   doc.save(fileName);
-  addMessage('ai', '✅ PDF exporté : **' + fileName + '**');
+  saveDocument('envoye');
+  addMessage('ai', '✅ PDF exporté : **' + fileName + '** · Devis sauvegardé dans "Mes Devis".');
 }
 
 // =============================================
@@ -1794,15 +2059,21 @@ function exportPDF() {
 // =============================================
 function resetDevis() {
   if (devisState && !confirm('Créer un nouveau devis ? Le devis actuel sera effacé.')) return;
+  // Sauvegarder le devis en cours si non encore sauvegardé
+  if (devisState && currentDocNum && !currentDocId) {
+    saveDocument('brouillon');
+  }
   devisState = null;
+  currentDocId = null;
+  currentDocNum = null;
+  currentDocType = 'devis';
   chatHistory = [];
   document.getElementById('devisDoc').innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><h3>Votre devis apparaît ici</h3><p>Décrivez le chantier dans le chat — le devis se génère automatiquement.</p></div>`;
   document.getElementById('autoBadge').style.visibility = 'hidden';
   document.getElementById('quickPrompts').style.display = 'flex';
+  document.getElementById('saveBar').style.display = 'none';
   document.getElementById('messages').innerHTML = `<div class="msg ai"><div class="msg-bubble">✅ Nouveau devis prêt. Décrivez-moi votre chantier !</div><span class="msg-time">${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</span></div>`;
   localStorage.removeItem('devis_autosave');
-  devisCounter++;
-  localStorage.setItem('devis_counter', devisCounter);
 }
 
 // =============================================
@@ -1813,6 +2084,7 @@ function resetDevis() {
 // INIT
 // =============================================
 window.addEventListener('load', () => {
+  updateDocsCount();
   if (!getApiKey()) {
     setTimeout(() => document.getElementById('apiKeyModal').classList.add('open'), 500);
   } else {
