@@ -321,14 +321,14 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
   /* Chat panel : caché sur mobile */
   .chat-panel{display:none!important;}
 
-  /* Devis panel : plein écran (moins header + barre de saisie) */
+  /* Devis panel : plein écran (moins header), padding-bottom pour barre fixe */
   .devis-panel{
     flex:1;width:100%;
     padding:8px;
+    padding-bottom:62px;
     overflow-y:auto;
     -webkit-overflow-scrolling:touch;
     display:block!important;
-    height:calc(100vh - 46px - 54px);
   }
   .devis-panel.hidden,.devis-panel.visible{display:block!important;}
 
@@ -363,13 +363,17 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
   /* Barre de saisie mobile */
   .mobile-chat-bar{
     display:flex;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:100;
     align-items:center;
     gap:8px;
     padding:8px 10px;
     background:white;
     border-top:1px solid var(--border);
     height:54px;
-    flex-shrink:0;
   }
   .mobile-chat-bar textarea{
     flex:1;
