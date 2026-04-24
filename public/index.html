@@ -297,67 +297,101 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
 }
 
 /* ===== MOBILE RESPONSIVE ===== */
+/* Barre de saisie mobile (bas de page) */
+.mobile-chat-bar{display:none;}
+
 @media (max-width:768px){
-  /* Barre de navigation mobile entre Chat et Devis */
-  .mobile-tabs{display:flex;background:var(--navy);border-top:1px solid rgba(255,255,255,0.1);}
-  .mobile-tab{flex:1;padding:10px 8px;border:none;background:none;color:rgba(255,255,255,0.6);font-size:12px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .15s;}
-  .mobile-tab.active{color:white;background:rgba(255,255,255,0.1);}
-  .mobile-tab svg{width:18px;height:18px;}
-  .mobile-tab-indicator{width:4px;height:4px;border-radius:50%;background:var(--orange);opacity:0;}
-  .mobile-tab.active .mobile-tab-indicator{opacity:1;}
+  /* Cacher la barre d'onglets (ancienne version) */
+  .mobile-tabs{display:none!important;}
 
-  /* Layout en colonne sur mobile */
-  body{overflow:auto;}
-  main{flex-direction:column;overflow:visible;}
+  /* Layout g├®n├®ral */
+  body{overflow:hidden;height:100vh;display:flex;flex-direction:column;}
+  main{flex:1;overflow:hidden;flex-direction:row;}
 
-  /* Header compact */
-  header{padding:0 12px;height:48px;}
+  /* Header compact ÔÇö sans emojis probl├®matiques */
+  header{padding:0 12px;height:46px;}
+  .logo-icon{width:26px;height:26px;font-size:13px;}
+  .logo-text strong{font-size:13px;}
   .logo-text span{display:none;}
-  .header-actions .btn span{display:none;}
-  .header-actions .btn{padding:6px 10px;}
+  /* Sur mobile : cacher les boutons ghost, garder seulement Export PDF */
+  .header-actions .btn-ghost{display:none;}
+  .header-actions .btn-orange{padding:5px 10px;font-size:12px;}
+  .header-actions .chat-connected{font-size:11px;gap:4px;}
 
-  /* Chat panel : plein ├®cran par d├®faut */
-  .chat-panel{
-    width:100%;min-width:unset;
-    display:flex;flex-direction:column;
-    border-right:none;border-bottom:1px solid var(--border);
-    height:calc(100vh - 48px - 56px); /* viewport - header - mobile tabs */
-    flex-shrink:0;
-  }
-  .chat-panel.hidden{display:none;}
+  /* Chat panel : cach├® sur mobile */
+  .chat-panel{display:none!important;}
 
-  /* Devis panel : cach├® par d├®faut sur mobile */
+  /* Devis panel : plein ├®cran (moins header + barre de saisie) */
   .devis-panel{
-    width:100%;padding:12px;
-    min-height:calc(100vh - 48px - 56px);
-    display:none;
+    flex:1;width:100%;
+    padding:8px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    display:block!important;
+    height:calc(100vh - 46px - 54px);
   }
-  .devis-panel.visible{display:block;}
-  .devis-panel.hidden{display:none;}
+  .devis-panel.hidden,.devis-panel.visible{display:block!important;}
+
+  /* Actions devis compactes */
+  .devis-actions{flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+  .devis-actions .btn{font-size:12px;padding:5px 10px;}
 
   /* Devis doc compact */
-  .devis-top{padding:16px 16px;}
+  .devis-top{padding:14px;flex-direction:column;gap:8px;}
+  .devis-title-block{text-align:left;}
   .devis-company h2{font-size:15px;}
   .devis-num{font-size:17px;}
-  .devis-meta{flex-direction:column;gap:12px;padding:16px;}
+  .devis-meta{flex-direction:column;gap:10px;padding:14px;}
   .devis-info-grid{text-align:left;grid-template-columns:1fr 1fr;}
-  .devis-sections{padding:0 16px;}
-  .devis-chantier{padding:12px 16px;}
-  .devis-totaux{padding:16px;justify-content:center;}
+  .devis-sections{padding:0 12px;}
+  .devis-chantier{padding:12px 14px;}
+  .devis-totaux{padding:14px;justify-content:center;}
   .totaux-box{width:100%;}
-  .devis-footer{padding:16px;}
+  .devis-footer{padding:14px;}
   .devis-signature{flex-direction:column;gap:12px;}
   .sig-box{width:100%;}
 
-  /* Tables scrollables */
-  .devis-section{overflow-x:auto;}
-  table.lignes{min-width:480px;}
+  /* Tables : scroll horizontal, police r├®duite */
+  .devis-section{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  table.lignes{min-width:460px;font-size:12px;}
+  table.lignes th,table.lignes td{padding:7px 5px;}
+  table.lignes th.desig{min-width:140px;}
 
-  /* Actions devis */
-  .devis-actions{flex-wrap:wrap;gap:8px;}
+  /* Notif toast */
+  .notif{bottom:62px;}
 
-  /* Bouton sauvegarder flottant en bas */
-  .notif{bottom:64px;}
+  /* Barre de saisie mobile */
+  .mobile-chat-bar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 10px;
+    background:white;
+    border-top:1px solid var(--border);
+    height:54px;
+    flex-shrink:0;
+  }
+  .mobile-chat-bar textarea{
+    flex:1;
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:8px 14px;
+    font-size:13px;
+    resize:none;
+    outline:none;
+    height:38px;
+    max-height:38px;
+    line-height:1.3;
+    color:var(--text);
+    background:var(--bg);
+    font-family:inherit;
+    overflow:hidden;
+  }
+  .mobile-chat-bar textarea:focus{border-color:var(--navy);}
+  .mobile-chat-bar .send-btn{width:38px;height:38px;border-radius:50%;flex-shrink:0;}
+
+  /* Modals plein ├®cran */
+  .modal{max-width:96vw;}
 }
 
 /* ===== FIN MOBILE ===== */
@@ -368,7 +402,7 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
 <!-- HEADER -->
 <header>
   <div class="logo">
-    <div class="logo-icon">­ƒöº</div>
+    <div class="logo-icon" style="font-size:14px;font-weight:900;color:white;">BTP</div>
     <div class="logo-text">
       <strong>Copilote Devis BTP</strong>
       <span>Propuls├® par Cognelia</span>
@@ -376,10 +410,10 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
   </div>
   <div class="header-actions">
     <div class="chat-connected"><div class="status-dot"></div> IA connect├®e</div>
-    <button class="btn btn-ghost" onclick="openDocsPanel()">­ƒôé Mes Devis<span class="docs-count" id="docsCount">0</span></button>
-    <button class="btn btn-ghost" onclick="openSettings()">ÔÜÖ Param├¿tres</button>
-    <button class="btn btn-ghost" onclick="window.print()">­ƒû¿ Imprimer</button>
-    <button class="btn btn-orange" onclick="exportPDF()">­ƒôä Export PDF</button>
+    <button class="btn btn-ghost" onclick="openDocsPanel()">Mes Devis <span class="docs-count" id="docsCount">0</span></button>
+    <button class="btn btn-ghost" onclick="openSettings()">Parametres</button>
+    <button class="btn btn-ghost" onclick="window.print()">Imprimer</button>
+    <button class="btn btn-orange" onclick="exportPDF()">Export PDF</button>
   </div>
 </header>
 
@@ -438,8 +472,8 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
         <div class="auto-dot"></div> Mise ├á jour automatique
       </div>
       <div style="display:flex;gap:8px;">
-        <button class="btn btn-navy" onclick="resetDevis()">­ƒùæ Nouveau devis</button>
-        <button class="btn btn-orange" onclick="exportPDF()">­ƒôä Export PDF</button>
+        <button class="btn btn-navy" onclick="resetDevis()">Nouveau devis</button>
+        <button class="btn btn-orange" onclick="exportPDF()">Export PDF</button>
       </div>
     </div>
     <div class="devis-doc" id="devisDoc">
@@ -452,19 +486,14 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
   </div>
 </main>
 
-<!-- ========== BARRE NAVIGATION MOBILE ========== -->
-<nav class="mobile-tabs" id="mobileTabs" style="display:none;">
-  <button class="mobile-tab active" id="tabChat" onclick="switchMobileTab('chat')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    Chat
-    <span class="mobile-tab-indicator"></span>
+<!-- ========== BARRE DE SAISIE MOBILE (bas de page) ========== -->
+<div class="mobile-chat-bar" id="mobileChatBar">
+  <textarea id="mobileChatInput" placeholder="D├®crivez le chantier..." rows="1"
+    onkeydown="handleMobileKey(event)"></textarea>
+  <button class="send-btn" onclick="sendMobileMessage()">
+    <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
   </button>
-  <button class="mobile-tab" id="tabDevis" onclick="switchMobileTab('devis')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="3"/></svg>
-    Devis
-    <span class="mobile-tab-indicator"></span>
-  </button>
-</nav>
+</div>
 
 <!-- ========== PANEL MES DEVIS ========== -->
 <div class="docs-panel" id="docsPanel">
@@ -2172,66 +2201,28 @@ window.addEventListener('load', () => {
     // Restaurer le devis de la session pr├®c├®dente si < 24h
     setTimeout(restoreDevisLocal, 600);
   }
-  initMobileLayout();
 });
 
-// ===== NAVIGATION MOBILE =====
-function initMobileLayout() {
-  const isMobile = () => window.innerWidth <= 768;
-  const mobileTabs = document.getElementById('mobileTabs');
-  const chatPanel = document.querySelector('.chat-panel');
-  const devisPanel = document.querySelector('.devis-panel');
-
-  function applyLayout() {
-    if (isMobile()) {
-      mobileTabs.style.display = 'flex';
-      // Assurer que le chat est visible par d├®faut
-      const activeTab = document.querySelector('.mobile-tab.active');
-      if (activeTab && activeTab.id === 'tabChat') {
-        chatPanel.classList.remove('hidden');
-        devisPanel.classList.remove('visible');
-        devisPanel.classList.add('hidden');
-      }
-    } else {
-      mobileTabs.style.display = 'none';
-      chatPanel.classList.remove('hidden');
-      devisPanel.classList.remove('hidden','visible');
-      devisPanel.style.display = '';
-    }
-  }
-
-  applyLayout();
-  window.addEventListener('resize', applyLayout);
+// ===== BARRE DE SAISIE MOBILE =====
+function sendMobileMessage() {
+  const input = document.getElementById('mobileChatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  // R├®utiliser l'input principal et envoyer
+  document.getElementById('chatInput').value = text;
+  input.value = '';
+  sendMessage();
 }
 
-function switchMobileTab(tab) {
-  const chatPanel = document.querySelector('.chat-panel');
-  const devisPanel = document.querySelector('.devis-panel');
-  const tabChat = document.getElementById('tabChat');
-  const tabDevis = document.getElementById('tabDevis');
-
-  if (tab === 'chat') {
-    chatPanel.classList.remove('hidden');
-    devisPanel.classList.remove('visible');
-    devisPanel.classList.add('hidden');
-    tabChat.classList.add('active');
-    tabDevis.classList.remove('active');
-  } else {
-    chatPanel.classList.add('hidden');
-    devisPanel.classList.add('visible');
-    devisPanel.classList.remove('hidden');
-    tabDevis.classList.add('active');
-    tabChat.classList.remove('active');
+function handleMobileKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMobileMessage();
   }
 }
 
-// Quand un devis est g├®n├®r├® sur mobile ÔåÆ basculer auto vers l'onglet Devis
-const _origRenderDevis = typeof renderDevis === 'function' ? renderDevis : null;
-function autoSwitchToDevisOnMobile() {
-  if (window.innerWidth <= 768) {
-    switchMobileTab('devis');
-  }
-}
+// (compatibilit├® ÔÇö ancienne fonction autoSwitch supprim├®e avec les onglets)
+function autoSwitchToDevisOnMobile() { /* plus n├®cessaire */ }
 </script>
 </body>
 </html>
