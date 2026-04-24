@@ -6,6 +6,7 @@
 <title>Copilote Devis BTP — Cognelia</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -402,6 +403,69 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
 }
 
 /* ===== FIN MOBILE ===== */
+
+/* ===== CONFIDENCE INDICATORS ===== */
+.conf-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;flex-shrink:0;vertical-align:middle;}
+.conf-high .conf-dot{background:#22c55e;}
+.conf-mid .conf-dot{background:#f59e0b;}
+.conf-low .conf-dot{background:#ef4444;}
+.conf-high td.price-cell{color:#166534!important;}
+.conf-mid td.price-cell{color:#92400e!important;}
+.conf-low td.price-cell{color:#b91c1c!important;font-style:italic;}
+.catalogue-banner{background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(30,58,95,0.05));border:1px solid rgba(34,197,94,0.25);border-radius:8px;padding:8px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-size:12px;color:#166534;}
+.catalogue-banner strong{color:var(--navy);}
+
+/* ===== SIGNATURE CANVAS ===== */
+.sig-section{padding:24px 32px;border-top:2px dashed var(--border);margin-top:8px;}
+.sig-section h4{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.sig-box{background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:12px;}
+.sig-box-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.sig-canvas{width:100%;height:100px;display:block;cursor:crosshair;border-radius:4px;background:white;border:1px dashed #ccc;}
+.sig-canvas.signed{border:1px solid var(--green);cursor:default;}
+.sig-controls{display:flex;gap:8px;margin-top:8px;align-items:center;}
+.sig-clear{font-size:11px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;}
+.sig-date-field{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text);}
+.sig-accept{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text);margin-top:8px;}
+.sig-accept input{width:14px;height:14px;accent-color:var(--navy);}
+.sig-done-badge{display:none;align-items:center;gap:6px;font-size:12px;color:#166534;font-weight:600;background:#dcfce7;border:1px solid #86efac;border-radius:6px;padding:6px 12px;margin-top:8px;}
+.sig-done-badge.visible{display:flex;}
+
+/* ===== RAPPORT D'AVANCEMENT ===== */
+.rapport-modal{background:white;border-radius:16px;padding:28px;width:520px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.rapport-modal h3{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.rapport-modal .sub{font-size:12px;color:var(--muted);margin-bottom:18px;}
+.rapport-zone{border:1.5px solid var(--border);border-radius:10px;padding:12px;min-height:80px;font-size:13px;color:var(--text);outline:none;width:100%;resize:none;margin-bottom:12px;}
+.rapport-zone:focus{border-color:var(--navy);}
+.rapport-result{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:14px;font-size:13px;color:var(--text);line-height:1.7;margin-bottom:12px;display:none;white-space:pre-wrap;}
+.rapport-result.visible{display:block;}
+.rapport-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-rapport-voice{background:rgba(232,96,10,0.08);color:var(--orange);border:1.5px solid var(--orange);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.btn-rapport-voice.listening{background:var(--orange);color:white;}
+.rapport-btn-copy{background:var(--navy);color:white;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;}
+.rapport-btn-wa{background:#25D366;color:white;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;}
+.rapport-btn-close{background:white;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;margin-left:auto;}
+
+/* ===== RELANCES ===== */
+.relance-modal{background:white;border-radius:16px;padding:28px;width:560px;max-width:95vw;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.relance-modal h3{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.relance-level{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.relance-level-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.relance-level-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;}
+.r-l1{background:#dbeafe;color:#1d4ed8;}
+.r-l2{background:#fef3c7;color:#d97706;}
+.r-l3{background:#fee2e2;color:#dc2626;}
+.relance-level h4{font-size:13px;font-weight:700;color:var(--text);margin:0;}
+.relance-msg{font-size:12.5px;line-height:1.7;color:var(--text);background:white;border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:8px;white-space:pre-wrap;}
+.relance-msg-actions{display:flex;gap:6px;}
+.btn-rel-copy,.btn-rel-wa,.btn-rel-sms{font-size:11px;padding:5px 12px;border-radius:6px;border:none;cursor:pointer;font-weight:600;}
+.btn-rel-copy{background:var(--navy);color:white;}
+.btn-rel-wa{background:#25D366;color:white;}
+.btn-rel-sms{background:#6366f1;color:white;}
+.doc-actions .btn-doc-relance{background:transparent;color:#d97706;border-color:#fde68a;}
+.doc-actions .btn-doc-relance:hover{background:#fef3c7;border-color:#d97706;}
+.doc-actions .btn-doc-rapport{background:transparent;color:#0284c7;border-color:#bae6fd;}
+.doc-actions .btn-doc-rapport:hover{background:#e0f2fe;border-color:#0284c7;}
 </style>
 </head>
 <body>
@@ -478,8 +542,9 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
       <div class="auto-badge" id="autoBadge" style="visibility:hidden">
         <div class="auto-dot"></div> Mise à jour automatique
       </div>
-      <div style="display:flex;gap:8px;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn btn-navy" onclick="resetDevis()">Nouveau devis</button>
+        <button class="btn btn-ghost" id="btnRapport" onclick="openRapport()" style="display:none;background:rgba(2,132,199,0.08);color:#0284c7;border-color:#bae6fd;">Rapport chantier</button>
         <button class="btn btn-orange" onclick="exportPDF()">Export PDF</button>
       </div>
     </div>
@@ -503,6 +568,44 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
   <button class="send-btn mobile-send-btn" onclick="sendMobileMessage()">
     <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
   </button>
+</div>
+
+<!-- ========== MODAL RAPPORT D'AVANCEMENT ========== -->
+<div class="modal-overlay" id="rapportModal" onclick="if(event.target===this)closeRapport()">
+  <div class="rapport-modal">
+    <h3>Rapport d'avancement chantier</h3>
+    <p class="sub">Décrivez l'avancement du jour — l'IA rédige un message professionnel pour votre client.</p>
+    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center;">
+      <button class="btn-rapport-voice" id="rapportVoiceBtn" onclick="toggleRapportVoice()">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+        Dicter
+      </button>
+      <span style="font-size:11px;color:var(--muted);" id="rapportVoiceStatus"></span>
+    </div>
+    <textarea class="rapport-zone" id="rapportInput" placeholder="Ex: Aujourd'hui on a terminé la démolition, commencé le placo. Petit retard sur la livraison des carreaux, prévu vendredi. Tout se passe bien." rows="4"></textarea>
+    <button class="btn-primary" style="width:100%;margin-bottom:12px;" onclick="genererRapport()">Générer le message client</button>
+    <div class="rapport-result" id="rapportResult"></div>
+    <div class="rapport-actions" id="rapportActions" style="display:none;">
+      <button class="rapport-btn-copy" onclick="copyRapport()">Copier</button>
+      <button class="rapport-btn-wa" onclick="sendRapportWA()">WhatsApp</button>
+      <button class="rapport-btn-close" onclick="closeRapport()">Fermer</button>
+    </div>
+    <div style="margin-top:12px;text-align:right;" id="rapportCloseWrap">
+      <button class="rapport-btn-close" onclick="closeRapport()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODAL RELANCES IMPAYÉS ========== -->
+<div class="modal-overlay" id="relanceModal" onclick="if(event.target===this)closeRelance()">
+  <div class="relance-modal">
+    <h3>Relances impayées</h3>
+    <p class="sub" id="relanceInfo" style="font-size:12px;color:var(--muted);margin-bottom:16px;"></p>
+    <div id="relanceContent"></div>
+    <div style="text-align:right;margin-top:4px;">
+      <button class="rapport-btn-close" onclick="closeRelance()">Fermer</button>
+    </div>
+  </div>
 </div>
 
 <!-- ========== PANEL MES DEVIS ========== -->
@@ -776,6 +879,8 @@ function saveDocument(status) {
   if (idx >= 0) docs[idx] = doc; else docs.unshift(doc);
   saveDocs(docs);
   updateDocsCount();
+  // Alimenter le catalogue avec les prix validés
+  updateCatalogueFromDevis(devisState.sections);
   showNotif('Sauvegarde — ' + doc.numero);
   renderDevis(); // refresh le numéro affiché
 }
@@ -900,6 +1005,8 @@ function renderDocsList() {
       <div class="doc-actions">
         <button class="btn-doc-load" onclick="loadDocument('${d.id}')">Ouvrir</button>
         ${canConvert ? '<button class="btn-doc-convert" onclick="convertToInvoice(\'' + d.id + '\')">→ Facture</button>' : ''}
+        <button class="btn-doc-relance" onclick="openRelance('${d.id}')">Relancer</button>
+        <button class="btn-doc-rapport" onclick="loadDocument('${d.id}');closeDocsPanel();openRapport()">Rapport</button>
       </div>
     </div>`;
   }).join('');
@@ -1069,6 +1176,46 @@ document.getElementById('sConditionsPaiement').addEventListener('change', functi
 // =============================================
 // SYSTEM PROMPT
 // =============================================
+// =============================================
+// CATALOGUE DE PRIX (auto-apprenant)
+// =============================================
+function getCatalogue() {
+  try { return JSON.parse(localStorage.getItem('cnl_catalogue') || '[]'); } catch { return []; }
+}
+function saveCatalogue(cat) { localStorage.setItem('cnl_catalogue', JSON.stringify(cat)); }
+
+function updateCatalogueFromDevis(sections) {
+  if (!sections) return;
+  const cat = getCatalogue();
+  (sections || []).forEach(sec => {
+    (sec.lignes || []).forEach(l => {
+      if (!l.prixUnitaireHT || !l.designation) return;
+      const key = l.designation.toLowerCase().trim();
+      const existing = cat.find(c => c.key === key);
+      if (existing) {
+        existing.pu = l.prixUnitaireHT;
+        existing.unite = l.unite;
+        existing.tva = l.tauxTVA;
+        existing.usage = (existing.usage || 0) + 1;
+        existing.updated = Date.now();
+      } else {
+        cat.push({ key, designation: l.designation, pu: l.prixUnitaireHT, unite: l.unite, tva: l.tauxTVA, usage: 1, updated: Date.now() });
+      }
+    });
+  });
+  // Garder les 200 entrées les plus récentes
+  cat.sort((a, b) => (b.updated||0) - (a.updated||0));
+  saveCatalogue(cat.slice(0, 200));
+}
+
+function buildCatalogueText() {
+  const cat = getCatalogue();
+  if (cat.length === 0) return '';
+  const top = cat.sort((a,b) => (b.usage||0) - (a.usage||0)).slice(0, 30);
+  return '\n\nCATALOGUE PERSONNEL DE L\'ARTISAN (tarifs réels validés — utilise ces prix en priorité, confiance: 1.0) :\n' +
+    top.map(c => `- ${c.designation} : ${c.pu}€/${c.unite||'u'} (TVA ${c.tva||10}%)`).join('\n');
+}
+
 function buildSystemPrompt() {
   const a = getArtisan();
   const microNote = a.microEntrepreneur
@@ -1092,6 +1239,15 @@ RÔLE ET COMPORTEMENT — MODE ACTION PURE :
 - Ta réponse "message" est UNE LIGNE maximum. Ex: "Devis salle de bain genere." ou "TVA 10% appliquee."
 - Tu regroupes les postes logiquement en sections (max 5 sections).
 - Tu utilises TOUJOURS le JSON pour répondre.
+
+CATALOGUE ET CONFIANCE :
+- Si une prestation correspond au catalogue personnel ci-dessous → utilise ce prix, confiance: 1.0
+- Si tu utilises un prix standard de ta base de connaissances → confiance: 0.75
+- Si tu estimes sans référence précise → confiance: 0.5
+- JAMAIS confiance: 0 — toujours fournir une estimation plutôt que de bloquer
+- Sépare la main d'œuvre (MO) et la fourniture quand l'artisan les distingue
+- TVA auto : 10% rénovation logement > 2 ans · 5,5% amélioration énergétique · 20% neuf/commercial · 0% micro-entrepreneur
+${buildCatalogueText()}
 
 CONNAISSANCES TECHNIQUES — Prix marché français HT :
 Plomberie : MO plombier 55-80€/h · Chauffe-eau thermo 200L fourni 900-1400€ · Pose chauffe-eau 250-400€ · Douche italienne fournie 600-1200€ · Meuble vasque 300-600€ · WC suspendu 250-450€ · Baignoire 400-900€
@@ -1124,7 +1280,7 @@ Structure du devis :
     {
       "titre": "Nom section",
       "lignes": [
-        { "designation": "Description précise et professionnelle", "quantite": 1, "unite": "forfait|m²|ml|h|u|ens", "prixUnitaireHT": 0, "tauxTVA": 10 }
+        { "designation": "Description précise et professionnelle", "quantite": 1, "unite": "forfait|m²|ml|h|u|ens", "prixUnitaireHT": 0, "tauxTVA": 10, "confiance": 0.75 }
       ]
     }
   ],
@@ -1799,12 +1955,15 @@ function renderDevis() {
       secTotal += ht;
       const tvaTaux = sanitizeTVA(l.tauxTVA);
       const tvaLabel = tvaTaux === 0 ? '<span style="color:var(--orange);font-size:10px">Exo.</span>' : tvaTaux + '%';
-      lignesHTML += `<tr>
+      const conf = l.confiance != null ? l.confiance : 0.75;
+      const confClass = conf >= 0.9 ? 'conf-high' : conf >= 0.6 ? 'conf-mid' : 'conf-low';
+      const confTitle = conf >= 0.9 ? 'Prix depuis votre catalogue' : conf >= 0.6 ? 'Prix marché standard' : 'Estimation — à vérifier';
+      lignesHTML += `<tr class="${confClass}">
         <td class="center" style="color:var(--muted);font-size:11px">${lineNum++}</td>
-        <td class="editable-cell" contenteditable="true" onblur="editLigne(this,${secIdx},${ligIdx},'designation')">${l.designation || ''}</td>
+        <td class="editable-cell" contenteditable="true" onblur="editLigne(this,${secIdx},${ligIdx},'designation')"><span class="conf-dot" title="${confTitle}"></span>${l.designation || ''}</td>
         <td class="center editable-cell" contenteditable="true" onblur="editLigne(this,${secIdx},${ligIdx},'quantite')">${Number(l.quantite).toLocaleString('fr-FR')}</td>
         <td class="center editable-cell" contenteditable="true" onblur="editLigne(this,${secIdx},${ligIdx},'unite')" style="color:var(--muted)">${l.unite || 'u'}</td>
-        <td class="right editable-cell" contenteditable="true" onblur="editLigne(this,${secIdx},${ligIdx},'prixUnitaireHT')">${formatMoney(l.prixUnitaireHT)}</td>
+        <td class="right editable-cell price-cell" contenteditable="true" onblur="editLigne(this,${secIdx},${ligIdx},'prixUnitaireHT')">${formatMoney(l.prixUnitaireHT)}</td>
         <td class="center editable-cell" contenteditable="true" onblur="editLigne(this,${secIdx},${ligIdx},'tauxTVA')">${tvaLabel}</td>
         <td class="right" style="color:var(--navy)">${formatMoney(ht)}</td>
       </tr>`;
@@ -1920,9 +2079,30 @@ function renderDevis() {
       ${assuranceMention || a.notes ? `<div class="footer-mentions">
         <p>${assuranceMention ? assuranceMention + '<br>' : ''}${a.notes || ''}</p>
       </div>` : ''}
-      <div class="devis-signature">
-        <div class="sig-box"><label>Bon pour accord — Client</label><p>Date et signature :</p></div>
-        <div class="sig-box"><label>Signature de l'entreprise</label><p>${a.entreprise}</p></div>
+      <div class="devis-signature" style="display:none;"></div>
+    </div>
+
+    <div class="sig-section" id="sigSection">
+      <h4>Bon pour accord — Signature électronique</h4>
+      <div class="sig-grid">
+        <div>
+          <div class="sig-box-label">Client — Lu et approuvé</div>
+          <canvas class="sig-canvas" id="sigClientCanvas"></canvas>
+          <div class="sig-controls">
+            <button class="sig-clear" onclick="clearSig('client')">Effacer</button>
+            <input class="sig-date-field" type="date" id="sigClientDate" value="${new Date().toISOString().split('T')[0]}">
+          </div>
+          <label class="sig-accept"><input type="checkbox" id="sigClientAccept"> Lu et approuvé sans réserve</label>
+          <div class="sig-done-badge" id="sigClientDone">Devis accepté et signé</div>
+        </div>
+        <div>
+          <div class="sig-box-label">Entreprise — ${a.entreprise}</div>
+          <canvas class="sig-canvas" id="sigArtisanCanvas"></canvas>
+          <div class="sig-controls">
+            <button class="sig-clear" onclick="clearSig('artisan')">Effacer</button>
+            <input class="sig-date-field" type="date" id="sigArtisanDate" value="${new Date().toISOString().split('T')[0]}">
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1954,6 +2134,61 @@ function renderDevis() {
   doc.querySelector('.devis-totaux')?.insertAdjacentElement('beforebegin', addSecBtn);
 
   saveDevisLocal();
+
+  // Afficher le bouton rapport chantier
+  document.getElementById('btnRapport').style.display = 'inline-flex';
+
+  // Afficher banner catalogue si rempli
+  const cat = getCatalogue();
+  let banner = document.getElementById('catalogueBanner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'catalogueBanner';
+    banner.className = 'catalogue-banner';
+    document.querySelector('.devis-actions').insertAdjacentElement('afterbegin', banner);
+  }
+  if (cat.length > 0) {
+    const confHighCount = (d.sections || []).flatMap(s => s.lignes || []).filter(l => l.confiance >= 0.9).length;
+    banner.style.display = 'flex';
+    banner.innerHTML = `<strong>${cat.length}</strong> prestations dans votre catalogue · <span style="color:#166534">${confHighCount} ligne(s) au tarif personnel</span>`;
+  } else {
+    banner.style.display = 'none';
+  }
+
+  // Initialiser les signature pads
+  requestAnimationFrame(() => {
+    ['Client', 'Artisan'].forEach(who => {
+      const canvas = document.getElementById('sig' + who + 'Canvas');
+      if (!canvas || !window.SignaturePad) return;
+      const existing = canvas._sigPad;
+      if (existing) existing.off();
+      const pad = new SignaturePad(canvas, { penColor: '#1e3a5f', minWidth: 1, maxWidth: 2.5 });
+      canvas._sigPad = pad;
+      // Restaurer signature sauvegardée
+      const saved = devisState['sig' + who];
+      if (saved) {
+        pad.fromDataURL(saved);
+        if (who === 'Client') {
+          canvas.classList.add('signed');
+          document.getElementById('sigClientDone').classList.add('visible');
+        }
+      }
+      // Sauvegarder à chaque fin de tracé
+      pad.addEventListener('endStroke', () => {
+        devisState['sig' + who] = pad.toDataURL();
+        if (who === 'Client' && !pad.isEmpty()) {
+          document.getElementById('sigClientDone').classList.add('visible');
+        }
+        saveDevisLocal();
+      });
+    });
+    // Checkbox accept
+    const cb = document.getElementById('sigClientAccept');
+    if (cb) {
+      cb.checked = devisState.sigClientAccepted || false;
+      cb.addEventListener('change', () => { devisState.sigClientAccepted = cb.checked; saveDevisLocal(); });
+    }
+  });
 }
 
 // =============================================
@@ -2228,6 +2463,7 @@ function resetDevis() {
   chatHistory = [];
   document.getElementById('devisDoc').innerHTML = `<div class="empty-state"><div class="empty-icon" style="font-size:48px;opacity:0.3;">&#128203;</div><h3>Votre devis apparaît ici</h3><p>Décrivez le chantier dans le chat — le devis se génère automatiquement.</p></div>`;
   document.getElementById('autoBadge').style.visibility = 'hidden';
+  document.getElementById('btnRapport').style.display = 'none';
   document.getElementById('quickPrompts').style.display = 'flex';
   document.getElementById('saveBar').style.display = 'none';
   document.getElementById('messages').innerHTML = `<div class="msg ai"><div class="msg-bubble">Nouveau devis prêt. Décrivez-moi votre chantier !</div><span class="msg-time">${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</span></div>`;
@@ -2237,6 +2473,141 @@ function resetDevis() {
 // =============================================
 // RESET — efface aussi l'autosave
 // =============================================
+
+// =============================================
+// SIGNATURE
+// =============================================
+function clearSig(who) {
+  const canvas = document.getElementById('sig' + (who === 'client' ? 'Client' : 'Artisan') + 'Canvas');
+  if (canvas?._sigPad) { canvas._sigPad.clear(); delete devisState['sig' + (who === 'client' ? 'Client' : 'Artisan')]; saveDevisLocal(); }
+  if (who === 'client') {
+    document.getElementById('sigClientDone').classList.remove('visible');
+  }
+}
+
+// =============================================
+// RAPPORT D'AVANCEMENT (WF4)
+// =============================================
+let rapportRecognition = null;
+let rapportListening = false;
+
+function openRapport() {
+  document.getElementById('rapportModal').classList.add('open');
+  document.getElementById('rapportInput').value = '';
+  document.getElementById('rapportResult').classList.remove('visible');
+  document.getElementById('rapportResult').textContent = '';
+  document.getElementById('rapportActions').style.display = 'none';
+  document.getElementById('rapportCloseWrap').style.display = 'block';
+}
+function closeRapport() {
+  document.getElementById('rapportModal').classList.remove('open');
+  if (rapportListening && rapportRecognition) rapportRecognition.stop();
+}
+
+function toggleRapportVoice() {
+  if (rapportListening) { if (rapportRecognition) rapportRecognition.stop(); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { alert('Reconnaissance vocale non supportée.'); return; }
+  rapportRecognition = new SR();
+  rapportRecognition.lang = 'fr-FR'; rapportRecognition.continuous = true; rapportRecognition.interimResults = true;
+  rapportListening = true;
+  const btn = document.getElementById('rapportVoiceBtn');
+  const status = document.getElementById('rapportVoiceStatus');
+  btn.classList.add('listening'); btn.querySelector('span') && (btn.querySelector('span').textContent = 'Arrêter');
+  status.textContent = 'Écoute en cours...';
+  rapportRecognition.onresult = (e) => {
+    let t = '';
+    for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
+    document.getElementById('rapportInput').value = t;
+  };
+  rapportRecognition.onend = () => { rapportListening = false; btn.classList.remove('listening'); status.textContent = ''; };
+  rapportRecognition.start();
+}
+
+async function genererRapport() {
+  const input = document.getElementById('rapportInput').value.trim();
+  if (!input) { alert('Décrivez d\'abord l\'avancement du chantier.'); return; }
+  const apiKey = getApiKey();
+  if (!apiKey) { document.getElementById('apiKeyModal').classList.add('open'); return; }
+  const d = devisState;
+  const clientNom = d?.client?.nom || 'votre client';
+  const chantierId = d?.titre || 'le chantier';
+  const btn = document.querySelector('.rapport-modal .btn-primary');
+  btn.textContent = 'Génération...'; btn.disabled = true;
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'x-access-code': apiKey },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001', max_tokens: 400,
+        system: `Tu rédiges des messages d'avancement chantier professionnels pour des artisans BTP français. À partir d'un compte-rendu brut de l'artisan, tu génères un message clair, rassurant et professionnel destiné au client final. Pas de jargon. Ton chaleureux mais sérieux. 3-5 phrases maximum. Réponds UNIQUEMENT avec le message client, sans commentaire.`,
+        messages: [{ role: 'user', content: `Chantier : ${chantierId}\nClient : ${clientNom}\n\nCompte-rendu de l'artisan :\n${input}` }]
+      })
+    });
+    const data = await res.json();
+    const msg = data.content?.[0]?.text || '';
+    const resultEl = document.getElementById('rapportResult');
+    resultEl.textContent = msg;
+    resultEl.classList.add('visible');
+    document.getElementById('rapportActions').style.display = 'flex';
+    document.getElementById('rapportCloseWrap').style.display = 'none';
+    window._rapportMsg = msg;
+    window._rapportClient = d?.client?.telephone || '';
+  } catch(e) { alert('Erreur : ' + e.message); }
+  finally { btn.textContent = 'Générer le message client'; btn.disabled = false; }
+}
+
+function copyRapport() {
+  navigator.clipboard.writeText(window._rapportMsg || '').then(() => showNotif('Message copié'));
+}
+function sendRapportWA() {
+  const msg = encodeURIComponent(window._rapportMsg || '');
+  const tel = (window._rapportClient || '').replace(/\D/g,'');
+  window.open('https://wa.me/' + (tel || '') + '?text=' + msg, '_blank');
+}
+
+// =============================================
+// RELANCES IMPAYÉS (WF3)
+// =============================================
+function openRelance(docId) {
+  const docs = getDocs();
+  const doc = docs.find(d => d.id === docId);
+  if (!doc) return;
+  const clientNom = doc.client || 'votre client';
+  const montant = formatMoney(doc.totalTTC) + ' TTC';
+  const num = doc.numero;
+  const artisan = getArtisan();
+  const jours = Math.floor((Date.now() - doc.savedAt) / 86400000);
+
+  const msg1 = `Bonjour ${clientNom},\n\nJ'espère que vous allez bien. Je me permets de vous rappeler que le ${doc.type === 'facture' ? 'paiement de la facture' : 'devis'} n° ${num} d'un montant de ${montant} est en attente.\n\nN'hésitez pas à me contacter si vous avez des questions.\n\nCordialement,\n${artisan.entreprise}`;
+
+  const msg2 = `Bonjour ${clientNom},\n\nSauf erreur de ma part, je n'ai pas reçu le règlement du ${doc.type === 'facture' ? 'montant de la facture' : 'montant'} n° ${num} s'élevant à ${montant}.\n\nJe vous remercie de bien vouloir régulariser cette situation dans les meilleurs délais. Passé ce délai, des pénalités de retard pourraient s'appliquer.\n\nCordialement,\n${artisan.entreprise}`;
+
+  const msg3 = `Bonjour ${clientNom},\n\nMalgré mes relances précédentes, je n'ai toujours pas reçu le paiement concernant le dossier n° ${num} d'un montant de ${montant}.\n\nJe vous mets en demeure de régler cette somme dans un délai de 8 jours à compter de la réception de ce message, conformément aux dispositions légales en vigueur. À défaut, je me verrai dans l'obligation d'engager les procédures de recouvrement nécessaires.\n\nCordialement,\n${artisan.entreprise}\nSIRET : ${artisan.siret || ''}`;
+
+  const makeLevel = (level, badge, title, cls, msg) => `
+    <div class="relance-level">
+      <div class="relance-level-header">
+        <span class="relance-level-badge ${cls}">${badge}</span>
+        <h4>${title}</h4>
+      </div>
+      <div class="relance-msg">${msg}</div>
+      <div class="relance-msg-actions">
+        <button class="btn-rel-copy" onclick="copyText(\`${msg.replace(/`/g,'\\`')}\`)">Copier</button>
+        <button class="btn-rel-wa" onclick="window.open('https://wa.me/?text='+encodeURIComponent(\`${msg.replace(/`/g,'\\`')}\`),'_blank')">WhatsApp</button>
+        <button class="btn-rel-sms" onclick="window.open('sms:?body='+encodeURIComponent(\`${msg.replace(/`/g,'\\`')}\`),'_blank')">SMS</button>
+      </div>
+    </div>`;
+
+  document.getElementById('relanceInfo').textContent = `Document ${num} — ${clientNom} — ${montant} — ${jours} jour(s) depuis création`;
+  document.getElementById('relanceContent').innerHTML =
+    makeLevel(1, 'Relance 1 — Douce', 'Rappel aimable (J+5)', 'r-l1', msg1) +
+    makeLevel(2, 'Relance 2 — Formelle', 'Mise en garde (J+15)', 'r-l2', msg2) +
+    makeLevel(3, 'Relance 3 — Mise en demeure', 'Juridique (J+30)', 'r-l3', msg3);
+
+  document.getElementById('relanceModal').classList.add('open');
+}
+function closeRelance() { document.getElementById('relanceModal').classList.remove('open'); }
+function copyText(txt) { navigator.clipboard.writeText(txt).then(() => showNotif('Copié')); }
 
 // =============================================
 // INIT
