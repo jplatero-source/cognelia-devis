@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Copilote Devis BTP ÔÇö Cognelia</title>
+<title>Copilote Devis BTP — Cognelia</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
 <style>
@@ -159,7 +159,7 @@ table.lignes tr:nth-child(even){background:#fafbff;}
 .cognelia-badge{text-align:center;padding:12px;font-size:10px;color:var(--muted);}
 .cognelia-badge strong{color:var(--navy);}
 
-/* ├ëDITION DIRECTE */
+/* ÉDITION DIRECTE */
 .editable-cell{cursor:text;border-radius:3px;transition:background .15s;}
 .editable-cell:hover{background:rgba(255,165,0,.08);outline:1px dashed rgba(255,165,0,.4);}
 .editable-cell:focus{background:rgba(255,165,0,.12);outline:2px solid rgba(255,165,0,.6);outline-offset:1px;}
@@ -304,11 +304,11 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
   /* Cacher la barre d'onglets (ancienne version) */
   .mobile-tabs{display:none!important;}
 
-  /* Layout g├®n├®ral */
+  /* Layout général */
   body{overflow:hidden;height:100vh;display:flex;flex-direction:column;}
   main{flex:1;overflow:hidden;flex-direction:row;}
 
-  /* Header compact ÔÇö sans emojis probl├®matiques */
+  /* Header compact — sans emojis problématiques */
   header{padding:0 12px;height:46px;}
   .logo-icon{width:26px;height:26px;font-size:13px;}
   .logo-text strong{font-size:13px;}
@@ -318,10 +318,10 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
   .header-actions .btn-orange{padding:5px 10px;font-size:12px;}
   .header-actions .chat-connected{font-size:11px;gap:4px;}
 
-  /* Chat panel : cach├® sur mobile */
+  /* Chat panel : caché sur mobile */
   .chat-panel{display:none!important;}
 
-  /* Devis panel : plein ├®cran (moins header + barre de saisie) */
+  /* Devis panel : plein écran (moins header + barre de saisie) */
   .devis-panel{
     flex:1;width:100%;
     padding:8px;
@@ -351,7 +351,7 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
   .devis-signature{flex-direction:column;gap:12px;}
   .sig-box{width:100%;}
 
-  /* Tables : scroll horizontal, police r├®duite */
+  /* Tables : scroll horizontal, police réduite */
   .devis-section{overflow-x:auto;-webkit-overflow-scrolling:touch;}
   table.lignes{min-width:460px;font-size:12px;}
   table.lignes th,table.lignes td{padding:7px 5px;}
@@ -390,7 +390,7 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
   .mobile-chat-bar textarea:focus{border-color:var(--navy);}
   .mobile-chat-bar .send-btn{width:38px;height:38px;border-radius:50%;flex-shrink:0;}
 
-  /* Modals plein ├®cran */
+  /* Modals plein écran */
   .modal{max-width:96vw;}
 }
 
@@ -405,11 +405,11 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
     <div class="logo-icon" style="font-size:14px;font-weight:900;color:white;">BTP</div>
     <div class="logo-text">
       <strong>Copilote Devis BTP</strong>
-      <span>Propuls├® par Cognelia</span>
+      <span>Propulsé par Cognelia</span>
     </div>
   </div>
   <div class="header-actions">
-    <div class="chat-connected"><div class="status-dot"></div> IA connect├®e</div>
+    <div class="chat-connected"><div class="status-dot"></div> IA connectée</div>
     <button class="btn btn-ghost" onclick="openDocsPanel()">Mes Devis <span class="docs-count" id="docsCount">0</span></button>
     <button class="btn btn-ghost" onclick="openSettings()">Parametres</button>
     <button class="btn btn-ghost" onclick="window.print()">Imprimer</button>
@@ -423,23 +423,23 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
   <div class="chat-panel">
     <div class="chat-header">
       <div>
-        <h3>­ƒÆ¼ Copilote Devis</h3>
+        <h3>Copilote Devis</h3>
         <small>Assistant de chiffrage BTP</small>
       </div>
-      <div class="chat-connected"><div class="status-dot"></div> Connect├®</div>
+      <div class="chat-connected"><div class="status-dot"></div> Connecté</div>
     </div>
 
     <!-- VOICE -->
     <div class="voice-area">
-      <button class="voice-btn idle" id="voiceBtn" onclick="toggleVoice()" title="Cliquez pour dicter">­ƒÄÖ</button>
-      <div class="voice-label" id="voiceLabel">Pr├¬t</div>
+      <button class="voice-btn idle" id="voiceBtn" onclick="toggleVoice()" title="Cliquez pour dicter"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="color:var(--navy)"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></button>
+      <div class="voice-label" id="voiceLabel">Prêt</div>
     </div>
 
     <div class="messages" id="messages">
       <div class="msg ai">
         <div class="msg-bubble">
-          ­ƒæï Bonjour ! Je suis votre copilote pour cr├®er des devis professionnels BTP.<br><br>
-          D├®crivez-moi le chantier ÔÇö je g├®n├¿re le devis en temps r├®el. Vous pouvez aussi me dicter : nom du client, remise, conditions de paiement, ou demander l'export PDF.
+          Bonjour ! Je suis votre copilote pour créer des devis professionnels BTP.<br><br>
+          Décrivez-moi le chantier — je génère le devis en temps réel. Vous pouvez aussi me dicter : nom du client, remise, conditions de paiement, ou demander l'export PDF.
         </div>
         <span class="msg-time">Maintenant</span>
       </div>
@@ -447,16 +447,16 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
 
     <div class="chat-input-area">
       <div class="quick-prompts" id="quickPrompts">
-        <button class="quick-btn" onclick="quickSend('Remplacement chauffe-eau thermodynamique 200L')">­ƒÜ┐ Chauffe-eau</button>
-        <button class="quick-btn" onclick="quickSend('R├®fection salle de bain compl├¿te')">­ƒøü Salle de bain</button>
-        <button class="quick-btn" onclick="quickSend('Pose de carrelage 30m┬▓')">­ƒÅá Carrelage</button>
-        <button class="quick-btn" onclick="quickSend('Isolation des combles perdus 80m┬▓')">­ƒîí Isolation</button>
-        <button class="quick-btn" onclick="quickSend('Ajouter une remise de 10%')">­ƒÅÀ Remise 10%</button>
-        <button class="quick-btn" onclick="quickSend('Conditions de paiement : 30% ├á la commande, 70% ├á r├®ception')">­ƒÆ│ Paiement</button>
-        <button class="quick-btn" onclick="quickSend('Exporter le devis en PDF')">­ƒôä Export PDF</button>
+        <button class="quick-btn" onclick="quickSend('Remplacement chauffe-eau thermodynamique 200L')">Chauffe-eau</button>
+        <button class="quick-btn" onclick="quickSend('Réfection salle de bain complète')">Salle de bain</button>
+        <button class="quick-btn" onclick="quickSend('Pose de carrelage 30m²')">Carrelage</button>
+        <button class="quick-btn" onclick="quickSend('Isolation des combles perdus 80m²')">Isolation</button>
+        <button class="quick-btn" onclick="quickSend('Ajouter une remise de 10%')">Remise 10%</button>
+        <button class="quick-btn" onclick="quickSend('Conditions de paiement : 30% à la commande, 70% à réception')">Paiement</button>
+        <button class="quick-btn" onclick="quickSend('Exporter le devis en PDF')">Export PDF</button>
       </div>
       <div class="chat-input-wrap">
-        <textarea id="chatInput" placeholder="Ex: Devis pour r├®novation salle de bain ÔÇö douche ├á l'italienne, nouveau WC suspendu..." rows="1"
+        <textarea id="chatInput" placeholder="Ex: Devis pour rénovation salle de bain — douche à l'italienne, nouveau WC suspendu..." rows="1"
           onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
         <button class="send-btn" onclick="sendMessage()">
           <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
@@ -469,7 +469,7 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
   <div class="devis-panel">
     <div class="devis-actions">
       <div class="auto-badge" id="autoBadge" style="visibility:hidden">
-        <div class="auto-dot"></div> Mise ├á jour automatique
+        <div class="auto-dot"></div> Mise à jour automatique
       </div>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-navy" onclick="resetDevis()">Nouveau devis</button>
@@ -478,9 +478,9 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
     </div>
     <div class="devis-doc" id="devisDoc">
       <div class="empty-state" id="emptyState">
-        <div class="empty-icon">­ƒôï</div>
-        <h3>Votre devis appara├«t ici</h3>
-        <p>D├®crivez le chantier dans le chat ├á gauche ÔÇö le devis se g├®n├¿re automatiquement en temps r├®el.</p>
+        <div class="empty-icon" style="font-size:48px;opacity:0.3;">&#128203;</div>
+        <h3>Votre devis apparaît ici</h3>
+        <p>Décrivez le chantier dans le chat à gauche — le devis se génère automatiquement en temps réel.</p>
       </div>
     </div>
   </div>
@@ -488,7 +488,7 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
 
 <!-- ========== BARRE DE SAISIE MOBILE (bas de page) ========== -->
 <div class="mobile-chat-bar" id="mobileChatBar">
-  <textarea id="mobileChatInput" placeholder="D├®crivez le chantier..." rows="1"
+  <textarea id="mobileChatInput" placeholder="Décrivez le chantier..." rows="1"
     onkeydown="handleMobileKey(event)"></textarea>
   <button class="send-btn" onclick="sendMobileMessage()">
     <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
@@ -498,57 +498,57 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
 <!-- ========== PANEL MES DEVIS ========== -->
 <div class="docs-panel" id="docsPanel">
   <div class="docs-header">
-    <h2>­ƒôé Mes Devis &amp; Factures</h2>
-    <button class="btn btn-ghost" onclick="closeDocsPanel()">Ô£ò Fermer</button>
+    <h2>Mes Devis &amp; Factures</h2>
+    <button class="btn btn-ghost" onclick="closeDocsPanel()">✕ Fermer</button>
   </div>
   <div class="docs-toolbar">
-    <input type="text" id="docsSearch" placeholder="­ƒöì Rechercher par client, num├®ro, chantier..." oninput="renderDocsList()"/>
-    <button class="btn btn-orange" onclick="saveDocument('brouillon'); renderDocsList();" id="btnSaveInPanel" style="display:none;">­ƒÆ¥ Sauvegarder le devis en cours</button>
+    <input type="text" id="docsSearch" placeholder="Rechercher par client, numéro, chantier..." oninput="renderDocsList()"/>
+    <button class="btn btn-orange" onclick="saveDocument('brouillon'); renderDocsList();" id="btnSaveInPanel" style="display:none;">Sauvegarder le devis en cours</button>
   </div>
   <div class="docs-list" id="docsList">
-    <div class="docs-empty"><div class="docs-empty-icon">­ƒôï</div><p>Aucun document sauvegard├®.</p></div>
+    <div class="docs-empty"><p>Aucun document sauvegardé.</p></div>
   </div>
 </div>
 
 <!-- SAVE BAR FLOTTANTE -->
 <div class="save-bar" id="saveBar">
-  <button class="btn-save-float" onclick="saveDocument('brouillon')">­ƒÆ¥ Sauvegarder</button>
+  <button class="btn-save-float" onclick="saveDocument('brouillon')">Sauvegarder</button>
 </div>
 
 <!-- NOTIFICATION -->
 <div class="notif" id="notif"></div>
 
-<!-- ========== MODAL CODE D'ACC├êS ========== -->
+<!-- ========== MODAL CODE D'ACCÈS ========== -->
 <div class="modal-overlay" id="apiKeyModal">
   <div class="apikey-modal">
-    <div class="apikey-icon">­ƒÅù</div>
+    <div class="apikey-icon">&#128736;</div>
     <h3>Copilote Devis BTP</h3>
-    <p>Entrez votre code d'acc├¿s personnel fourni par Cognelia pour activer votre assistant.</p>
+    <p>Entrez votre code d'accès personnel fourni par Cognelia pour activer votre assistant.</p>
     <div class="apikey-input-wrap">
-      <input type="text" id="apiKeyInput" placeholder="Votre code d'acc├¿s..." autocomplete="off" style="text-transform:uppercase;letter-spacing:2px;" />
+      <input type="text" id="apiKeyInput" placeholder="Votre code d'accès..." autocomplete="off" style="text-transform:uppercase;letter-spacing:2px;" />
     </div>
-    <div class="apikey-note">­ƒöÆ Acc├¿s s├®curis├® ┬À Propuls├® par Cognelia</div>
-    <button class="btn-primary" style="width:100%;padding:12px;font-size:14px;" onclick="saveApiKey()">Acc├®der ├á mon Copilote</button>
+    <div class="apikey-note">Acces securise · Propulsé par Cognelia</div>
+    <button class="btn-primary" style="width:100%;padding:12px;font-size:14px;" onclick="saveApiKey()">Accéder à mon Copilote</button>
     <div class="apikey-link">Code perdu ? <a href="mailto:contact@cognelia.fr">Contactez Cognelia</a></div>
   </div>
 </div>
 
-<!-- ========== MODAL PARAM├êTRES ========== -->
+<!-- ========== MODAL PARAMÈTRES ========== -->
 <div class="modal-overlay" id="settingsModal">
   <div class="modal">
     <div class="modal-head">
-      <h3>ÔÜÖ Param├¿tres de l'entreprise</h3>
+      <h3>Parametres de l'entreprise</h3>
       <p class="sub">Ces informations apparaissent sur tous vos devis</p>
       <div class="tab-bar">
-        <button class="tab-btn active" onclick="switchTab('identite')" id="tab-identite">­ƒÅó Identit├®</button>
-        <button class="tab-btn" onclick="switchTab('juridique')" id="tab-juridique">ÔÜû Juridique</button>
-        <button class="tab-btn" onclick="switchTab('assurance')" id="tab-assurance">­ƒøí Assurance</button>
-        <button class="tab-btn" onclick="switchTab('paiement')" id="tab-paiement">­ƒÆ│ Paiement</button>
+        <button class="tab-btn active" onclick="switchTab('identite')" id="tab-identite">Identite</button>
+        <button class="tab-btn" onclick="switchTab('juridique')" id="tab-juridique">⚖ Juridique</button>
+        <button class="tab-btn" onclick="switchTab('assurance')" id="tab-assurance">Assurance</button>
+        <button class="tab-btn" onclick="switchTab('paiement')" id="tab-paiement">Paiement</button>
       </div>
     </div>
     <div class="modal-body">
 
-      <!-- ONGLET IDENTIT├ë -->
+      <!-- ONGLET IDENTITÉ -->
       <div class="tab-pane active" id="pane-identite">
         <div class="form-row">
           <div class="form-group">
@@ -558,7 +558,7 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
           <div class="form-group">
             <label>Forme juridique</label>
             <select id="sFormeJuridique">
-              <option value="">ÔÇö Choisir ÔÇö</option>
+              <option value="">— Choisir —</option>
               <option value="Auto-entrepreneur">Auto-entrepreneur</option>
               <option value="EI">EI - Entreprise Individuelle</option>
               <option value="EIRL">EIRL</option>
@@ -569,12 +569,12 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
           </div>
         </div>
         <div class="form-group">
-          <label>Adresse compl├¿te</label>
+          <label>Adresse complète</label>
           <input type="text" id="sAdresse" placeholder="12 rue de la Paix, 75001 Paris"/>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>T├®l├®phone</label>
+            <label>Téléphone</label>
             <input type="text" id="sTel" placeholder="06 12 34 56 78"/>
           </div>
           <div class="form-group">
@@ -593,7 +593,7 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
         <div class="toggle-row">
           <div>
             <label>Micro-entrepreneur <span class="badge-micro">TVA 0%</span></label>
-            <small>Active l'exon├®ration TVA ÔÇö art. 293B du CGI</small>
+            <small>Active l'exonération TVA — art. 293B du CGI</small>
           </div>
           <label class="toggle">
             <input type="checkbox" id="sMicroEntrepreneur" onchange="onMicroChange()"/>
@@ -606,7 +606,7 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
             <input type="text" id="sSiret" placeholder="123 456 789 00010"/>
           </div>
           <div class="form-group">
-            <label>N┬░ TVA intracommunautaire</label>
+            <label>N° TVA intracommunautaire</label>
             <input type="text" id="sTvaIntracom" placeholder="FR12345678901" id="sTvaIntracom"/>
           </div>
         </div>
@@ -617,71 +617,71 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
           </div>
           <div class="form-group">
             <label>Capital social</label>
-            <input type="text" id="sCapital" placeholder="10 000 Ôé¼"/>
+            <input type="text" id="sCapital" placeholder="10 000 €"/>
           </div>
         </div>
         <div class="form-group">
-          <label>Mentions l├®gales compl├®mentaires</label>
-          <textarea id="sNotes" placeholder="Artisan RGE ┬À Qualibat n┬░XXX ┬À Mention RGE Qualifelec"></textarea>
+          <label>Mentions légales complémentaires</label>
+          <textarea id="sNotes" placeholder="Artisan RGE · Qualibat n°XXX · Mention RGE Qualifelec"></textarea>
           <p class="form-note">Ces mentions apparaissent en bas de chaque devis.</p>
         </div>
       </div>
 
       <!-- ONGLET ASSURANCE -->
       <div class="tab-pane" id="pane-assurance">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Les informations d'assurance d├®cennale sont obligatoires sur tout devis BTP (art. L241-1 du Code des assurances).</p>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Les informations d'assurance décennale sont obligatoires sur tout devis BTP (art. L241-1 du Code des assurances).</p>
         <div class="form-row">
           <div class="form-group">
             <label>Compagnie d'assurance</label>
             <input type="text" id="sAssuranceNom" placeholder="AXA, MAAF, Allianz..."/>
           </div>
           <div class="form-group">
-            <label>N┬░ de police d├®cennale</label>
+            <label>N° de police décennale</label>
             <input type="text" id="sAssuranceNumero" placeholder="123456789"/>
           </div>
         </div>
         <div class="form-group">
-          <label>Zone g├®ographique couverte</label>
-          <input type="text" id="sAssuranceZone" placeholder="France m├®tropolitaine"/>
+          <label>Zone géographique couverte</label>
+          <input type="text" id="sAssuranceZone" placeholder="France métropolitaine"/>
         </div>
         <div class="form-group">
           <label>Type de travaux couverts</label>
           <input type="text" id="sAssuranceTravaux" placeholder="Plomberie, sanitaires, chauffage"/>
         </div>
         <div style="background:rgba(232,96,10,0.06);border:1px solid rgba(232,96,10,0.2);border-radius:8px;padding:12px 14px;margin-top:8px;">
-          <p style="font-size:11.5px;color:var(--orange);line-height:1.6;font-weight:600;">ÔÜá Rappel l├®gal</p>
-          <p style="font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:4px;">La mention de l'assurance d├®cennale est obligatoire pour tout artisan du b├ótiment. En cas d'omission, vous vous exposez ├á une amende de 75 000 Ôé¼ et 6 mois d'emprisonnement.</p>
+          <p style="font-size:11.5px;color:var(--orange);line-height:1.6;font-weight:600;">Rappel legal</p>
+          <p style="font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:4px;">La mention de l'assurance décennale est obligatoire pour tout artisan du bâtiment. En cas d'omission, vous vous exposez à une amende de 75 000 € et 6 mois d'emprisonnement.</p>
         </div>
       </div>
 
       <!-- ONGLET PAIEMENT -->
       <div class="tab-pane" id="pane-paiement">
         <div class="form-group">
-          <label>Conditions de paiement par d├®faut</label>
+          <label>Conditions de paiement par défaut</label>
           <select id="sConditionsPaiement">
-            <option value="30% ├á la commande, 70% ├á r├®ception des travaux">30% commande ÔÇö 70% r├®ception</option>
-            <option value="50% ├á la commande, 50% ├á r├®ception des travaux">50% commande ÔÇö 50% r├®ception</option>
-            <option value="100% ├á r├®ception des travaux">100% ├á r├®ception</option>
-            <option value="├Ç r├®ception de facture, sous 30 jours">├Ç 30 jours</option>
-            <option value="Personnalis├®">Personnalis├®...</option>
+            <option value="30% à la commande, 70% à réception des travaux">30% commande — 70% réception</option>
+            <option value="50% à la commande, 50% à réception des travaux">50% commande — 50% réception</option>
+            <option value="100% à réception des travaux">100% à réception</option>
+            <option value="À réception de facture, sous 30 jours">À 30 jours</option>
+            <option value="Personnalisé">Personnalisé...</option>
           </select>
         </div>
         <div class="form-group" id="customPaiementGroup" style="display:none;">
-          <label>Conditions personnalis├®es</label>
-          <textarea id="sConditionsPaiementCustom" placeholder="Ex: 40% ├á la commande, 30% ├á mi-chantier, 30% ├á r├®ception..."></textarea>
+          <label>Conditions personnalisées</label>
+          <textarea id="sConditionsPaiementCustom" placeholder="Ex: 40% à la commande, 30% à mi-chantier, 30% à réception..."></textarea>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Validit├® du devis (jours)</label>
+            <label>Validité du devis (jours)</label>
             <input type="number" id="sValidite" placeholder="30" min="1" max="365"/>
           </div>
           <div class="form-group">
-            <label>D├®lai de paiement (jours)</label>
+            <label>Délai de paiement (jours)</label>
             <input type="number" id="sDelaiPaiement" placeholder="30" min="0" max="90"/>
           </div>
         </div>
         <hr class="form-sep">
-        <p style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:12px;">­ƒÅª Coordonn├®es bancaires (optionnel ÔÇö appara├«t sur le devis)</p>
+        <p style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:12px;">Coordonnees bancaires (optionnel — apparaît sur le devis)</p>
         <div class="form-group">
           <label>IBAN</label>
           <input type="text" id="sIban" placeholder="FR76 1234 5678 9012 3456 7890 123"/>
@@ -698,14 +698,14 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
         </div>
         <hr class="form-sep">
         <div class="form-group">
-          <p class="form-note" style="font-size:11px;color:var(--muted);">Propuls├® par Cognelia ┬À IA activ├®e</p>
+          <p class="form-note" style="font-size:11px;color:var(--muted);">Propulsé par Cognelia · IA activée</p>
         </div>
       </div>
 
     </div>
     <div class="modal-foot">
       <button class="btn-outline" onclick="closeSettings()">Annuler</button>
-      <button class="btn-primary" onclick="saveSettings()">­ƒÆ¥ Enregistrer</button>
+      <button class="btn-primary" onclick="saveSettings()">Enregistrer</button>
     </div>
   </div>
 </div>
@@ -720,8 +720,8 @@ let isLoading = false;
 let devisCounter = parseInt(localStorage.getItem('devis_counter') || '1');
 
 // ---- DOCUMENT MANAGEMENT ----
-let currentDocId = null;      // ID du document en cours d'├®dition
-let currentDocNum = null;     // Num├®ro assign├® (DEV-... ou FAC-...)
+let currentDocId = null;      // ID du document en cours d'édition
+let currentDocNum = null;     // Numéro assigné (DEV-... ou FAC-...)
 let currentDocType = 'devis'; // 'devis' ou 'facture'
 
 function nextDevisNum() {
@@ -755,7 +755,7 @@ function saveDocument(status) {
     type: currentDocType,
     numero: currentDocNum,
     status: status || 'brouillon',
-    client: devisState.client?.nom || 'ÔÇö',
+    client: devisState.client?.nom || '—',
     titre: devisState.titre || 'Sans titre',
     totalTTC: t.totalTTC,
     savedAt: Date.now(),
@@ -766,15 +766,15 @@ function saveDocument(status) {
   if (idx >= 0) docs[idx] = doc; else docs.unshift(doc);
   saveDocs(docs);
   updateDocsCount();
-  showNotif('­ƒÆ¥ Sauvegard├® ÔÇö ' + doc.numero);
-  renderDevis(); // refresh le num├®ro affich├®
+  showNotif('Sauvegarde — ' + doc.numero);
+  renderDevis(); // refresh le numéro affiché
 }
 
 function loadDocument(id) {
   const docs = getDocs();
   const doc = docs.find(d => d.id === id);
   if (!doc) return;
-  if (devisState && !confirm('Charger ce document ? Le devis en cours sera perdu (pensez ├á sauvegarder).')) return;
+  if (devisState && !confirm('Charger ce document ? Le devis en cours sera perdu (pensez à sauvegarder).')) return;
   devisState = JSON.parse(JSON.stringify(doc.state));
   currentDocId = doc.id;
   currentDocNum = doc.numero;
@@ -785,7 +785,7 @@ function loadDocument(id) {
   document.getElementById('quickPrompts').style.display = 'none';
   document.getElementById('saveBar').style.display = 'block';
   document.getElementById('messages').innerHTML = '';
-  addMessage('ai', '­ƒôé Document charg├® : <strong>' + doc.numero + '</strong> ÔÇö ' + doc.client);
+  addMessage('ai', 'Document chargé : <strong>' + doc.numero + '</strong> — ' + doc.client);
   closeDocsPanel();
 }
 
@@ -793,7 +793,7 @@ function convertToInvoice(id) {
   const docs = getDocs();
   const doc = docs.find(d => d.id === id);
   if (!doc) return;
-  if (!confirm('Convertir "' + doc.numero + '" en facture ? Un nouveau num├®ro de facture sera assign├®.')) return;
+  if (!confirm('Convertir "' + doc.numero + '" en facture ? Un nouveau numéro de facture sera assigné.')) return;
   const facNum = nextFactureNum();
   const newDoc = {
     id: 'doc-' + Date.now(),
@@ -806,12 +806,12 @@ function convertToInvoice(id) {
     savedAt: Date.now(),
     state: JSON.parse(JSON.stringify(doc.state))
   };
-  // Marquer le devis original comme "factur├®"
+  // Marquer le devis original comme "facturé"
   const origIdx = docs.findIndex(d => d.id === id);
   if (origIdx >= 0) docs[origIdx].status = 'facture';
   docs.unshift(newDoc);
   saveDocs(docs);
-  // Charger la facture dans l'├®diteur
+  // Charger la facture dans l'éditeur
   devisState = JSON.parse(JSON.stringify(newDoc.state));
   currentDocId = newDoc.id;
   currentDocNum = facNum;
@@ -821,7 +821,7 @@ function convertToInvoice(id) {
   document.getElementById('saveBar').style.display = 'block';
   updateDocsCount();
   renderDocsList();
-  addMessage('ai', '­ƒº¥ Facture cr├®├®e : <strong>' + facNum + '</strong> ÔÇö pr├¬te ├á valider et envoyer.');
+  addMessage('ai', 'Facture creee : <strong>' + facNum + '</strong> — prête à valider et envoyer.');
   closeDocsPanel();
 }
 
@@ -829,11 +829,11 @@ function updateDocStatus(id, status) {
   const docs = getDocs();
   const idx = docs.findIndex(d => d.id === id);
   if (idx >= 0) { docs[idx].status = status; saveDocs(docs); renderDocsList(); }
-  if (currentDocId === id) showNotif('Statut mis ├á jour : ' + statusLabel(status));
+  if (currentDocId === id) showNotif('Statut mis à jour : ' + statusLabel(status));
 }
 
 function statusLabel(s) {
-  return {brouillon:'Brouillon',envoye:'Envoy├®',accepte:'Accept├®',refuse:'Refus├®',facture:'Factur├®'}[s] || s;
+  return {brouillon:'Brouillon',envoye:'Envoyé',accepte:'Accepté',refuse:'Refusé',facture:'Facturé'}[s] || s;
 }
 function statusClass(s, type) {
   if (type === 'facture') return 's-facture-doc';
@@ -856,20 +856,20 @@ function renderDocsList() {
   );
   const el = document.getElementById('docsList');
   if (!filtered.length) {
-    el.innerHTML = '<div class="docs-empty"><div class="docs-empty-icon">­ƒôï</div><p style="font-size:14px;color:var(--muted);">Aucun document' + (q ? ' pour cette recherche' : '') + '.</p></div>';
+    el.innerHTML = '<div class="docs-empty"><p style="font-size:14px;color:var(--muted);">Aucun document' + (q ? ' pour cette recherche' : '') + '.</p></div>';
     return;
   }
   el.innerHTML = filtered.map(d => {
     const isFacture = d.type === 'facture';
-    const icon = isFacture ? '­ƒº¥' : '­ƒôï';
+    const icon = isFacture ? 'F' : 'D';
     const date = new Date(d.savedAt).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric' });
-    const total = Number(d.totalTTC || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Ôé¼';
+    const total = Number(d.totalTTC || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
     const sLabel = isFacture ? 'Facture' : statusLabel(d.status);
     const sClass = statusClass(d.status, d.type);
     const canConvert = !isFacture && (d.status === 'accepte' || d.status === 'envoye' || d.status === 'brouillon');
     const statusOptions = isFacture
-      ? '<option value="brouillon">Brouillon</option><option value="envoye">Envoy├®e</option><option value="accepte">Pay├®e</option>'
-      : '<option value="brouillon">Brouillon</option><option value="envoye">Envoy├®</option><option value="accepte">Accept├®</option><option value="refuse">Refus├®</option><option value="facture">Factur├®</option>';
+      ? '<option value="brouillon">Brouillon</option><option value="envoye">Envoyée</option><option value="accepte">Payée</option>'
+      : '<option value="brouillon">Brouillon</option><option value="envoye">Envoyé</option><option value="accepte">Accepté</option><option value="refuse">Refusé</option><option value="facture">Facturé</option>';
     return `<div class="doc-item">
       <div class="doc-type-icon">${icon}</div>
       <div class="doc-info">
@@ -888,8 +888,8 @@ function renderDocsList() {
         </div>
       </div>
       <div class="doc-actions">
-        <button class="btn-doc-load" onclick="loadDocument('${d.id}')">­ƒôé Ouvrir</button>
-        ${canConvert ? '<button class="btn-doc-convert" onclick="convertToInvoice(\'' + d.id + '\')">­ƒº¥ ÔåÆ Facture</button>' : ''}
+        <button class="btn-doc-load" onclick="loadDocument('${d.id}')">Ouvrir</button>
+        ${canConvert ? '<button class="btn-doc-convert" onclick="convertToInvoice(\'' + d.id + '\')">→ Facture</button>' : ''}
       </div>
     </div>`;
   }).join('');
@@ -931,7 +931,7 @@ function getArtisan() {
     iban: localStorage.getItem('s_iban') || '',
     bic: localStorage.getItem('s_bic') || '',
     banque: localStorage.getItem('s_banque') || '',
-    conditionsPaiement: localStorage.getItem('s_conditions_paiement') || '30% ├á la commande, 70% ├á r├®ception des travaux',
+    conditionsPaiement: localStorage.getItem('s_conditions_paiement') || '30% à la commande, 70% à réception des travaux',
     validite: parseInt(localStorage.getItem('s_validite') || '30'),
     delaiPaiement: localStorage.getItem('s_delai_paiement') || '30'
   };
@@ -944,12 +944,12 @@ function getApiKey() {
 function saveApiKey() {
   const code = document.getElementById('apiKeyInput').value.trim().toUpperCase();
   if (!code) {
-    alert('Veuillez entrer votre code d\'acc├¿s.');
+    alert('Veuillez entrer votre code d\'accès.');
     return;
   }
   localStorage.setItem('access_code', code);
   document.getElementById('apiKeyModal').classList.remove('open');
-  addMessage('ai', 'Ô£à Acc├¿s activ├® ! Je suis pr├¬t. D├®crivez-moi votre chantier.');
+  addMessage('ai', 'Acces active ! Je suis prêt. Décrivez-moi votre chantier.');
 }
 
 // =============================================
@@ -994,7 +994,7 @@ function openSettings() {
   document.getElementById('sBanque').value = a.banque;
   document.getElementById('sValidite').value = a.validite;
   document.getElementById('sDelaiPaiement').value = a.delaiPaiement;
-  // Code d'acc├¿s g├®r├® c├┤t├® serveur
+  // Code d'accès géré côté serveur
 
   // Conditions paiement
   const sel = document.getElementById('sConditionsPaiement');
@@ -1002,7 +1002,7 @@ function openSettings() {
   let found = false;
   for (let opt of sel.options) { if (opt.value === cp) { sel.value = cp; found = true; break; } }
   if (!found) {
-    sel.value = 'Personnalis├®';
+    sel.value = 'Personnalisé';
     document.getElementById('sConditionsPaiementCustom').value = cp;
     document.getElementById('customPaiementGroup').style.display = 'block';
   }
@@ -1017,11 +1017,11 @@ function closeSettings() {
 
 function saveSettings() {
   const cp = document.getElementById('sConditionsPaiement').value;
-  const finalCP = cp === 'Personnalis├®'
+  const finalCP = cp === 'Personnalisé'
     ? document.getElementById('sConditionsPaiementCustom').value.trim()
     : cp;
 
-  // Cl├® API g├®r├®e c├┤t├® serveur ÔÇö rien ├á sauvegarder ici
+  // Clé API gérée côté serveur — rien à sauvegarder ici
 
   localStorage.setItem('s_entreprise', document.getElementById('sEntreprise').value.trim() || 'Votre Entreprise BTP');
   localStorage.setItem('s_forme_juridique', document.getElementById('sFormeJuridique').value);
@@ -1048,12 +1048,12 @@ function saveSettings() {
 
   closeSettings();
   if (devisState) renderDevis();
-  addMessage('ai', 'Ô£à Param├¿tres enregistr├®s ! Ils seront utilis├®s sur tous vos devis.');
+  addMessage('ai', 'Parametres enregistres ! Ils seront utilisés sur tous vos devis.');
 }
 
 // Watch custom paiement
 document.getElementById('sConditionsPaiement').addEventListener('change', function() {
-  document.getElementById('customPaiementGroup').style.display = this.value === 'Personnalis├®' ? 'block' : 'none';
+  document.getElementById('customPaiementGroup').style.display = this.value === 'Personnalisé' ? 'block' : 'none';
 });
 
 // =============================================
@@ -1065,43 +1065,43 @@ function buildSystemPrompt() {
     ? '\nIMPORTANT : Cet artisan est auto-entrepreneur / micro-entrepreneur. TVA NON APPLICABLE (art. 293B du CGI). Toutes les lignes doivent avoir tauxTVA: 0. Ajoute la mention "TVA non applicable, art. 293B du CGI" dans notesBas.'
     : '';
 
-  return `Tu es Copilote Devis BTP, un assistant expert en chiffrage de travaux BTP en France. Tu aides les artisans ├á cr├®er des devis professionnels par conversation naturelle.
+  return `Tu es Copilote Devis BTP, un assistant expert en chiffrage de travaux BTP en France. Tu aides les artisans à créer des devis professionnels par conversation naturelle.
 
-ARTISAN : ${a.entreprise}${a.formeJuridique ? ' ÔÇö ' + a.formeJuridique : ''}
-SIRET : ${a.siret || 'non renseign├®'}
-Contact : ${[a.tel, a.email].filter(Boolean).join(' | ') || 'non renseign├®'}
-Adresse : ${a.adresse || 'non renseign├®e'}
-${a.microEntrepreneur ? 'ÔÜá MICRO-ENTREPRENEUR ÔÇö Exon├®r├® de TVA (art. 293B CGI)' : ''}
+ARTISAN : ${a.entreprise}${a.formeJuridique ? ' — ' + a.formeJuridique : ''}
+SIRET : ${a.siret || 'non renseigné'}
+Contact : ${[a.tel, a.email].filter(Boolean).join(' | ') || 'non renseigné'}
+Adresse : ${a.adresse || 'non renseignée'}
+${a.microEntrepreneur ? 'MICRO-ENTREPRENEUR — Exonéré de TVA (art. 293B CGI)' : ''}
 ${microNote}
 
-R├öLE ET COMPORTEMENT ÔÇö MODE ACTION PURE :
-- Tu ne poses JAMAIS de question. Jamais. M├¬me si une info manque.
-- ├Ç chaque message, tu g├®n├¿res ou mets ├á jour le devis IMM├ëDIATEMENT avec ce que tu sais.
-- Si une info manque (surface, prix, marque, type), utilise une estimation BTP standard raisonnable et indique-la dans la d├®signation (ex: "Fourniture et pose WC suspendu (estimation standard)").
-- L'artisan corrigera lui-m├¬me ce qui ne lui convient pas ÔÇö ce n'est pas ton r├┤le de v├®rifier.
-- Ta r├®ponse "message" est UNE LIGNE maximum. Ex: "Ô£à Devis salle de bain g├®n├®r├®." ou "Ô£à TVA 10% appliqu├®e."
+RÔLE ET COMPORTEMENT — MODE ACTION PURE :
+- Tu ne poses JAMAIS de question. Jamais. Même si une info manque.
+- À chaque message, tu génères ou mets à jour le devis IMMÉDIATEMENT avec ce que tu sais.
+- Si une info manque (surface, prix, marque, type), utilise une estimation BTP standard raisonnable et indique-la dans la désignation (ex: "Fourniture et pose WC suspendu (estimation standard)").
+- L'artisan corrigera lui-même ce qui ne lui convient pas — ce n'est pas ton rôle de vérifier.
+- Ta réponse "message" est UNE LIGNE maximum. Ex: "Devis salle de bain genere." ou "TVA 10% appliquee."
 - Tu regroupes les postes logiquement en sections (max 5 sections).
-- Tu utilises TOUJOURS le JSON pour r├®pondre.
+- Tu utilises TOUJOURS le JSON pour répondre.
 
-CONNAISSANCES TECHNIQUES ÔÇö Prix march├® fran├ºais HT :
-Plomberie : MO plombier 55-80Ôé¼/h ┬À Chauffe-eau thermo 200L fourni 900-1400Ôé¼ ┬À Pose chauffe-eau 250-400Ôé¼ ┬À Douche italienne fournie 600-1200Ôé¼ ┬À Meuble vasque 300-600Ôé¼ ┬À WC suspendu 250-450Ôé¼ ┬À Baignoire 400-900Ôé¼
-├ëlectricit├® : MO ├®lectricien 55-75Ôé¼/h ┬À Tableau ├®lec standard 800-1500Ôé¼ ┬À Point lumineux 80-150Ôé¼ ┬À Prise 60-100Ôé¼
-Carrelage : Pose sol 35-55Ôé¼/m┬▓ ┬À Pose mural 40-65Ôé¼/m┬▓ ┬À Fourniture moy 25-50Ôé¼/m┬▓ ┬À D├®pose 15-25Ôé¼/m┬▓
-Isolation : Combles perdus souffl├® 25-40Ôé¼/m┬▓ ┬À Sous-rampants 40-60Ôé¼/m┬▓ ┬À ITE fa├ºade 80-150Ôé¼/m┬▓
-Peinture : MO peintre 25-40Ôé¼/m┬▓ ┬À Fourniture 5-12Ôé¼/m┬▓
-Menuiserie : Porte int fournie/pos├®e 400-900Ôé¼ ┬À Fen├¬tre PVC fournie/pos├®e 600-1400Ôé¼ ┬À Volet roulant 400-800Ôé¼
-Ma├ºonnerie : MO ma├ºon 40-60Ôé¼/h ┬À D├®molition cloison 20-35Ôé¼/m┬▓
-Divers : D├®placement/approvisionnement 80-150Ôé¼ ┬À Protection/nettoyage chantier 150-400Ôé¼
+CONNAISSANCES TECHNIQUES — Prix marché français HT :
+Plomberie : MO plombier 55-80€/h · Chauffe-eau thermo 200L fourni 900-1400€ · Pose chauffe-eau 250-400€ · Douche italienne fournie 600-1200€ · Meuble vasque 300-600€ · WC suspendu 250-450€ · Baignoire 400-900€
+Électricité : MO électricien 55-75€/h · Tableau élec standard 800-1500€ · Point lumineux 80-150€ · Prise 60-100€
+Carrelage : Pose sol 35-55€/m² · Pose mural 40-65€/m² · Fourniture moy 25-50€/m² · Dépose 15-25€/m²
+Isolation : Combles perdus soufflé 25-40€/m² · Sous-rampants 40-60€/m² · ITE façade 80-150€/m²
+Peinture : MO peintre 25-40€/m² · Fourniture 5-12€/m²
+Menuiserie : Porte int fournie/posée 400-900€ · Fenêtre PVC fournie/posée 600-1400€ · Volet roulant 400-800€
+Maçonnerie : MO maçon 40-60€/h · Démolition cloison 20-35€/m²
+Divers : Déplacement/approvisionnement 80-150€ · Protection/nettoyage chantier 150-400€
 
 TAUX DE TVA BTP FRANCE :
-- 20% ÔåÆ neuf, local commercial, logement < 2 ans, ├®quipements seuls
-- 10% ÔåÆ r├®novation logement > 2 ans (le plus courant)
-- 5,5% ÔåÆ travaux am├®lioration ├®nerg├®tique (isolation, PAC, pompe ├á chaleur, chaudi├¿re biomasse, panneaux solaires)
-- 0% ÔåÆ micro-entrepreneur (art. 293B CGI)
+- 20% → neuf, local commercial, logement < 2 ans, équipements seuls
+- 10% → rénovation logement > 2 ans (le plus courant)
+- 5,5% → travaux amélioration énergétique (isolation, PAC, pompe à chaleur, chaudière biomasse, panneaux solaires)
+- 0% → micro-entrepreneur (art. 293B CGI)
 
-R├ëPONSE ÔÇö Format STRICT (JSON pur, pas de markdown) :
+RÉPONSE — Format STRICT (JSON pur, pas de markdown) :
 {
-  "message": "ta r├®ponse courte en fran├ºais",
+  "message": "ta réponse courte en français",
   "devis": { ... } ou null si pas de modification
 }
 
@@ -1114,7 +1114,7 @@ Structure du devis :
     {
       "titre": "Nom section",
       "lignes": [
-        { "designation": "Description pr├®cise et professionnelle", "quantite": 1, "unite": "forfait|m┬▓|ml|h|u|ens", "prixUnitaireHT": 0, "tauxTVA": 10 }
+        { "designation": "Description précise et professionnelle", "quantite": 1, "unite": "forfait|m²|ml|h|u|ens", "prixUnitaireHT": 0, "tauxTVA": 10 }
       ]
     }
   ],
@@ -1127,12 +1127,12 @@ Structure du devis :
 dateEmission : optionnel. Format "JJ/MM/AAAA" ou "JJ mois AAAA". Laisser vide pour utiliser la date du jour.
 
 COMPORTEMENT CONTEXTUEL :
-- "client = Dupont" ou "le client s'appelle Jacky" ÔåÆ client.nom = exactement ce qui est dit, SANS ajouter de civilit├® (pas de "M.", "Mme" sauf si explicitement demand├®)
-- "remise 10%" ÔåÆ remise.actif:true, type:pourcentage, valeur:10
-- "conditions : 30% commande" ÔåÆ conditionsPaiement
-- "supprimer", "enlever" ÔåÆ retirer la ligne/section du devis
-- Si artisan mentionne l'adresse/ville du chantier ÔåÆ client.ville
-- Toujours conserver les lignes existantes sauf si modification demand├®e`;
+- "client = Dupont" ou "le client s'appelle Jacky" → client.nom = exactement ce qui est dit, SANS ajouter de civilité (pas de "M.", "Mme" sauf si explicitement demandé)
+- "remise 10%" → remise.actif:true, type:pourcentage, valeur:10
+- "conditions : 30% commande" → conditionsPaiement
+- "supprimer", "enlever" → retirer la ligne/section du devis
+- Si artisan mentionne l'adresse/ville du chantier → client.ville
+- Toujours conserver les lignes existantes sauf si modification demandée`;
 }
 
 // =============================================
@@ -1155,7 +1155,7 @@ function toggleVoice() {
   if (isListening) { stopListening(); return; }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) {
-    addMessage('ai', 'ÔÜá´©Å La reconnaissance vocale n\'est pas support├®e sur ce navigateur. Utilisez Chrome ou Edge.');
+    addMessage('ai', 'La reconnaissance vocale n\'est pas supportée sur ce navigateur. Utilisez Chrome ou Edge.');
     return;
   }
   startListening();
@@ -1168,8 +1168,8 @@ function startListening() {
   const btn = document.getElementById('voiceBtn');
   const label = document.getElementById('voiceLabel');
   btn.className = 'voice-btn listening';
-  btn.textContent = '­ƒÄÖ';
-  label.textContent = 'Je vous ├®coute...';
+  btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="color:var(--navy)"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>';
+  label.textContent = 'Je vous écoute...';
   label.className = 'voice-label listening';
   const input = document.getElementById('chatInput');
   input.placeholder = 'Transcription en cours...';
@@ -1188,23 +1188,23 @@ function startListening() {
   recognition.onend = () => {
     isListening = false;
     btn.className = 'voice-btn processing';
-    btn.textContent = 'ÔÅ│';
+    btn.textContent = '⏳';
     label.textContent = 'Traitement...';
     label.className = 'voice-label';
     const text = input.value.trim();
     if (text) {
       setTimeout(() => {
         btn.className = 'voice-btn idle';
-        btn.textContent = '­ƒÄÖ';
-        label.textContent = 'Pr├¬t';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="color:var(--navy)"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>';
+        label.textContent = 'Prêt';
         label.className = 'voice-label';
-        input.placeholder = 'Ex: Devis pour r├®novation salle de bain...';
+        input.placeholder = 'Ex: Devis pour rénovation salle de bain...';
         sendMessage();
       }, 300);
     } else {
       btn.className = 'voice-btn idle';
-      btn.textContent = '­ƒÄÖ';
-      label.textContent = 'Pr├¬t';
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="color:var(--navy)"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>';
+      label.textContent = 'Prêt';
       label.className = 'voice-label';
     }
   };
@@ -1212,13 +1212,13 @@ function startListening() {
   recognition.onerror = (e) => {
     isListening = false;
     btn.className = 'voice-btn idle';
-    btn.textContent = '­ƒÄÖ';
-    label.textContent = 'Pr├¬t';
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="color:var(--navy)"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>';
+    label.textContent = 'Prêt';
     label.className = 'voice-label';
-    input.placeholder = 'Ex: Devis pour r├®novation salle de bain...';
-    // Erreurs silencieuses : no-speech et network (perte de connexion momentan├®e)
+    input.placeholder = 'Ex: Devis pour rénovation salle de bain...';
+    // Erreurs silencieuses : no-speech et network (perte de connexion momentanée)
     if (e.error !== 'no-speech' && e.error !== 'network') {
-      addMessage('ai', 'ÔÜá´©Å Micro indisponible : ' + e.error);
+      addMessage('ai', 'Micro indisponible : ' + e.error);
     }
   };
 
@@ -1230,32 +1230,32 @@ function stopListening() {
 }
 
 // =============================================
-// (demo mode supprim├®)
+// (demo mode supprimé)
 // =============================================
 function getDemoResponse(text) {
   const t = text.toLowerCase();
   const a = getArtisan();
 
   // Client name
-  const clientMatch = text.match(/(?:client|s'appelle|pour|contact)\s+(?:M\.?\s*|Mme\.?\s*|Mr\.?\s*)?([A-Z├Ç-├£][a-z├á-├╝]+(?:\s+[A-Z├Ç-├£][a-z├á-├╝]+)?)/);
+  const clientMatch = text.match(/(?:client|s'appelle|pour|contact)\s+(?:M\.?\s*|Mme\.?\s*|Mr\.?\s*)?([A-ZÀ-Ü][a-zà-ü]+(?:\s+[A-ZÀ-Ü][a-zà-ü]+)?)/);
 
   // Remise
-  if (/remise|r├®duction|discount/.test(t)) {
+  if (/remise|réduction|discount/.test(t)) {
     const pct = text.match(/(\d+)\s*%/);
     const val = pct ? parseInt(pct[1]) : 10;
     return {
-      message: `Ô£à Remise de ${val}% appliqu├®e sur le devis.`,
+      message: `Remise de ${val}% appliquée sur le devis.`,
       devis: devisState ? { ...devisState, remise: { actif: true, type: 'pourcentage', valeur: val, raison: 'Geste commercial' } } : null
     };
   }
 
   // Conditions paiement
-  if (/condition|paiement|acompte|r├¿glement/.test(t)) {
-    const cp = /50/.test(t) ? '50% ├á la commande, 50% ├á r├®ception' :
-               /100/.test(t) ? '100% ├á r├®ception' :
-               '30% ├á la commande, 70% ├á r├®ception des travaux';
+  if (/condition|paiement|acompte|règlement/.test(t)) {
+    const cp = /50/.test(t) ? '50% à la commande, 50% à réception' :
+               /100/.test(t) ? '100% à réception' :
+               '30% à la commande, 70% à réception des travaux';
     return {
-      message: `Ô£à Conditions de paiement mises ├á jour : ${cp}`,
+      message: `Conditions de paiement mises à jour : ${cp}`,
       devis: devisState ? { ...devisState, conditionsPaiement: cp } : null
     };
   }
@@ -1264,54 +1264,54 @@ function getDemoResponse(text) {
   if (clientMatch || /client|m\.\s|mme\s|contact/.test(t)) {
     const nom = clientMatch ? clientMatch[1] : 'Dupont';
     return {
-      message: `Ô£à Client enregistr├® : **${nom}**. Continuez ├á dicter les travaux.`,
+      message: `Client enregistre : **${nom}**. Continuez à dicter les travaux.`,
       devis: devisState ? { ...devisState, client: { ...devisState.client, nom } } : null
     };
   }
 
   // PDF
-  if (/pdf|export|t├®l├®charg|imprimer/.test(t)) {
-    return { message: '­ƒôä Export PDF en coursÔÇª', devis: null };
+  if (/pdf|export|télécharg|imprimer/.test(t)) {
+    return { message: 'Export PDF en cours...', devis: null };
   }
 
   // SALLE DE BAIN
   if (/salle.de.bain|sdb|douche|baignoire|vasque|wc|toilette|sanitaire/.test(t)) {
     return {
-      message: "Ô£à Devis r├®novation salle de bain g├®n├®r├® ! J'ai inclus les postes standards. Dites-moi si vous souhaitez modifier des prix ou ajouter des postes.",
+      message: "Devis renovation salle de bain généré ! J'ai inclus les postes standards. Dites-moi si vous souhaitez modifier des prix ou ajouter des postes.",
       devis: {
-        client: { nom: '├Ç compl├®ter', adresse: '', ville: '', telephone: '', email: '' },
-        titre: 'R├®novation Salle de Bain',
-        description: 'R├®novation compl├¿te salle de bain ÔÇö d├®molition, plomberie, carrelage, ├®quipements',
+        client: { nom: 'À compléter', adresse: '', ville: '', telephone: '', email: '' },
+        titre: 'Rénovation Salle de Bain',
+        description: 'Rénovation complète salle de bain — démolition, plomberie, carrelage, équipements',
         sections: [
           {
-            titre: 'D├®molition & Pr├®paration',
+            titre: 'Démolition & Préparation',
             lignes: [
-              { designation: 'D├®pose ancienne baignoire / douche, WC et meuble vasque', quantite: 1, unite: 'forfait', prixUnitaireHT: 450, tauxTVA: 10 },
-              { designation: 'D├®pose carrelage mural et sol (protection, ├®vacuation d├®chets)', quantite: 1, unite: 'forfait', prixUnitaireHT: 380, tauxTVA: 10 }
+              { designation: 'Dépose ancienne baignoire / douche, WC et meuble vasque', quantite: 1, unite: 'forfait', prixUnitaireHT: 450, tauxTVA: 10 },
+              { designation: 'Dépose carrelage mural et sol (protection, évacuation déchets)', quantite: 1, unite: 'forfait', prixUnitaireHT: 380, tauxTVA: 10 }
             ]
           },
           {
             titre: 'Plomberie & Sanitaires',
             lignes: [
-              { designation: 'Fourniture et pose douche ├á l\'italienne 90├ù90 cm ÔÇö receveur extra-plat', quantite: 1, unite: 'u', prixUnitaireHT: 950, tauxTVA: 10 },
-              { designation: 'Fourniture et pose WC suspendu avec b├óti-support ÔÇö blanc', quantite: 1, unite: 'u', prixUnitaireHT: 680, tauxTVA: 10 },
+              { designation: 'Fourniture et pose douche à l\'italienne 90×90 cm — receveur extra-plat', quantite: 1, unite: 'u', prixUnitaireHT: 950, tauxTVA: 10 },
+              { designation: 'Fourniture et pose WC suspendu avec bâti-support — blanc', quantite: 1, unite: 'u', prixUnitaireHT: 680, tauxTVA: 10 },
               { designation: 'Fourniture et pose meuble vasque 80 cm, mitigeur, miroir LED', quantite: 1, unite: 'u', prixUnitaireHT: 820, tauxTVA: 10 },
-              { designation: 'Main d\'┼ôuvre plomberie ÔÇö raccordements et mise en service', quantite: 8, unite: 'h', prixUnitaireHT: 65, tauxTVA: 10 }
+              { designation: 'Main d\'œuvre plomberie — raccordements et mise en service', quantite: 8, unite: 'h', prixUnitaireHT: 65, tauxTVA: 10 }
             ]
           },
           {
-            titre: 'Carrelage & Rev├¬tements',
+            titre: 'Carrelage & Revêtements',
             lignes: [
-              { designation: 'Fourniture et pose carrelage sol gr├¿s c├®rame 60├ù60 ÔÇö ton gris clair', quantite: 6.5, unite: 'm┬▓', prixUnitaireHT: 85, tauxTVA: 10 },
-              { designation: 'Fourniture et pose fa├»ence murale 30├ù60 ÔÇö couleur unie', quantite: 18, unite: 'm┬▓', prixUnitaireHT: 95, tauxTVA: 10 },
-              { designation: 'Joints, colle et finitions p├®riph├®riques', quantite: 1, unite: 'forfait', prixUnitaireHT: 220, tauxTVA: 10 }
+              { designation: 'Fourniture et pose carrelage sol grès cérame 60×60 — ton gris clair', quantite: 6.5, unite: 'm²', prixUnitaireHT: 85, tauxTVA: 10 },
+              { designation: 'Fourniture et pose faïence murale 30×60 — couleur unie', quantite: 18, unite: 'm²', prixUnitaireHT: 95, tauxTVA: 10 },
+              { designation: 'Joints, colle et finitions périphériques', quantite: 1, unite: 'forfait', prixUnitaireHT: 220, tauxTVA: 10 }
             ]
           },
           {
             titre: 'Divers',
             lignes: [
-              { designation: 'Protection chantier, nettoyage et ├®vacuation gravats', quantite: 1, unite: 'forfait', prixUnitaireHT: 280, tauxTVA: 10 },
-              { designation: 'D├®placement et approvisionnement', quantite: 1, unite: 'forfait', prixUnitaireHT: 120, tauxTVA: 10 }
+              { designation: 'Protection chantier, nettoyage et évacuation gravats', quantite: 1, unite: 'forfait', prixUnitaireHT: 280, tauxTVA: 10 },
+              { designation: 'Déplacement et approvisionnement', quantite: 1, unite: 'forfait', prixUnitaireHT: 120, tauxTVA: 10 }
             ]
           }
         ],
@@ -1324,59 +1324,59 @@ function getDemoResponse(text) {
   }
 
   // CHAUFFE-EAU
-  if (/chauffe.eau|ballon|thermodynamique|chaudi├¿re|chauffage/.test(t)) {
+  if (/chauffe.eau|ballon|thermodynamique|chaudière|chauffage/.test(t)) {
     const isThermo = /thermodynamique|thermo/.test(t);
     return {
-      message: `Ô£à Devis ${isThermo ? 'chauffe-eau thermodynamique' : 'chauffe-eau'} g├®n├®r├®. ├ëligible TVA 5,5% (am├®lioration ├®nerg├®tique).`,
+      message: `Devis ${isThermo ? 'chauffe-eau thermodynamique' : 'chauffe-eau'} généré. Éligible TVA 5,5% (amélioration énergétique).`,
       devis: {
-        client: { nom: '├Ç compl├®ter', adresse: '', ville: '', telephone: '', email: '' },
+        client: { nom: 'À compléter', adresse: '', ville: '', telephone: '', email: '' },
         titre: isThermo ? 'Installation Chauffe-eau Thermodynamique' : 'Remplacement Chauffe-eau',
         description: '',
         sections: [
           {
             titre: 'Fourniture',
             lignes: [
-              { designation: isThermo ? 'Chauffe-eau thermodynamique 200L ÔÇö classe ├®nerg├®tique A+' : 'Chauffe-eau ├®lectrique 200L', quantite: 1, unite: 'u', prixUnitaireHT: isThermo ? 1190 : 520, tauxTVA: isThermo ? 5.5 : 10 },
-              { designation: 'Kit raccordement, s├®curit├®s et robinetterie', quantite: 1, unite: 'forfait', prixUnitaireHT: 145, tauxTVA: isThermo ? 5.5 : 10 }
+              { designation: isThermo ? 'Chauffe-eau thermodynamique 200L — classe énergétique A+' : 'Chauffe-eau électrique 200L', quantite: 1, unite: 'u', prixUnitaireHT: isThermo ? 1190 : 520, tauxTVA: isThermo ? 5.5 : 10 },
+              { designation: 'Kit raccordement, sécurités et robinetterie', quantite: 1, unite: 'forfait', prixUnitaireHT: 145, tauxTVA: isThermo ? 5.5 : 10 }
             ]
           },
           {
-            titre: 'Main d\'┼ôuvre',
+            titre: 'Main d\'œuvre',
             lignes: [
-              { designation: 'D├®pose ancien chauffe-eau, ├®vacuation', quantite: 1, unite: 'forfait', prixUnitaireHT: 180, tauxTVA: isThermo ? 5.5 : 10 },
-              { designation: isThermo ? 'Pose chauffe-eau thermodynamique mural, raccordements plomberie et ├®lectricit├®, mise en service' : 'Pose et raccordement chauffe-eau', quantite: 1, unite: 'forfait', prixUnitaireHT: isThermo ? 420 : 280, tauxTVA: isThermo ? 5.5 : 10 },
-              { designation: 'D├®placement et approvisionnement', quantite: 1, unite: 'forfait', prixUnitaireHT: 90, tauxTVA: isThermo ? 5.5 : 10 }
+              { designation: 'Dépose ancien chauffe-eau, évacuation', quantite: 1, unite: 'forfait', prixUnitaireHT: 180, tauxTVA: isThermo ? 5.5 : 10 },
+              { designation: isThermo ? 'Pose chauffe-eau thermodynamique mural, raccordements plomberie et électricité, mise en service' : 'Pose et raccordement chauffe-eau', quantite: 1, unite: 'forfait', prixUnitaireHT: isThermo ? 420 : 280, tauxTVA: isThermo ? 5.5 : 10 },
+              { designation: 'Déplacement et approvisionnement', quantite: 1, unite: 'forfait', prixUnitaireHT: 90, tauxTVA: isThermo ? 5.5 : 10 }
             ]
           }
         ],
         remise: { actif: false, type: 'pourcentage', valeur: 0, raison: '' },
         conditionsPaiement: a.conditionsPaiement,
         validite: a.validite,
-        notesBas: isThermo ? 'Travaux ├®ligibles au cr├®dit d\'imp├┤t ├®nergie et aux aides MaPrimeR├®nov\'.' : ''
+        notesBas: isThermo ? 'Travaux éligibles au crédit d\'impôt énergie et aux aides MaPrimeRénov\'.' : ''
       }
     };
   }
 
   // CARRELAGE
-  if (/carrelage|fa├»ence|rev├¬tement|sol|parquet/.test(t)) {
+  if (/carrelage|faïence|revêtement|sol|parquet/.test(t)) {
     const m2Match = text.match(/(\d+)\s*m/);
     const surface = m2Match ? parseInt(m2Match[1]) : 25;
     return {
-      message: `Ô£à Devis pose de carrelage ${surface} m┬▓ g├®n├®r├®.`,
+      message: `Devis pose de carrelage ${surface} m² généré.`,
       devis: {
-        client: { nom: '├Ç compl├®ter', adresse: '', ville: '', telephone: '', email: '' },
-        titre: `Pose Carrelage ${surface} m┬▓`,
+        client: { nom: 'À compléter', adresse: '', ville: '', telephone: '', email: '' },
+        titre: `Pose Carrelage ${surface} m²`,
         description: '',
         sections: [
           {
             titre: 'Carrelage',
             lignes: [
-              { designation: `Fourniture carrelage gr├¿s c├®rame 60├ù60 ÔÇö coloris au choix (${surface} m┬▓ + 10% chutes)`, quantite: Math.ceil(surface * 1.1), unite: 'm┬▓', prixUnitaireHT: 38, tauxTVA: 10 },
-              { designation: `D├®pose ancien rev├¬tement de sol`, quantite: surface, unite: 'm┬▓', prixUnitaireHT: 18, tauxTVA: 10 },
-              { designation: `Pose carrelage sol sur chape existante ÔÇö joints compris`, quantite: surface, unite: 'm┬▓', prixUnitaireHT: 45, tauxTVA: 10 },
-              { designation: 'Ragr├®age et pr├®paration support', quantite: surface, unite: 'm┬▓', prixUnitaireHT: 12, tauxTVA: 10 },
+              { designation: `Fourniture carrelage grès cérame 60×60 — coloris au choix (${surface} m² + 10% chutes)`, quantite: Math.ceil(surface * 1.1), unite: 'm²', prixUnitaireHT: 38, tauxTVA: 10 },
+              { designation: `Dépose ancien revêtement de sol`, quantite: surface, unite: 'm²', prixUnitaireHT: 18, tauxTVA: 10 },
+              { designation: `Pose carrelage sol sur chape existante — joints compris`, quantite: surface, unite: 'm²', prixUnitaireHT: 45, tauxTVA: 10 },
+              { designation: 'Ragréage et préparation support', quantite: surface, unite: 'm²', prixUnitaireHT: 12, tauxTVA: 10 },
               { designation: 'Plinthes carrelage assorties, pose', quantite: Math.ceil(surface * 0.5), unite: 'ml', prixUnitaireHT: 22, tauxTVA: 10 },
-              { designation: 'Nettoyage et ├®vacuation d├®chets', quantite: 1, unite: 'forfait', prixUnitaireHT: 150, tauxTVA: 10 }
+              { designation: 'Nettoyage et évacuation déchets', quantite: 1, unite: 'forfait', prixUnitaireHT: 150, tauxTVA: 10 }
             ]
           }
         ],
@@ -1389,51 +1389,51 @@ function getDemoResponse(text) {
   }
 
   // ISOLATION
-  if (/isolation|comble|rampant|ite|fa├ºade|isoler/.test(t)) {
+  if (/isolation|comble|rampant|ite|façade|isoler/.test(t)) {
     const m2Match = text.match(/(\d+)\s*m/);
     const surface = m2Match ? parseInt(m2Match[1]) : 80;
     const isComble = /comble|souffle|perdus/.test(t);
     return {
-      message: `Ô£à Devis isolation ${isComble ? 'combles' : 'thermique'} ${surface} m┬▓ ÔÇö TVA 5,5% (travaux d'am├®lioration ├®nerg├®tique).`,
+      message: `Devis isolation ${isComble ? 'combles' : 'thermique'} ${surface} m² — TVA 5,5% (travaux d'amélioration énergétique).`,
       devis: {
-        client: { nom: '├Ç compl├®ter', adresse: '', ville: '', telephone: '', email: '' },
-        titre: `Isolation ${isComble ? 'Combles Perdus' : 'Thermique'} ÔÇö ${surface} m┬▓`,
-        description: 'Travaux d\'am├®lioration de la performance ├®nerg├®tique ÔÇö ├®ligibles MaPrimeR├®nov\'',
+        client: { nom: 'À compléter', adresse: '', ville: '', telephone: '', email: '' },
+        titre: `Isolation ${isComble ? 'Combles Perdus' : 'Thermique'} — ${surface} m²`,
+        description: 'Travaux d\'amélioration de la performance énergétique — éligibles MaPrimeRénov\'',
         sections: [
           {
             titre: 'Isolation',
             lignes: [
-              { designation: isComble ? `Isolation combles perdus par soufflage ÔÇö laine de verre 300 mm ÔÇö RÔëÑ7` : 'Isolation thermique par l\'ext├®rieur (ITE) ÔÇö laine de roche 120 mm', quantite: surface, unite: 'm┬▓', prixUnitaireHT: isComble ? 32 : 115, tauxTVA: 5.5 },
-              { designation: isComble ? 'Trappe d\'acc├¿s isol├®e et pose d\'├®cran de protection' : 'Enduit de finition et finitions p├®riph├®riques', quantite: 1, unite: 'forfait', prixUnitaireHT: isComble ? 280 : Math.round(surface * 18), tauxTVA: 5.5 },
-              { designation: 'D├®placement, installation chantier, nettoyage', quantite: 1, unite: 'forfait', prixUnitaireHT: 220, tauxTVA: 5.5 }
+              { designation: isComble ? `Isolation combles perdus par soufflage — laine de verre 300 mm — R≥7` : 'Isolation thermique par l\'extérieur (ITE) — laine de roche 120 mm', quantite: surface, unite: 'm²', prixUnitaireHT: isComble ? 32 : 115, tauxTVA: 5.5 },
+              { designation: isComble ? 'Trappe d\'accès isolée et pose d\'écran de protection' : 'Enduit de finition et finitions périphériques', quantite: 1, unite: 'forfait', prixUnitaireHT: isComble ? 280 : Math.round(surface * 18), tauxTVA: 5.5 },
+              { designation: 'Déplacement, installation chantier, nettoyage', quantite: 1, unite: 'forfait', prixUnitaireHT: 220, tauxTVA: 5.5 }
             ]
           }
         ],
         remise: { actif: false, type: 'pourcentage', valeur: 0, raison: '' },
         conditionsPaiement: a.conditionsPaiement,
         validite: a.validite,
-        notesBas: 'TVA 5,5% applicable ÔÇö travaux d\'am├®lioration de la performance ├®nerg├®tique. ├ëligible MaPrimeR├®nov\' et CEE.'
+        notesBas: 'TVA 5,5% applicable — travaux d\'amélioration de la performance énergétique. Éligible MaPrimeRénov\' et CEE.'
       }
     };
   }
 
-  // ├ëLECTRICIT├ë
-  if (/├®lectric|tableau|disjoncteur|prise|luminaire|├®clairage/.test(t)) {
+  // ÉLECTRICITÉ
+  if (/électric|tableau|disjoncteur|prise|luminaire|éclairage/.test(t)) {
     return {
-      message: 'Ô£à Devis ├®lectricit├® g├®n├®r├® avec les postes standards.',
+      message: 'Devis électricité généré avec les postes standards.',
       devis: {
-        client: { nom: '├Ç compl├®ter', adresse: '', ville: '', telephone: '', email: '' },
-        titre: 'Travaux ├ëlectricit├®',
+        client: { nom: 'À compléter', adresse: '', ville: '', telephone: '', email: '' },
+        titre: 'Travaux Électricité',
         description: '',
         sections: [
           {
-            titre: '├ëlectricit├®',
+            titre: 'Électricité',
             lignes: [
-              { designation: 'Remplacement tableau ├®lectrique ÔÇö 13 circuits, disjoncteur diff├®rentiel', quantite: 1, unite: 'u', prixUnitaireHT: 1200, tauxTVA: 10 },
-              { designation: 'Points lumineux ÔÇö fourniture et pose (spots encastr├®s LED)', quantite: 8, unite: 'u', prixUnitaireHT: 110, tauxTVA: 10 },
-              { designation: 'Prises de courant 2P+T ÔÇö fourniture et pose', quantite: 12, unite: 'u', prixUnitaireHT: 75, tauxTVA: 10 },
-              { designation: 'Main d\'┼ôuvre ├®lectricien ÔÇö c├óblage, saign├®es, raccordements', quantite: 14, unite: 'h', prixUnitaireHT: 68, tauxTVA: 10 },
-              { designation: 'D├®placement et approvisionnement', quantite: 1, unite: 'forfait', prixUnitaireHT: 110, tauxTVA: 10 }
+              { designation: 'Remplacement tableau électrique — 13 circuits, disjoncteur différentiel', quantite: 1, unite: 'u', prixUnitaireHT: 1200, tauxTVA: 10 },
+              { designation: 'Points lumineux — fourniture et pose (spots encastrés LED)', quantite: 8, unite: 'u', prixUnitaireHT: 110, tauxTVA: 10 },
+              { designation: 'Prises de courant 2P+T — fourniture et pose', quantite: 12, unite: 'u', prixUnitaireHT: 75, tauxTVA: 10 },
+              { designation: 'Main d\'œuvre électricien — câblage, saignées, raccordements', quantite: 14, unite: 'h', prixUnitaireHT: 68, tauxTVA: 10 },
+              { designation: 'Déplacement et approvisionnement', quantite: 1, unite: 'forfait', prixUnitaireHT: 110, tauxTVA: 10 }
             ]
           }
         ],
@@ -1450,18 +1450,18 @@ function getDemoResponse(text) {
     const m2Match = text.match(/(\d+)\s*m/);
     const surface = m2Match ? parseInt(m2Match[1]) : 60;
     return {
-      message: `Ô£à Devis peinture ${surface} m┬▓ g├®n├®r├®.`,
+      message: `Devis peinture ${surface} m² généré.`,
       devis: {
-        client: { nom: '├Ç compl├®ter', adresse: '', ville: '', telephone: '', email: '' },
-        titre: `Travaux de Peinture ÔÇö ${surface} m┬▓`,
+        client: { nom: 'À compléter', adresse: '', ville: '', telephone: '', email: '' },
+        titre: `Travaux de Peinture — ${surface} m²`,
         description: '',
         sections: [
           {
             titre: 'Peinture',
             lignes: [
-              { designation: 'Pr├®paration support ÔÇö rebouchage, pon├ºage, impression', quantite: surface, unite: 'm┬▓', prixUnitaireHT: 8, tauxTVA: 10 },
-              { designation: 'Fourniture et application peinture acrylique 2 couches ÔÇö coloris au choix', quantite: surface, unite: 'm┬▓', prixUnitaireHT: 35, tauxTVA: 10 },
-              { designation: 'Peinture plafond blanc mat 2 couches', quantite: Math.round(surface * 0.4), unite: 'm┬▓', prixUnitaireHT: 30, tauxTVA: 10 },
+              { designation: 'Préparation support — rebouchage, ponçage, impression', quantite: surface, unite: 'm²', prixUnitaireHT: 8, tauxTVA: 10 },
+              { designation: 'Fourniture et application peinture acrylique 2 couches — coloris au choix', quantite: surface, unite: 'm²', prixUnitaireHT: 35, tauxTVA: 10 },
+              { designation: 'Peinture plafond blanc mat 2 couches', quantite: Math.round(surface * 0.4), unite: 'm²', prixUnitaireHT: 30, tauxTVA: 10 },
               { designation: 'Protection mobilier et sols, nettoyage chantier', quantite: 1, unite: 'forfait', prixUnitaireHT: 180, tauxTVA: 10 }
             ]
           }
@@ -1474,9 +1474,9 @@ function getDemoResponse(text) {
     };
   }
 
-  // R├ëPONSE G├ëN├ëRIQUE
+  // RÉPONSE GÉNÉRIQUE
   return {
-    message: '­ƒÄ¡ [Mode d├®mo] Je comprends votre demande. En mode IA r├®elle, je g├®n├®rerai un devis d├®taill├® adapt├®. Essayez : "R├®fection salle de bain", "Chauffe-eau thermodynamique", "Carrelage 30m┬▓", "Isolation combles 80m┬▓".',
+    message: '[Demo] Je comprends votre demande. En mode IA réelle, je générerai un devis détaillé adapté. Essayez : "Réfection salle de bain", "Chauffe-eau thermodynamique", "Carrelage 30m²", "Isolation combles 80m²".',
     devis: null
   };
 }
@@ -1506,9 +1506,9 @@ async function sendMessage() {
   try {
     let userContent = text;
     if (devisState) {
-      userContent = text + '\n\n[├ëTAT ACTUEL DU DEVIS: ' + JSON.stringify(devisState) + ']';
+      userContent = text + '\n\n[ÉTAT ACTUEL DU DEVIS: ' + JSON.stringify(devisState) + ']';
     }
-    // Limite l'historique aux 10 derniers messages (5 ├®changes) pour ├®conomiser les tokens
+    // Limite l'historique aux 10 derniers messages (5 échanges) pour économiser les tokens
     const recentHistory = chatHistory.slice(0, -1).slice(-10);
     const msgs = recentHistory.map(m => ({ role: m.role, content: m.content }));
     msgs.push({ role: 'user', content: userContent });
@@ -1532,7 +1532,7 @@ async function sendMessage() {
       if (res.status === 403) {
         localStorage.removeItem('access_code');
         document.getElementById('apiKeyModal').classList.add('open');
-        throw new Error(err.error?.message || 'Code d\'acc├¿s invalide.');
+        throw new Error(err.error?.message || 'Code d\'accès invalide.');
       }
       throw new Error(err.error?.message || 'Erreur serveur ' + res.status);
     }
@@ -1550,13 +1550,13 @@ async function sendMessage() {
     }
 
     chatHistory.push({ role: 'assistant', content: raw });
-    addMessage('ai', parsed.message || 'Devis mis ├á jour.');
+    addMessage('ai', parsed.message || 'Devis mis à jour.');
 
     if (parsed.devis) {
       const isFirstDevis = !devisState;
       devisState = parsed.devis;
       if (isFirstDevis) {
-        // Nouveau devis ÔåÆ attribuer un num├®ro d├®finitif
+        // Nouveau devis → attribuer un numéro définitif
         currentDocId = null;
         currentDocNum = nextDevisNum();
         currentDocType = 'devis';
@@ -1567,13 +1567,13 @@ async function sendMessage() {
       document.getElementById('autoBadge').style.visibility = 'visible';
     }
 
-    if (parsed.message && /pdf|t├®l├®charg|exporter/i.test(parsed.message)) {
+    if (parsed.message && /pdf|télécharg|exporter/i.test(parsed.message)) {
       if (devisState) setTimeout(exportPDF, 800);
     }
 
   } catch (err) {
     hideTyping();
-    addMessage('ai', 'ÔØî ' + err.message);
+    addMessage('ai', 'Erreur : ' + err.message);
     console.error(err);
   } finally {
     isLoading = false;
@@ -1609,7 +1609,7 @@ function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault
 function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
 
 // =============================================
-// ├ëDITION DIRECTE DES CELLULES
+// ÉDITION DIRECTE DES CELLULES
 // =============================================
 function editLigne(el, secIdx, ligIdx, field) {
   if (!devisState?.sections?.[secIdx]?.lignes?.[ligIdx]) return;
@@ -1675,7 +1675,7 @@ function restoreDevisLocal() {
       document.getElementById('autoBadge').style.visibility = 'visible';
       document.getElementById('quickPrompts').style.display = 'none';
       document.getElementById('saveBar').style.display = 'flex';
-      addMessage('ai', 'ÔÖ╗´©Å Devis pr├®c├®dent restaur├® automatiquement.');
+      addMessage('ai', '♻️ Devis précédent restauré automatiquement.');
     }
   } catch {}
 }
@@ -1684,16 +1684,16 @@ function restoreDevisLocal() {
 // DEVIS RENDER
 // =============================================
 function formatMoney(v) {
-  return Number(v || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Ôé¼';
+  return Number(v || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
 }
 function formatMoneyPDF(v) {
-  // ├ëvite le U+202F (espace ins├®cable) du locale fr-FR qui corrompt jsPDF
+  // Évite le U+202F (espace insécable) du locale fr-FR qui corrompt jsPDF
   const n = Number(v || 0).toFixed(2);
   const [int, dec] = n.split('.');
-  return int.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ',' + dec + ' Ôé¼';
+  return int.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ',' + dec + ' €';
 }
 function sanitizeTVA(taux) {
-  // Convertit "N/A", null, undefined ou tout non-num├®rique en 0
+  // Convertit "N/A", null, undefined ou tout non-numérique en 0
   if (typeof taux === 'number' && !isNaN(taux)) return taux;
   const parsed = parseFloat(taux);
   return isNaN(parsed) ? 0 : parsed;
@@ -1732,7 +1732,7 @@ function renderDevis() {
 
   if (!currentDocNum) { currentDocNum = nextDevisNum(); }
   const num = currentDocNum;
-  const docLabel = currentDocType === 'facture' ? 'Facture N┬░' : 'Devis N┬░';
+  const docLabel = currentDocType === 'facture' ? 'Facture N°' : 'Devis N°';
   let baseDate = new Date();
   if (d.dateEmission) {
     const tryParse = new Date(d.dateEmission.split('/').reverse().join('-'));
@@ -1765,8 +1765,8 @@ function renderDevis() {
       <div class="section-title editable-cell" contenteditable="true" onblur="editSectionTitre(this,${secIdx})">${sec.titre || 'Travaux'}</div>
       <table class="lignes">
         <thead><tr>
-          <th class="num">#</th><th class="desig">D├®signation</th>
-          <th class="num-col">Qt├®</th><th class="unit-col">Unit├®</th>
+          <th class="num">#</th><th class="desig">Désignation</th>
+          <th class="num-col">Qté</th><th class="unit-col">Unité</th>
           <th class="price-col">P.U. HT</th><th class="tva-col">TVA</th>
           <th class="total-col">Total HT</th>
         </tr></thead>
@@ -1779,7 +1779,7 @@ function renderDevis() {
   // TVA lines
   let tvaLines = '';
   if (a.microEntrepreneur || Object.keys(t.tvaMap).every(k => k === '0')) {
-    tvaLines = `<div class="tva-exonere">TVA non applicable ÔÇö art. 293B du CGI</div>`;
+    tvaLines = `<div class="tva-exonere">TVA non applicable — art. 293B du CGI</div>`;
   } else {
     Object.entries(t.tvaMap).forEach(([taux, montant]) => {
       if (Number(taux) > 0) tvaLines += `<div class="total-line tva-detail"><label>TVA ${taux}%</label><span>${formatMoney(montant)}</span></div>`;
@@ -1789,23 +1789,23 @@ function renderDevis() {
   // Remise
   let remiseHTML = '';
   if (d.remise?.actif && t.remiseMontant > 0) {
-    const lib = d.remise.type === 'pourcentage' ? `Remise ${d.remise.valeur}%${d.remise.raison ? ' ÔÇö ' + d.remise.raison : ''}` : `Remise${d.remise.raison ? ' ÔÇö ' + d.remise.raison : ''}`;
+    const lib = d.remise.type === 'pourcentage' ? `Remise ${d.remise.valeur}%${d.remise.raison ? ' — ' + d.remise.raison : ''}` : `Remise${d.remise.raison ? ' — ' + d.remise.raison : ''}`;
     remiseHTML = `<div class="total-line remise"><label>${lib}</label><span>-${formatMoney(t.remiseMontant)}</span></div>`;
   }
 
   // Footer mentions
   const assuranceMention = a.assuranceNom
-    ? `Assurance d├®cennale : ${a.assuranceNom}${a.assuranceNumero ? ' ÔÇö Police n┬░' + a.assuranceNumero : ''}${a.assuranceZone ? ' ÔÇö Zone : ' + a.assuranceZone : ''}`
+    ? `Assurance décennale : ${a.assuranceNom}${a.assuranceNumero ? ' — Police n°' + a.assuranceNumero : ''}${a.assuranceZone ? ' — Zone : ' + a.assuranceZone : ''}`
     : '';
   const ribBlock = a.iban ? `<div class="footer-rib">
-    <strong>Coordonn├®es bancaires</strong>
-    IBAN : <span>${a.iban}</span>${a.bic ? ' ┬À BIC : <span>' + a.bic + '</span>' : ''}${a.banque ? ' ┬À ' + a.banque : ''}
+    <strong>Coordonnées bancaires</strong>
+    IBAN : <span>${a.iban}</span>${a.bic ? ' · BIC : <span>' + a.bic + '</span>' : ''}${a.banque ? ' · ' + a.banque : ''}
   </div>` : '';
   const isMicroTVA = a.microEntrepreneur || d.notesBas?.includes('293B');
   const microMention = isMicroTVA ? '<br><em>TVA non applicable, art. 293B du CGI.</em>' : '';
-  // Supprimer la mention 293B des notesBas pour ├®viter le doublon
+  // Supprimer la mention 293B des notesBas pour éviter le doublon
   const notesBasClean = (d.notesBas || '').replace(/TVA\s+non\s+applicable[^.]*\.?\s*/gi, '').trim();
-  const tvaMentionInfo = (a.microEntrepreneur || t.totalTVA === 0) ? '<p>Exon├®r├® TVA</p>' : '<p>Applicable</p>';
+  const tvaMentionInfo = (a.microEntrepreneur || t.totalTVA === 0) ? '<p>Exonéré TVA</p>' : '<p>Applicable</p>';
 
   doc.innerHTML = `
     <div class="devis-top">
@@ -1814,9 +1814,9 @@ function renderDevis() {
         <p>
           ${a.formeJuridique ? a.formeJuridique + '<br>' : ''}
           ${a.adresse ? a.adresse + '<br>' : ''}
-          ${a.tel ? '­ƒô× ' + a.tel + ' ┬À ' : ''}${a.email ? 'Ô£ë ' + a.email : ''}<br>
+          ${a.tel ? a.tel + ' · ' : ''}${a.email ? '✉ ' + a.email : ''}<br>
           ${a.siret ? 'SIRET : ' + a.siret : ''}
-          ${a.tvaIntracom ? ' ┬À TVA : ' + a.tvaIntracom : ''}
+          ${a.tvaIntracom ? ' · TVA : ' + a.tvaIntracom : ''}
         </p>
       </div>
       <div class="devis-title-block">
@@ -1830,11 +1830,11 @@ function renderDevis() {
       <div class="devis-client">
         <h4>Client</h4>
         <p>
-          <strong class="editable-cell" contenteditable="true" onblur="editClientField(this,'nom')">${d.client?.nom || '├Ç compl├®ter'}</strong><br>
+          <strong class="editable-cell" contenteditable="true" onblur="editClientField(this,'nom')">${d.client?.nom || 'À compléter'}</strong><br>
           <span class="editable-cell" contenteditable="true" onblur="editClientField(this,'adresse')" style="display:block;min-height:1em">${d.client?.adresse || ''}</span>
           <span class="editable-cell" contenteditable="true" onblur="editClientField(this,'ville')">${d.client?.ville || ''}</span>
-          ${d.client?.telephone ? '<br>­ƒô× ' + d.client.telephone : ''}
-          ${d.client?.email ? '<br>Ô£ë ' + d.client.email : ''}
+          ${d.client?.telephone ? '<br>' + d.client.telephone : ''}
+          ${d.client?.email ? '<br>✉ ' + d.client.email : ''}
         </p>
       </div>
       <div class="devis-info-grid">
@@ -1846,7 +1846,7 @@ function renderDevis() {
     </div>
 
     <div class="devis-chantier">
-      <h3>­ƒôì ${d.titre || 'Travaux'}</h3>
+      <h3>${d.titre || 'Travaux'}</h3>
       ${d.description ? '<p>' + d.description + '</p>' : ''}
     </div>
 
@@ -1856,7 +1856,7 @@ function renderDevis() {
       <div class="totaux-box">
         <div class="total-line"><label>Total HT</label><span>${formatMoney(t.totalHT)}</span></div>
         ${remiseHTML}
-        ${t.remiseMontant > 0 ? '<div class="total-line"><label>Total HT apr├¿s remise</label><span>' + formatMoney(t.totalHTApresRemise) + '</span></div>' : ''}
+        ${t.remiseMontant > 0 ? '<div class="total-line"><label>Total HT après remise</label><span>' + formatMoney(t.totalHTApresRemise) + '</span></div>' : ''}
         ${tvaLines}
         ${!a.microEntrepreneur ? '<div class="total-line"><label>Total TVA</label><span>' + formatMoney(t.totalTVA) + '</span></div>' : ''}
         <div class="total-line grand-total"><label>Total TTC</label><span>${formatMoney(t.totalTTC)}</span></div>
@@ -1873,13 +1873,13 @@ function renderDevis() {
         <p>${assuranceMention ? assuranceMention + '<br>' : ''}${a.notes || ''}</p>
       </div>` : ''}
       <div class="devis-signature">
-        <div class="sig-box"><label>Bon pour accord ÔÇö Client</label><p>Date et signature :</p></div>
+        <div class="sig-box"><label>Bon pour accord — Client</label><p>Date et signature :</p></div>
         <div class="sig-box"><label>Signature de l'entreprise</label><p>${a.entreprise}</p></div>
       </div>
     </div>
 
     <div class="cognelia-badge">
-      Devis cr├®├® avec <strong>Copilote Devis BTP</strong> ┬À Propuls├® par <strong>Cognelia</strong>
+      Devis créé avec <strong>Copilote Devis BTP</strong> · Propulsé par <strong>Cognelia</strong>
     </div>`;
 
   // Boutons d'ajout section/ligne
@@ -1895,7 +1895,7 @@ function renderDevis() {
     secEl.querySelectorAll('tbody tr').forEach((tr, ligIdx) => {
       const td = document.createElement('td');
       td.className = 'del-cell';
-      td.innerHTML = '<button class="btn-del-ligne" onclick="deleteLigne(' + secIdx + ',' + ligIdx + ')" title="Supprimer">­ƒùæ</button>';
+      td.innerHTML = '<button class="btn-del-ligne" onclick="deleteLigne(' + secIdx + ',' + ligIdx + ')" title="Supprimer">x</button>';
       tr.appendChild(td);
     });
   });
@@ -1912,7 +1912,7 @@ function renderDevis() {
 // PDF EXPORT
 // =============================================
 function exportPDF() {
-  if (!devisState) { alert('Cr├®ez d\'abord un devis via le chat.'); return; }
+  if (!devisState) { alert('Créez d\'abord un devis via le chat.'); return; }
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ format: 'a4', unit: 'mm' });
@@ -1941,13 +1941,13 @@ function exportPDF() {
   let yh = 19;
   if (a.formeJuridique) { doc.text(a.formeJuridique, 14, yh); yh += 4.5; }
   if (a.adresse) { doc.text(a.adresse, 14, yh); yh += 4.5; }
-  const contact = [a.tel, a.email].filter(Boolean).join(' ┬À ');
+  const contact = [a.tel, a.email].filter(Boolean).join(' · ');
   if (contact) { doc.text(contact, 14, yh); yh += 4.5; }
-  if (a.siret) doc.text('SIRET : ' + a.siret + (a.tvaIntracom ? '  ┬À  TVA : ' + a.tvaIntracom : ''), 14, yh);
+  if (a.siret) doc.text('SIRET : ' + a.siret + (a.tvaIntracom ? '  ·  TVA : ' + a.tvaIntracom : ''), 14, yh);
 
   doc.setTextColor(150, 180, 210);
   doc.setFontSize(8);
-  doc.text(isFacture ? 'FACTURE N┬░' : 'DEVIS N┬░', W - 14, 9, { align: 'right' });
+  doc.text(isFacture ? 'FACTURE N°' : 'DEVIS N°', W - 14, 9, { align: 'right' });
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(17);
   doc.setFont('helvetica', 'bold');
@@ -1966,13 +1966,13 @@ function exportPDF() {
   doc.text('CLIENT', 14, y); y += 4;
   doc.setTextColor(...NAVY);
   doc.setFontSize(12);
-  doc.text(d.client?.nom || '├Ç compl├®ter', 14, y); y += 5;
+  doc.text(d.client?.nom || 'À compléter', 14, y); y += 5;
   doc.setFontSize(8.5);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(60, 80, 100);
   if (d.client?.adresse) { doc.text(d.client.adresse, 14, y); y += 4; }
   if (d.client?.ville) { doc.text(d.client.ville, 14, y); y += 4; }
-  if (d.client?.telephone) { doc.text('T├®l : ' + d.client.telephone, 14, y); y += 4; }
+  if (d.client?.telephone) { doc.text('Tél : ' + d.client.telephone, 14, y); y += 4; }
 
   // Paiement info
   doc.setTextColor(...MUTED);
@@ -1980,7 +1980,7 @@ function exportPDF() {
   doc.text('Paiement : ' + (d.conditionsPaiement || a.conditionsPaiement), W - 14, 52, { align: 'right' });
   if (a.microEntrepreneur) {
     doc.setTextColor(...ORANGE);
-    doc.text('TVA non applicable ÔÇö art. 293B CGI', W - 14, 57, { align: 'right' });
+    doc.text('TVA non applicable — art. 293B CGI', W - 14, 57, { align: 'right' });
   }
 
   // Chantier title
@@ -2021,7 +2021,7 @@ function exportPDF() {
 
     doc.autoTable({
       startY: y,
-      head: [['#', 'D├®signation', 'Qt├®/Unit├®', 'P.U. HT', 'TVA', 'Total HT']],
+      head: [['#', 'Désignation', 'Qté/Unité', 'P.U. HT', 'TVA', 'Total HT']],
       body: rows,
       theme: 'grid',
       headStyles: { fillColor: [240, 244, 252], textColor: MUTED, fontSize: 7.5, fontStyle: 'bold', cellPadding: 3 },
@@ -2060,10 +2060,10 @@ function exportPDF() {
   if (t.remiseMontant > 0) {
     const remLib = d.remise.type === 'pourcentage' ? `Remise ${d.remise.valeur}%` : 'Remise';
     totauxLines.push([remLib, '-' + formatMoneyPDF(t.remiseMontant)]);
-    totauxLines.push(['Total HT apr├¿s remise', formatMoneyPDF(t.totalHTApresRemise)]);
+    totauxLines.push(['Total HT après remise', formatMoneyPDF(t.totalHTApresRemise)]);
   }
   if (a.microEntrepreneur || t.totalTVA === 0) {
-    totauxLines.push(['TVA (non applicable)', '0,00 Ôé¼']);
+    totauxLines.push(['TVA (non applicable)', '0,00 €']);
   } else {
     Object.entries(t.tvaMap).forEach(([taux, montant]) => {
       if (Number(taux) > 0) totauxLines.push(['TVA ' + taux + '%', formatMoneyPDF(montant)]);
@@ -2117,7 +2117,7 @@ function exportPDF() {
   }
   if (d.notesBas) { doc.text(d.notesBas, 14, y, { maxWidth: W - 28 }); y += 5; }
   if (a.assuranceNom) {
-    doc.text(`Assurance d├®cennale : ${a.assuranceNom}${a.assuranceNumero ? ' ÔÇö Police n┬░' + a.assuranceNumero : ''}${a.assuranceZone ? ' ÔÇö Zone : ' + a.assuranceZone : ''}.`, 14, y, { maxWidth: W - 28 });
+    doc.text(`Assurance décennale : ${a.assuranceNom}${a.assuranceNumero ? ' — Police n°' + a.assuranceNumero : ''}${a.assuranceZone ? ' — Zone : ' + a.assuranceZone : ''}.`, 14, y, { maxWidth: W - 28 });
     y += 5;
   }
   if (a.notes) { doc.text(a.notes, 14, y, { maxWidth: W - 28 }); y += 5; }
@@ -2130,10 +2130,10 @@ function exportPDF() {
     doc.setTextColor(...NAVY);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(7.5);
-    doc.text('Coordonn├®es bancaires', 18, y + 1);
+    doc.text('Coordonnées bancaires', 18, y + 1);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(...MUTED);
-    const ribText = `IBAN : ${a.iban}${a.bic ? '  ┬À  BIC : ' + a.bic : ''}${a.banque ? '  ┬À  ' + a.banque : ''}`;
+    const ribText = `IBAN : ${a.iban}${a.bic ? '  ·  BIC : ' + a.bic : ''}${a.banque ? '  ·  ' + a.banque : ''}`;
     doc.text(ribText, 18, y + 5.5);
     y += 16;
   }
@@ -2146,7 +2146,7 @@ function exportPDF() {
   doc.roundedRect(112, y, 84, 28, 2, 2, 'S');
   doc.setFontSize(7.5);
   doc.setTextColor(...MUTED);
-  doc.text('Bon pour accord ÔÇö Le client :', 18, y + 5);
+  doc.text('Bon pour accord — Le client :', 18, y + 5);
   doc.text('Signature de l\'entreprise :', 116, y + 5);
   doc.text('Date et signature :', 18, y + 10);
   doc.setTextColor(...NAVY);
@@ -2155,21 +2155,21 @@ function exportPDF() {
   // Badge
   doc.setFontSize(7);
   doc.setTextColor(180, 190, 205);
-  doc.text('Devis cr├®├® avec Copilote Devis BTP ┬À Propuls├® par Cognelia ┬À cognelia.fr', W / 2, 291, { align: 'center' });
+  doc.text('Devis créé avec Copilote Devis BTP · Propulsé par Cognelia · cognelia.fr', W / 2, 291, { align: 'center' });
 
   const prefix = isFacture ? 'facture' : 'devis';
   const fileName = prefix + '-' + (d.client?.nom || 'client').replace(/[^a-z0-9]/gi, '-').toLowerCase() + '-' + num + '.pdf';
   doc.save(fileName);
   saveDocument('envoye');
-  addMessage('ai', 'Ô£à PDF export├® : **' + fileName + '** ┬À Devis sauvegard├® dans "Mes Devis".');
+  addMessage('ai', 'PDF exporté : **' + fileName + '** · Devis sauvegardé dans "Mes Devis".');
 }
 
 // =============================================
 // RESET
 // =============================================
 function resetDevis() {
-  if (devisState && !confirm('Cr├®er un nouveau devis ? Le devis actuel sera effac├®.')) return;
-  // Sauvegarder le devis en cours si non encore sauvegard├®
+  if (devisState && !confirm('Créer un nouveau devis ? Le devis actuel sera effacé.')) return;
+  // Sauvegarder le devis en cours si non encore sauvegardé
   if (devisState && currentDocNum && !currentDocId) {
     saveDocument('brouillon');
   }
@@ -2178,16 +2178,16 @@ function resetDevis() {
   currentDocNum = null;
   currentDocType = 'devis';
   chatHistory = [];
-  document.getElementById('devisDoc').innerHTML = `<div class="empty-state"><div class="empty-icon">­ƒôï</div><h3>Votre devis appara├«t ici</h3><p>D├®crivez le chantier dans le chat ÔÇö le devis se g├®n├¿re automatiquement.</p></div>`;
+  document.getElementById('devisDoc').innerHTML = `<div class="empty-state"><div class="empty-icon" style="font-size:48px;opacity:0.3;">&#128203;</div><h3>Votre devis apparaît ici</h3><p>Décrivez le chantier dans le chat — le devis se génère automatiquement.</p></div>`;
   document.getElementById('autoBadge').style.visibility = 'hidden';
   document.getElementById('quickPrompts').style.display = 'flex';
   document.getElementById('saveBar').style.display = 'none';
-  document.getElementById('messages').innerHTML = `<div class="msg ai"><div class="msg-bubble">Ô£à Nouveau devis pr├¬t. D├®crivez-moi votre chantier !</div><span class="msg-time">${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</span></div>`;
+  document.getElementById('messages').innerHTML = `<div class="msg ai"><div class="msg-bubble">Nouveau devis prêt. Décrivez-moi votre chantier !</div><span class="msg-time">${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</span></div>`;
   localStorage.removeItem('devis_autosave');
 }
 
 // =============================================
-// RESET ÔÇö efface aussi l'autosave
+// RESET — efface aussi l'autosave
 // =============================================
 
 // =============================================
@@ -2198,7 +2198,7 @@ window.addEventListener('load', () => {
   if (!getApiKey()) {
     setTimeout(() => document.getElementById('apiKeyModal').classList.add('open'), 500);
   } else {
-    // Restaurer le devis de la session pr├®c├®dente si < 24h
+    // Restaurer le devis de la session précédente si < 24h
     setTimeout(restoreDevisLocal, 600);
   }
 });
@@ -2208,7 +2208,7 @@ function sendMobileMessage() {
   const input = document.getElementById('mobileChatInput');
   const text = input.value.trim();
   if (!text) return;
-  // R├®utiliser l'input principal et envoyer
+  // Réutiliser l'input principal et envoyer
   document.getElementById('chatInput').value = text;
   input.value = '';
   sendMessage();
@@ -2221,8 +2221,8 @@ function handleMobileKey(e) {
   }
 }
 
-// (compatibilit├® ÔÇö ancienne fonction autoSwitch supprim├®e avec les onglets)
-function autoSwitchToDevisOnMobile() { /* plus n├®cessaire */ }
+// (compatibilité — ancienne fonction autoSwitch supprimée avec les onglets)
+function autoSwitchToDevisOnMobile() { /* plus nécessaire */ }
 </script>
 </body>
 </html>
