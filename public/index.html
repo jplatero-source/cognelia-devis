@@ -392,7 +392,10 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
     overflow:hidden;
   }
   .mobile-chat-bar textarea:focus{border-color:var(--navy);}
-  .mobile-chat-bar .send-btn{width:38px;height:38px;border-radius:50%;flex-shrink:0;}
+  .mobile-chat-bar .send-btn{width:38px;height:38px;border-radius:50%;flex-shrink:0;background:var(--orange);}
+  .mobile-chat-bar .send-btn:hover{background:var(--orange-light);}
+  .mobile-mic-btn{width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--bg);color:var(--navy);transition:all .2s;}
+  .mobile-mic-btn.listening{background:var(--orange);color:white;box-shadow:0 0 0 6px rgba(232,96,10,0.15);animation:pulse-ring 1.2s ease-out infinite;}
 
   /* Modals plein écran */
   .modal{max-width:96vw;}
@@ -484,7 +487,7 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
       <div class="empty-state" id="emptyState">
         <div class="empty-icon" style="font-size:48px;opacity:0.3;">&#128203;</div>
         <h3>Votre devis apparaît ici</h3>
-        <p>Décrivez le chantier dans le chat à gauche — le devis se génère automatiquement en temps réel.</p>
+        <p>Décrivez le chantier ci-dessous — le devis se génère automatiquement.</p>
       </div>
     </div>
   </div>
@@ -492,9 +495,12 @@ tr:hover .btn-del-ligne:hover{opacity:1;background:rgba(220,50,50,.1);}
 
 <!-- ========== BARRE DE SAISIE MOBILE (bas de page) ========== -->
 <div class="mobile-chat-bar" id="mobileChatBar">
+  <button class="mobile-mic-btn" id="mobileMicBtn" onclick="toggleMobileVoice()" title="Dicter">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+  </button>
   <textarea id="mobileChatInput" placeholder="Décrivez le chantier..." rows="1"
     onkeydown="handleMobileKey(event)"></textarea>
-  <button class="send-btn" onclick="sendMobileMessage()">
+  <button class="send-btn mobile-send-btn" onclick="sendMobileMessage()">
     <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
   </button>
 </div>
@@ -1231,6 +1237,44 @@ function startListening() {
 
 function stopListening() {
   if (recognition) recognition.stop();
+}
+
+function toggleMobileVoice() {
+  if (isListening) { stopListening(); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { alert('Reconnaissance vocale non supportée sur ce navigateur.'); return; }
+  recognition = initSpeech();
+  if (!recognition) return;
+  isListening = true;
+  const btn = document.getElementById('mobileMicBtn');
+  const input = document.getElementById('mobileChatInput');
+  btn.classList.add('listening');
+  input.placeholder = 'Je vous écoute...';
+  input.value = '';
+  recognition.onresult = (e) => {
+    let interim = '', final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript;
+      else interim += e.results[i][0].transcript;
+    }
+    input.value = final || interim;
+  };
+  recognition.onend = () => {
+    isListening = false;
+    btn.classList.remove('listening');
+    input.placeholder = 'Décrivez le chantier...';
+    const text = input.value.trim();
+    if (text) setTimeout(() => sendMobileMessage(), 300);
+  };
+  recognition.onerror = (e) => {
+    isListening = false;
+    btn.classList.remove('listening');
+    input.placeholder = 'Décrivez le chantier...';
+    if (e.error !== 'no-speech' && e.error !== 'network') {
+      input.placeholder = 'Micro indisponible : ' + e.error;
+    }
+  };
+  recognition.start();
 }
 
 // =============================================
